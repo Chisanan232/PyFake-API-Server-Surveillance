@@ -8,6 +8,7 @@ jobs:
 #    name: Prepare all unit test items
     uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_get_tests.yaml@v6.1
     with:
+      shell_path: './get-all-tests.sh'
       shell_arg: test/unit_test/
 
 
@@ -15,6 +16,7 @@ jobs:
 #    name: Prepare all integration test items
     uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_get_tests.yaml@v6.1
     with:
+      shell_path: './get-all-tests.sh'
       shell_arg: test/integration_test/
 
 
