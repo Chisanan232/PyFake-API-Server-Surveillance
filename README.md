@@ -17,7 +17,7 @@ A CI tool for having surveillance at the specific API end points and updating.
 ## Overview
 
 Do you ever have experience about missing the change of Back-End side and cause break some feature in Font-End side? This
-tool will help you keep the API change under surveillance. And reach to update the API information is always the latest 
+tool will help you keep the API change under surveillance. And reach to update the API information is always the latest
 version which is the same with Back-End side.
 
 
@@ -31,7 +31,7 @@ So it also only supports Python 3.8 version up.
 
 ## Quickly Start
 
-Here section would lead you quickly start to set up your first one application by **_PyMock-Server-Surveillance_** for 
+Here section would lead you quickly start to set up your first one application by **_PyMock-Server-Surveillance_** for
 keep target API under surveillance easily.
 
 In basically, it has 3 steps: install the package, configure settings about the APIs for mocking and run command.
