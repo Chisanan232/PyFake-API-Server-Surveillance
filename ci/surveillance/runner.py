@@ -1,4 +1,3 @@
-
 def run() -> None:
     # get the API doc config from end point (request API doc config and get response)
     # check the diff between local config and the new config (check the diff by git?)
