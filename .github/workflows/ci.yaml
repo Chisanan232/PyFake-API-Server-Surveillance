@@ -16,16 +16,17 @@ on:
 #     For documentation
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/workflows/documentation.yaml"
+      - ".cache/**/*.json"
       - "docs/**"
       - "**/*.md"
       - "mkdocs.yml"
-      - "README.md.md"
+      - "README.md"
 #     For Docker feature
       - ".github/workflows/docker.yaml"
       - "scripts/ci/**-docker-**.sh"
       - "scripts/docker/**"
       - "Dockerfile"
-      - "README.md-DOCKER.md"
+      - "README-DOCKER.md"
 #     Others
       - ".gitcommitrules"
       - ".gitignore"
@@ -47,16 +48,17 @@ on:
 #     For documentation
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/workflows/documentation.yaml"
+      - ".cache/**/*.json"
       - "docs/**"
       - "**/*.md"
       - "mkdocs.yml"
-      - "README.md.md"
+      - "README.md"
 #     For Docker feature
       - ".github/workflows/docker.yaml"
       - "scripts/ci/**-docker-**.sh"
       - "scripts/docker/**"
       - "Dockerfile"
-      - "README.md-DOCKER.md"
+      - "README-DOCKER.md"
 #     Others
       - ".gitcommitrules"
       - ".gitignore"
@@ -82,7 +84,8 @@ jobs:
       test_type: unit-test
       upload-to-codecov: true
       codecov_flags: unit-test  # Required if 'upload-to-codecov' is true
-      codecov_name: pymock-server-surveillance  # Required if 'upload-to-codecov' is true
+      codecov_name: pyfake-api-server-surveillance  # Required if 'upload-to-codecov' is true
+
 
   integration-test_codecov_finish:
 #    name: Organize and generate the testing report and upload it to Codecov
@@ -95,7 +98,7 @@ jobs:
       test_type: integration-test
       upload-to-codecov: true
       codecov_flags: integration-test  # Required if 'upload-to-codecov' is true
-      codecov_name: pymock-server-surveillance  # Required if 'upload-to-codecov' is true
+      codecov_name: pyfake-api-server-surveillance  # Required if 'upload-to-codecov' is true
 
 
   system-test_codecov_finish:
@@ -109,7 +112,7 @@ jobs:
       test_type: system-test
       upload-to-codecov: true
       codecov_flags: system-test  # Required if 'upload-to-codecov' is true
-      codecov_name: pymock-server-surveillance  # Required if 'upload-to-codecov' is true
+      codecov_name: pyfake-api-server-surveillance  # Required if 'upload-to-codecov' is true
 
 
   all-test_codecov_finish:
@@ -123,7 +126,7 @@ jobs:
       test_type: all-test
       upload-to-codecov: true
       codecov_flags: all-test  # Required if 'upload-to-codecov' is true
-      codecov_name: pymock-server-surveillance  # Required if 'upload-to-codecov' is true
+      codecov_name: pyfake-api-server-surveillance  # Required if 'upload-to-codecov' is true
 
 
   sonarcloud_finish:
@@ -144,6 +147,6 @@ jobs:
     uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_pre-building_test.yaml@v7.2
     with:
       build-type: poetry
-      python_package_name: pymock-server
-      test_shell_in_python: from pymock_server.ci.surveillance.runner import run
-      test_shell: mock surveillance --help  # FIXME: Use correct command line to test
+      python_package_name: fake-api-server-surveillance
+      test_shell_in_python: from fake_api_server.ci.surveillance.runner import run
+      test_shell: fake --help
