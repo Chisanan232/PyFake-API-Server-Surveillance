@@ -1,59 +1,30 @@
-### _Target_
-[//]: # (The target why you modify something. And also could have *key point change example* if it needs to describe to 
-be more clearly and easily to understand your change in PR)
+[//]: # (The target why you modify something.)
+## _Target_
 
-* change something ...
-* Key point change example:
-    * as is:
-    ```python
-    # this is previous code
-    general_run()
-    ```
-    * to be:
-    ```python
-    # this is new code
-    wow_run()
-    ```
+[//]: # (The summary what you did or your target.)
+* ### Task summary:
 
+    N/A.
 
-### _Effecting Scope_
-[//]: # (What's the scope in project it would affect with your modify? The format could refer to previous one section.)
+[//]: # (The task ID in ClickUp [project: https://app.clickup.com/9018752317/v/f/90183126979/90182605225] which maps this change.)
+* ### Task tickets:
 
-* Key points:
-  <details>
-  <summary> General features in project </summary>
-  
-  - [ ] Git setting
-  - [ ] Project management tool
-    - [ ] Python project management tool
-    - [ ] GitHub project settings
-  </details>
-  
-  <details>
-  <summary> CI/CD </summary>
-  
-  - [ ] pre-commit
-  - [ ] PyLinter
-  - [ ] MyPy (data typing)
-  - [ ] Test
-  - [ ] Test coverage report
-  - [ ] Code quality
-  - [ ] CI/CD workflow
-  - [ ] Dependency management tool
-  - [ ] Release
-  </details>
-  
-  <details>
-  <summary> Major features of code </summary>
+    * Task ID: N/A.
+    * Relative task IDs: N/A.
 
-  - [ ] features ...
-  </details>
+[//]: # (The key changes like demonstration, as-is & to-be, etc. for reviewers could be faster understand what it changes)
+* ### Key point change (optional):
 
-* Roughly description:
-  * effect something ...
+    N/A.
 
 
-### _Description_
-[//]: # (What codes, settings or something else you adjust and why you do it.)
+[//]: # (What's the scope in project it would affect with your modify? For example, would it affect CI workflow? Or any feature usage? Please list all the items which may be affected.)
+## _Effecting Scope_
 
-* the summary of your modify ...
+* N/A.
+
+
+[//]: # (The brief of major changes what your modify. Please list it.)
+## _Description_
+
+* N/A.
