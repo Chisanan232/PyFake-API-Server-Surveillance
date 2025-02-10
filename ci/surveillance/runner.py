@@ -1,8 +1,7 @@
 import os
-import sys
-if sys.version_info >= (3, 11):
+try:
     from http import HTTPMethod
-else:
+except ImportError:
     from fake_api_server.model.http import HTTPMethod
 
 import urllib3
