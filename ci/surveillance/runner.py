@@ -6,5 +6,6 @@ def run() -> None:
     # result = Surveillance.monitor()
     print("got difference~")
     # GitHelper.commit_change()
+    # TODO: this is backlog task
     print("notify developers")
     # Notificatier.notidy()
