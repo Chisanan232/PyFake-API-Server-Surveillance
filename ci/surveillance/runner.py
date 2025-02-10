@@ -1,6 +1,6 @@
 import os
 import sys
-if sys.version_info > (3, 9):
+if sys.version_info >= (3, 11):
     from http import HTTPMethod
 else:
     from fake_api_server.model.http import HTTPMethod
