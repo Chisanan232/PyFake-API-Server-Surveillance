@@ -1,0 +1,10 @@
+from enum import Enum
+
+
+class EnvironmentVariableKey(Enum):
+    GIT_REPOSITORY = "GIT_REPOSITORY"
+    API_DOC_URL = "API_DOC_URL"
+    SERVER_TYPE = "SERVER_TYPE"
+    GIT_AUTHOR_NAME = "GIT_AUTHOR_NAME"
+    GIT_AUTHOR_EMAIL = "GIT_AUTHOR_EMAIL"
+    GIT_COMMIT_MSG = "GIT_COMMIT_MSG"
