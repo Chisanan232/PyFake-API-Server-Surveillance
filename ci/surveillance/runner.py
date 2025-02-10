@@ -1,4 +1,5 @@
 import os
+
 try:
     from http import HTTPMethod
 except ImportError:
