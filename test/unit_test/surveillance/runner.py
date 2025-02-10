@@ -1,12 +1,10 @@
 import json
 import os
 from http import HTTPMethod, HTTPStatus
-from typing import Mapping, Any
 from unittest.mock import Mock, patch
 from urllib3 import BaseHTTPResponse
 
 from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.model.action import ActionInput
 from ci.surveillance.runner import run
 
 
