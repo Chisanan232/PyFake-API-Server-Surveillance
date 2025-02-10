@@ -3,7 +3,7 @@ import os
 try:
     from http import HTTPMethod
 except ImportError:
-    from fake_api_server.model.http import HTTPMethod
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 import urllib3
 

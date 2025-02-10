@@ -1,9 +1,11 @@
 import json
 import os
+
 try:
     from http import HTTPMethod
 except ImportError:
     from fake_api_server.model.http import HTTPMethod
+
 from unittest.mock import Mock, patch
 
 from urllib3 import BaseHTTPResponse
