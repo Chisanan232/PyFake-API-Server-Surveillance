@@ -1,5 +1,6 @@
 import os
 import sys
+
 if sys.version_info >= (3, 11):
     from http import HTTPMethod
 else:
