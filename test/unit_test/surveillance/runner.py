@@ -2,6 +2,7 @@ import json
 import os
 from http import HTTPMethod, HTTPStatus
 from unittest.mock import Mock, patch
+
 from urllib3 import BaseHTTPResponse
 
 from ci.surveillance.model import EnvironmentVariableKey

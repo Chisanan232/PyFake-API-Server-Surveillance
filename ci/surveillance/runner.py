@@ -1,10 +1,11 @@
 import os
-import urllib3
 import sys
 if sys.version_info > (3, 9):
     from http import HTTPMethod
 else:
     from fake_api_server.model.http import HTTPMethod
+
+import urllib3
 
 from .model.action import ActionInput
 
