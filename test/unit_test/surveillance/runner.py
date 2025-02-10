@@ -1,6 +1,9 @@
 import json
 import os
-from http import HTTPMethod, HTTPStatus
+try:
+    from http import HTTPMethod
+except ImportError:
+    from fake_api_server.model.http import HTTPMethod
 from unittest.mock import Mock, patch
 
 from urllib3 import BaseHTTPResponse
@@ -29,7 +32,7 @@ def test_run(mock_request: Mock):
     }
     mock_request.return_value = DummyResponse(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-        status=HTTPStatus.OK,
+        status=200,
         version=11,
         version_string="HTTP/1.1",
         reason="",
