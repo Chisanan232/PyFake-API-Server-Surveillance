@@ -1,5 +1,5 @@
 import os
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.action import ActionInput

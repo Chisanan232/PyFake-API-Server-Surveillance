@@ -1,9 +1,10 @@
-from typing import Type, Mapping
+from typing import Mapping, Type
 
 import pytest
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.action import ActionInput
+
 from ._base import _BaseModelTestSuite
 
 

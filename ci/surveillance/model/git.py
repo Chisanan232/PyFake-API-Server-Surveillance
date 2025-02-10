@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Mapping
 
-from ._base import _BaseModel
 from . import EnvironmentVariableKey
+from ._base import _BaseModel
 
 
 @dataclass
