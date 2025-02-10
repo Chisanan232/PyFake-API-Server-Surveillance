@@ -1,6 +1,7 @@
 import os
-import urllib3
 from http import HTTPMethod
+
+import urllib3
 
 from .model.action import ActionInput
 
