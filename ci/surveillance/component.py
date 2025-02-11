@@ -40,17 +40,13 @@ class SavingConfigComponent:
 
         return api_config.serialize()
 
-    def save_api_config(
-        self, cmd_args: PullApiDocConfigArgs, serialized_api_config: Optional[Dict[str, Any]]
-    ) -> None:
+    def save_api_config(self, cmd_args: PullApiDocConfigArgs, serialized_api_config: Optional[Dict[str, Any]]) -> None:
         if cmd_args.dry_run:
             self._dry_run_final_process(cmd_args, serialized_api_config)
         else:
             self._final_process(cmd_args, serialized_api_config)
 
-    def _final_process(
-        self, cmd_args: PullApiDocConfigArgs, serialized_api_config: Optional[Dict[str, Any]]
-    ) -> None:
+    def _final_process(self, cmd_args: PullApiDocConfigArgs, serialized_api_config: Optional[Dict[str, Any]]) -> None:
         logger.info("Write the API configuration to file ...")
         self._file.write(path=cmd_args.config_path, config=serialized_api_config, mode="w+")
         logger.info(f"All configuration has been writen in file '{cmd_args.config_path}'.")

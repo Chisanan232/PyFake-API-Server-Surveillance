@@ -1,9 +1,10 @@
-from typing import Type, Mapping
+from typing import Mapping, Type
 
 import pytest
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
+
 from ._base import _BaseModelTestSuite
 
 
@@ -34,7 +35,9 @@ class TestActionInput(_BaseModelTestSuite):
 
     def _verify_model_props(self, model: PullApiDocConfigArgs, original_data: Mapping) -> None:
         assert model.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
-        assert model.include_template_config == bool(original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value])
+        assert model.include_template_config == bool(
+            original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]
+        )
         assert model.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
         assert model.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
         assert model.divide_api == bool(original_data[EnvironmentVariableKey.DIVIDE_API.value])
