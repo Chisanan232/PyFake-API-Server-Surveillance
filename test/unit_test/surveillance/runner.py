@@ -1,5 +1,8 @@
 import json
 import os
+from typing import Type
+
+import pytest
 
 try:
     from http import HTTPMethod
@@ -22,8 +25,9 @@ class DummyResponse(BaseHTTPResponse):
         return json.dumps(_data).encode("utf-8")
 
 
+@pytest.mark.parametrize("api_doc_config_resp", [DummyResponse])
 @patch("urllib3.request")
-def test_run(mock_request: Mock):
+def test_run(mock_request: Mock, api_doc_config_resp: Type[BaseHTTPResponse]):
     data = {
         EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
         EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
@@ -32,7 +36,7 @@ def test_run(mock_request: Mock):
         EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
         EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
     }
-    mock_request.return_value = DummyResponse(
+    mock_request.return_value = api_doc_config_resp(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
         status=200,
         version=11,
