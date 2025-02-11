@@ -17,15 +17,15 @@ from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
 
 
-class DummyResponse(BaseHTTPResponse):
+class DummySwaggerAPIDocConfigResponse(BaseHTTPResponse):
 
     @property
     def data(self) -> bytes:
-        _data = {"key": "value"}
+        _data = {"swagger": "v2.0.1"}
         return json.dumps(_data).encode("utf-8")
 
 
-@pytest.mark.parametrize("api_doc_config_resp", [DummyResponse])
+@pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse])
 @patch("urllib3.request")
 def test_run(mock_request: Mock, api_doc_config_resp: Type[BaseHTTPResponse]):
     data = {
