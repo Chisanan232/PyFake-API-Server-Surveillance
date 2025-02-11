@@ -30,7 +30,21 @@ class DummySwaggerAPIDocConfigResponse(BaseHTTPResponse):
         return json.dumps(_data).encode("utf-8")
 
 
-@pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse])
+class DummyOpenAPIDocConfigResponse(BaseHTTPResponse):
+
+    @property
+    def data(self) -> bytes:
+        _data = {
+            "openapi": "3.0.1",
+            "paths": {},
+            "components": {
+                "schemas": {},
+            },
+        }
+        return json.dumps(_data).encode("utf-8")
+
+
+@pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 def test_run(mock_request: Mock, api_doc_config_resp: Type[BaseHTTPResponse]):
     data = {
