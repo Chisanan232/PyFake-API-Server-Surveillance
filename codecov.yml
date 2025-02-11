@@ -2,3 +2,6 @@ codecov:
   token: $CODECOV_TOKEN
   branch: master
   strict_yaml_branch: master
+comment:
+  require_head: false     # default true
+  require_base: false
