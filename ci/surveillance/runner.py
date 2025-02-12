@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 
 import urllib3
@@ -37,11 +38,16 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
             rel_path = file_path.relative_to("./")
             all_files.add(str(rel_path))
 
+    result = subprocess.run("git status")
+    print(f"[DEBUG] git status (before add file): {result.stdout}")
     # Check untracked files
     untracked = set(repo.untracked_files)
     for file in all_files:
         if file in untracked:
             repo.index.add(action_inputs.subcmd_pull_args.config_path)
+
+    result = subprocess.run("git status")
+    print(f"[DEBUG] git status (add untracked files): {result.stdout}")
 
     # Check modified but unstaged files
     diff_index = repo.index.diff(None)
@@ -49,6 +55,9 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     for file in all_files:
         if file in modified:
             repo.index.add(action_inputs.subcmd_pull_args.config_path)
+
+    result = subprocess.run("git status")
+    print(f"[DEBUG] git status (add unstaged files): {result.stdout}")
 
     commit = repo.index.commit(
         author=action_inputs.git_info.commit.author.serialize_for_git(),
