@@ -26,6 +26,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     filepath = base_test_dir / "api.yaml"
     if not filepath.exists():
         filepath.touch()
+    assert filepath.exists(), "File doesn't be created. Please check it."
 
     action_inputs = ActionInput(
         server_type=Mock(),
