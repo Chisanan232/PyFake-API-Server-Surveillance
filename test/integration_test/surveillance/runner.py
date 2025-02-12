@@ -1,13 +1,13 @@
 import os
 import shutil
-from unittest.mock import Mock, patch, PropertyMock
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 from git import Repo
 from git.remote import PushInfoList
 
 from ci.surveillance.model.action import ActionInput
-from ci.surveillance.model.git import GitInfo, GitCommit, GitAuthor
+from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
 from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 from ci.surveillance.runner import commit_change_config
 

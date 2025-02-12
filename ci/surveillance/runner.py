@@ -23,14 +23,16 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
             url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}",
             to_path="./",
         )
-        assert os.path.exists(action_inputs.subcmd_pull_args.config_path), "PyFake-API-Server configuration is required. Please check it."
+        assert os.path.exists(
+            action_inputs.subcmd_pull_args.config_path
+        ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
     git_ref: str = os.environ.get("GITHUB_HEAD_REF")
 
     # Get all files in the folder
     all_files = set()
-    for file_path in Path("./").rglob('*.yaml'):
+    for file_path in Path("./").rglob("*.yaml"):
         if file_path.is_file():
             rel_path = file_path.relative_to("./")
             all_files.add(str(rel_path))

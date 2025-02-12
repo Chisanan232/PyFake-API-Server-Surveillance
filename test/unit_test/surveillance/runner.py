@@ -44,7 +44,6 @@ def test_run(mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp:
         EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
         EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
         EnvironmentVariableKey.DRY_RUN.value: "true",
-
         # GitHub action environment
         "GITHUB_HEAD_REF": "git-branch",
     }
