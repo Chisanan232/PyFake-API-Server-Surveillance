@@ -97,7 +97,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         print(f"[DEBUG] filepath: {filepath}")
         print(f"[DEBUG] committed_files: {committed_files}")
-        assert str(filepath) in committed_files[0]
+        assert str(filepath) in committed_files
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not os.getenv("GITHUB_ACTIONS") and committed_files:
