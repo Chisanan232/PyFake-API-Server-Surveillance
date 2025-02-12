@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import urllib3
 
@@ -8,9 +9,57 @@ except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from fake_api_server.model import deserialize_api_doc_config
+from git import Repo
 
 from .component import SavingConfigComponent
 from .model.action import ActionInput
+
+
+def commit_change_config(action_inputs: ActionInput) -> bool:
+    if os.path.exists(action_inputs.subcmd_pull_args.config_path):
+        repo = Repo("./")
+    else:
+        repo = Repo.clone_from(
+            url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}",
+            to_path="./",
+        )
+        assert os.path.exists(action_inputs.subcmd_pull_args.config_path), "PyFake-API-Server configuration is required. Please check it."
+
+    remote_name: str = "origin"
+    git_ref: str = os.environ.get("GITHUB_HEAD_REF")
+
+    # Get all files in the folder
+    all_files = set()
+    for file_path in Path("./").rglob('*.yaml'):
+        if file_path.is_file():
+            rel_path = file_path.relative_to("./")
+            all_files.add(str(rel_path))
+
+    # Check untracked files
+    untracked = set(repo.untracked_files)
+    for file in all_files:
+        if file in untracked:
+            repo.index.add(action_inputs.subcmd_pull_args.config_path)
+
+    # Check modified but unstaged files
+    diff_index = repo.index.diff(None)
+    modified = {item.a_path for item in diff_index}
+    for file in all_files:
+        if file in modified:
+            repo.index.add(action_inputs.subcmd_pull_args.config_path)
+
+    commit = repo.index.commit(
+        author=action_inputs.git_info.commit.author.serialize_for_git(),
+        message=action_inputs.git_info.commit.message,
+    )
+    push_result = repo.remote(name=remote_name).push(f"{remote_name}:{git_ref}")
+    # Check push result
+    if push_result[0].flags & push_result[0].ERROR:
+        print("Push failed. Please check.")
+        return False
+
+    print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
+    return True
 
 
 def run() -> None:
@@ -27,8 +76,11 @@ def run() -> None:
     api_config = current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
     _saving_config_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=api_config)
     # result = Surveillance.monitor()
-    print("got difference~")
+
+    print("commit the different and push to remote repository")
+    commit_change_config(action_inputs)
     # GitHelper.commit_change()
+
     # TODO: this is backlog task
     print("notify developers")
     # Notificatier.notidy()
