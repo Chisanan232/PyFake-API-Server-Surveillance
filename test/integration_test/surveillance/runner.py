@@ -93,8 +93,10 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
 
-        committed_files = real_repo.index.diff(real_repo.head.commit)
-        assert str(filepath) in list(map(lambda i: i.a_path, committed_files))[0]
+        committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
+        print(f"[DEBUG] filepath: {filepath}")
+        print(f"[DEBUG] committed_files: {committed_files}")
+        assert str(filepath) in committed_files[0]
     finally:
         if not os.getenv("GITHUB_ACTIONS"):
             # test finally
