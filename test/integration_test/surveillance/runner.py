@@ -95,8 +95,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
 
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
-        print(f"[DEBUG] filepath: {filepath}")
-        print(f"[DEBUG] committed_files: {committed_files}")
         assert str(filepath) in committed_files
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
