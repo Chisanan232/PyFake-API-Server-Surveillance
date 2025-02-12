@@ -28,4 +28,4 @@ scripts/ci/get-all-tests.sh
 ## Some usage of this project
 study/
 under_test/
-verify_git_feature/
+#verify_git_feature/
