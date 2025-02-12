@@ -32,20 +32,33 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     git_ref: str = os.environ["GITHUB_HEAD_REF"]
 
     # Get all files in the folder
+    all_files = set()
     for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
         if file_path.is_file():
-            repo.index.add(str(file_path))
+            all_files.add(file_path)
 
     # Check untracked files
     untracked = set(repo.untracked_files)
     for file in untracked:
-        repo.index.add(file)
+        if Path(file).is_file():
+            if file in all_files:
+                repo.index.add(file)
+        else:
+            for one_file in Path(file).rglob("*.yaml"):
+                if one_file in all_files:
+                    repo.index.add(one_file)
 
     # Check modified but unstaged files
     diff_index = repo.index.diff(None)
     modified = {item.a_path for item in diff_index}
     for file in modified:
-        repo.index.add(file)
+        if Path(file).is_file():
+            if file in all_files:
+                repo.index.add(file)
+        else:
+            for one_file in Path(file).rglob("*.yaml"):
+                if one_file in all_files:
+                    repo.index.add(one_file)
 
     commit = repo.index.commit(
         author=action_inputs.git_info.commit.author.serialize_for_git(),
