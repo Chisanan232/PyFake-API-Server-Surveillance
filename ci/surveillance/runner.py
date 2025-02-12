@@ -38,7 +38,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
             rel_path = file_path.relative_to("./")
             all_files.add(str(rel_path))
 
-    result = subprocess.run("git status")
+    result = subprocess.run("git status", shell=True, capture_output=True)
     print(f"[DEBUG] git status (before add file): {result.stdout}")
     # Check untracked files
     untracked = set(repo.untracked_files)
@@ -46,7 +46,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         if file in untracked:
             repo.index.add(action_inputs.subcmd_pull_args.config_path)
 
-    result = subprocess.run("git status")
+    result = subprocess.run("git status", shell=True, capture_output=True)
     print(f"[DEBUG] git status (add untracked files): {result.stdout}")
 
     # Check modified but unstaged files
@@ -56,7 +56,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         if file in modified:
             repo.index.add(action_inputs.subcmd_pull_args.config_path)
 
-    result = subprocess.run("git status")
+    result = subprocess.run("git status", shell=True, capture_output=True)
     print(f"[DEBUG] git status (add unstaged files): {result.stdout}")
 
     commit = repo.index.commit(
