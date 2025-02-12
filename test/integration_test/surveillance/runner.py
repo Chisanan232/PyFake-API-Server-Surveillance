@@ -98,6 +98,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert str(filepath) in committed_files
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
-        if not os.getenv("GITHUB_ACTIONS") and committed_files:
+        if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
