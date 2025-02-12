@@ -37,33 +37,42 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         if file_path.is_file():
             all_files.add(file_path)
 
+    print(f"Found files: {all_files}")
+
     # Check untracked files
     untracked = set(repo.untracked_files)
+    print(f"Check untracked file ...")
     for file in untracked:
         if Path(file).is_file():
             if file in all_files:
                 repo.index.add(file)
+                print(f"Add file: {file}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
                     repo.index.add(one_file)
+                    print(f"Add file: {one_file}")
 
     # Check modified but unstaged files
     diff_index = repo.index.diff(None)
     modified = {item.a_path for item in diff_index}
+    print(f"Check modified file ...")
     for file in modified:
         if Path(file).is_file():
             if file in all_files:
                 repo.index.add(file)
+                print(f"Add file: {file}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
                     repo.index.add(one_file)
+                    print(f"Add file: {one_file}")
 
     commit = repo.index.commit(
         author=action_inputs.git_info.commit.author.serialize_for_git(),
         message=action_inputs.git_info.commit.message,
     )
+    print(f"Commit the change.")
     push_result = repo.remote(name=remote_name).push(f"{remote_name}:{git_ref}")
     # Check push result
     if push_result[0].flags & push_result[0].ERROR:
