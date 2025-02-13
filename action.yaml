@@ -1,0 +1,73 @@
+name: "Monitor API server"
+description: "Monitor the target API server repository and "
+author: "Bryant Liu"
+inputs:
+  # API server info
+  repo:
+    description: "The target project repository to monitor."
+    required: true
+  api-doc-url:
+    description: "The host URL of API documentation to monitor."
+    required: true
+#  server-type:
+#    description: "The API server type PyFake-API-Server would try to check. [options: <rest-server>]"
+#    required: true
+  # git info
+  git-author-name:
+    description: "The author info (only name) to commit the change of API interface if it has."
+    required: false
+    default: "PyFake-API-Server-bot"
+  git-author-email:
+    description: "The author info (only email) to commit the change of API interface if it has."
+    required: false
+    default: ""
+  git-commit-msg:
+    description: "The commit message for committing the change of API interface if it has."
+    required: false
+    default: "✏️ Update the API interface settings."
+  # options about how to pull API server doc config
+  config-path:
+    description: "The file path of the PyFake-API-Server configuration."
+    required: false
+    default: "./api.yaml"
+  include-template-config:
+    description: "Whether it should include template section in configuration or not."
+    required: false
+    default: "true"
+  base-file-path:
+    description: "The base path which should be a directory and includes all configuration."
+    required: false
+    default: "./"
+  base-url:
+    description: "The base URL as prefix at API path in configuration."
+    required: false
+  divide-api:
+    description: "Divide the API part configuration."
+    required: false
+    default: "false"
+  divide-http:
+    description: "Divide the HTTP part configuration."
+    required: false
+    default: "false"
+  divide-http-request:
+    description: "Divide the HTTP request part configuration."
+    required: false
+    default: "false"
+  divide-http-response:
+    description: "Divide the HTTP response part configuration."
+    required: false
+    default: "false"
+  dry-run:
+    description: "Dry run this action. It just won't download the configuration finally."
+    required: false
+    default: "false"
+outputs:
+  has-change:
+    description: "If it has any change, this property value would be *true*."
+runs:
+  # TODO: Finish this part setting with Python package *fake-api-server-surveillance*
+  using: "node20"
+  main: "index.ts"
+branding:
+  icon: 'monitor'
+  color: 'black'
