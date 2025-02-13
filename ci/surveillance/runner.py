@@ -102,5 +102,5 @@ def run() -> None:
     # GitHelper.commit_change()
 
     # TODO: this is backlog task
-    print("notify developers")
+    # print("notify developers")
     # Notificatier.notidy()
