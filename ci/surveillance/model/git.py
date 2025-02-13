@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Mapping
 
+from git import Actor
+
 from . import EnvironmentVariableKey
 from ._base import _BaseModel
 
@@ -15,6 +17,12 @@ class GitAuthor(_BaseModel):
         return GitAuthor(
             name=data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value],
             email=data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value],
+        )
+
+    def serialize_for_git(self) -> Actor:
+        return Actor(
+            name=self.name,
+            email=self.email,
         )
 
 

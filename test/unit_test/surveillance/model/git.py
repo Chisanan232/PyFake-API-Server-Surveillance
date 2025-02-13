@@ -1,6 +1,7 @@
 from typing import Mapping, Type
 
 import pytest
+from git import Actor
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
@@ -29,6 +30,21 @@ class TestGitAuthor(_BaseModelTestSuite):
     def _verify_model_props(self, model: GitAuthor, original_data: Mapping) -> None:
         assert model.name == original_data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
         assert model.email == original_data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
+
+    @pytest.mark.parametrize(
+        "data",
+        [
+            {
+                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
+                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
+            },
+        ],
+    )
+    def test_serialize_for_git(self, model: Type[GitAuthor], data: Mapping) -> None:
+        git_author = model.deserialize(data).serialize_for_git()
+        assert isinstance(git_author, Actor)
+        assert git_author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
+        assert git_author.email == data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
 
 
 class TestGitCommit(_BaseModelTestSuite):
