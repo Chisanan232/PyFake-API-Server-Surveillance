@@ -62,12 +62,66 @@ inputs:
     required: false
     default: "false"
 outputs:
-  has-change:
+  monitor-result:
     description: "If it has any change, this property value would be *true*."
+    value: ${{ steps.monitor-result.outputs.monitor-result }}
 runs:
-  # TODO: Finish this part setting with Python package *fake-api-server-surveillance*
-  using: "node20"
-  main: "index.ts"
+  using: "composite"
+  steps:
+    - name: Fail-fast in unsupported environments
+      if: runner.os == 'Windows'
+      shell: bash -eEuo pipefail {0}
+      run: |
+        >&2 echo This action is only able to run under GNU/Linux or Apple MacOS environments
+        exit 1
+
+    - name: Clone project
+      uses: actions/checkout@v4
+
+    - name: Install Python 3.12 for running surveillance
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        pip --version
+        pip install -U poetry
+
+    - name: Build Python runtime environment by Poetry
+      shell: bash
+      run: |
+        poetry --version
+        poetry install
+
+    - name: Run surveillance
+      run: poetry run fake rest-server run-surveillance
+      shell: bash
+      env:
+        # API documentation info
+        API_DOC_URL: ${{ inputs.api-doc-url }}
+#        SERVER_TYPE: ${{ inputs.server-type }}
+        # git info
+        GIT_REPOSITORY: ${{ inputs.repo }}
+        GIT_AUTHOR_NAME: ${{ inputs.git-author-name }}
+        GIT_AUTHOR_EMAIL: ${{ inputs.git-author-email }}
+        GIT_COMMIT_MSG: ${{ inputs.git-commit-msg }}
+        # for subcommand line *pull* options
+        CONFIG_PATH: ${{ inputs.config-path }}
+        INCLUDE_TEMPLATE_CONFIG: ${{ inputs.include-template-config }}
+        BASE_FILE_PATH: ${{ inputs.base-file-path }}
+        BASE_URL: ${{ inputs.base-url }}
+        DIVIDE_API: ${{ inputs.divide-api }}
+        DIVIDE_HTTP: ${{ inputs.divide-http }}
+        DIVIDE_HTTP_REQUEST: ${{ inputs.divide-http-request }}
+        DIVIDE_HTTP_RESPONSE: ${{ inputs.divide-http-response }}
+        DRY_RUN: ${{ inputs.dry-run }}
+
+    - name: Set result as output value
+      id: monitor-result
+      shell: bash
+      run: echo "monitor-result=$(echo $TODO_SOMETHING_OUTPUT)" >> $GITHUB_OUTPUT
 branding:
   icon: 'monitor'
   color: 'black'
