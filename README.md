@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/PyFake-API-Server-Surveillance?color=%23099cec&amp;label=PyPI&amp;logo=pypi&amp;logoColor=white)](https://pypi.org/project/PyFake-API-Server-Surveillance)
 [![Release](https://img.shields.io/github/release/Chisanan232/PyFake-API-Server-Surveillance.svg?label=Release&logo=github)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/releases)
-[![CI](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci-cd.yml)
+[![CI](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci.yaml/badge.svg)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/Chisanan232/PyFake-API-Server-Surveillance/graph/badge.svg?token=r5HJxg9KhN)](https://codecov.io/gh/Chisanan232/PyFake-API-Server-Surveillance)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Chisanan232/PyFake-API-Server-Surveillance/master.svg)](https://results.pre-commit.ci/latest/github/Chisanan232/PyFake-API-Server-Surveillance/master)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Chisanan232_PyFake-API-Server-Surveillance&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Chisanan232_PyFake-API-Server-Surveillance)
