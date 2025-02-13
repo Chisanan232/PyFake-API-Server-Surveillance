@@ -28,7 +28,20 @@ on:
       - "poetry.lock"
 
 jobs:
-  e2e-test:
+  e2e-test-with-required-param:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+
+      - name: Run Fake-API-Server-Surveillance
+        uses: ./
+        with:
+          repo: Chisanan232/Sample-Python-Server
+          api-doc-url: "http://127.0.0.1:20080"
+          dry-run: "true"
+
+  e2e-test-with-optional-param:
     runs-on: ubuntu-latest
     steps:
       - name: Clone project
@@ -39,18 +52,15 @@ jobs:
         with:
           # API server info
           repo: Chisanan232/Sample-Python-Server
-          api-doc-url: 'http://127.0.0.1:20080'
+          api-doc-url: "http://127.0.0.1:20080"
           # git info
-          git-author-name: 'e2e-test-bot'
-          git-author-email: 'e2e-test-bot@testmail.com'
-          git-commit-msg: ' 🧪 test commit message.'
+          git-author-name: "e2e-test-bot"
+          git-author-email: "e2e-test-bot@testmail.com"
+          git-commit-msg: " 🧪 test commit message."
           # options about how to pull API server doc config
-          config-path: './rest-server/api.yaml'
-          include-template-config: 'true'
-          base-file-path: './rest-server/'
-          base-url: '/test/v1'
-          divide-api: 'true'
-          divide-http: 'false'
-          divide-http-request: 'false'
-          divide-http-response: 'false'
-          dry-run: 'false'
+          config-path: "./rest-server/api.yaml"
+          include-template-config: "true"
+          base-file-path: "./rest-server/"
+          base-url: "/test/v1"
+          divide-api: "true"
+          dry-run: "true"
