@@ -20,8 +20,34 @@ class DummySwaggerAPIDocConfigResponse(DummyHTTPResponse):
         return {
             "swagger": "2.0",
             "tags": [],
-            "paths": {},
-            "definitions": {},
+            "paths": {
+                "/api/v1/test/foo": {
+                    "get": {
+                        "tags": [],
+                        "summary": "This is Foo API",
+                        "description": "  400 - Bad request error\n 401 - Unauthorized error\n 404 - Not found voucher\n 500 - Unexpected error\n",
+                        "operationId": "",
+                        "produces": [
+                            "*/*"
+                        ],
+                        "parameters": [],
+                        "responses": {
+                            "200": {
+                                "description": "OK",
+                                "schema": {
+                                    "$ref": "#/definitions/Unit"
+                                }
+                            }
+                        }
+                    },
+                },
+            },
+            "definitions": {
+                "Unit": {
+                    "type": "object",
+                    "title": "Unit"
+                },
+            },
         }
 
     @property
@@ -35,9 +61,36 @@ class DummyOpenAPIDocConfigResponse(DummyHTTPResponse):
     def mock_data() -> Mapping:
         return {
             "openapi": "3.0.1",
-            "paths": {},
+            "paths": {
+                "/api/v1/test/foo": {
+                    "get": {
+                        "tags": [],
+                        "summary": "This is Foo API",
+                        "description": "  400 - Bad request error\n 401 - Unauthorized error\n 404 - Not found voucher\n 500 - Unexpected error\n",
+                        "operationId": "",
+                        "parameters": [],
+                        "responses": {
+                            "200": {
+                                "description": "OK",
+                                "content": {
+                                    "*/*": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Unit"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                },
+            },
             "components": {
-                "schemas": {},
+                "schemas": {
+                    "Unit": {
+                        "type": "object",
+                        "title": "Unit"
+                    },
+                },
             },
         }
 
