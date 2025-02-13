@@ -1,6 +1,6 @@
 import json
-from typing import Mapping
 from abc import ABC, abstractmethod
+from typing import Mapping
 
 from urllib3 import BaseHTTPResponse
 
@@ -27,26 +27,14 @@ class DummySwaggerAPIDocConfigResponse(DummyHTTPResponse):
                         "summary": "This is Foo API",
                         "description": "  400 - Bad request error\n 401 - Unauthorized error\n 404 - Not found voucher\n 500 - Unexpected error\n",
                         "operationId": "",
-                        "produces": [
-                            "*/*"
-                        ],
+                        "produces": ["*/*"],
                         "parameters": [],
-                        "responses": {
-                            "200": {
-                                "description": "OK",
-                                "schema": {
-                                    "$ref": "#/definitions/Unit"
-                                }
-                            }
-                        }
+                        "responses": {"200": {"description": "OK", "schema": {"$ref": "#/definitions/Unit"}}},
                     },
                 },
             },
             "definitions": {
-                "Unit": {
-                    "type": "object",
-                    "title": "Unit"
-                },
+                "Unit": {"type": "object", "title": "Unit"},
             },
         }
 
@@ -72,24 +60,15 @@ class DummyOpenAPIDocConfigResponse(DummyHTTPResponse):
                         "responses": {
                             "200": {
                                 "description": "OK",
-                                "content": {
-                                    "*/*": {
-                                        "schema": {
-                                            "$ref": "#/components/schemas/Unit"
-                                        }
-                                    }
-                                }
+                                "content": {"*/*": {"schema": {"$ref": "#/components/schemas/Unit"}}},
                             }
-                        }
+                        },
                     },
                 },
             },
             "components": {
                 "schemas": {
-                    "Unit": {
-                        "type": "object",
-                        "title": "Unit"
-                    },
+                    "Unit": {"type": "object", "title": "Unit"},
                 },
             },
         }

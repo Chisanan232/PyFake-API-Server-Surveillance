@@ -16,8 +16,11 @@ from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
 
 # isort: off
-from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse, \
-    DummyHTTPResponse
+from test._values.dummy_objects import (
+    DummySwaggerAPIDocConfigResponse,
+    DummyOpenAPIDocConfigResponse,
+    DummyHTTPResponse,
+)
 
 
 # isort: on
@@ -27,7 +30,9 @@ from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOp
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.commit_change_config")
 @patch("ci.surveillance.runner.load_config")
-def test_run(mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]):
+def test_run(
+    mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]
+):
     data = {
         # API documentation info
         EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
