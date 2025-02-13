@@ -1,0 +1,56 @@
+name: E2E test
+
+on:
+  # No matter for push or pull request events, it would trigger CI for safely saving the source code.
+  # For the push event, it only runs building and testing.
+  push:
+    branches:
+      - "master"
+      - "develop/**"
+    paths:
+      - ".github/workflows/action-e2e-test.yaml"
+      - "ci/**"
+      - "action.yaml"
+      - "pyproject.toml"
+      - "poetry.lock"
+
+  # For the push event, in addition to build and test would be run, it would trigger other service to keep the reports
+  # or other checking, i.e., record the test report by CodeCov and check the code quality by SonarQube.
+  pull_request:
+    branches:
+      - "master"
+      - "develop/**"
+    paths:
+      - ".github/workflows/action-e2e-test.yaml"
+      - "ci/**"
+      - "action.yaml"
+      - "pyproject.toml"
+      - "poetry.lock"
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+
+      - name: Run Fake-API-Server-Surveillance
+        uses: ./
+        with:
+          # API server info
+          repo: Chisanan232/Sample-Python-Server
+          api-doc-url: 'http://127.0.0.1:20080'
+          # git info
+          git-author-name: 'e2e-test-bot'
+          git-author-email: 'e2e-test-bot@testmail.com'
+          git-commit-msg: ' 🧪 test commit message.'
+          # options about how to pull API server doc config
+          config-path: './rest-server/api.yaml'
+          include-template-config: 'true'
+          base-file-path: './rest-server/'
+          base-url: '/test/v1'
+          divide-api: 'true'
+          divide-http: 'false'
+          divide-http-request: 'false'
+          divide-http-response: 'false'
+          dry-run: 'false'
