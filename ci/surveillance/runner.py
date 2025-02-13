@@ -8,7 +8,7 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
-from fake_api_server.model import deserialize_api_doc_config
+from fake_api_server.model import deserialize_api_doc_config, load_config
 from git import Repo
 
 from .component import SavingConfigComponent
@@ -88,19 +88,35 @@ def run() -> None:
     # if no diff = nothing, else it would update the config (commit the change and request PR by git and gh?)
     print("monitor the github repro ...")
     action_inputs = ActionInput.deserialize(os.environ)
+    api_config = load_config(action_inputs.subcmd_pull_args.config_path)
 
     response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
     current_api_doc_config = deserialize_api_doc_config(response.json())
+    new_api_config = current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
 
-    _saving_config_component = SavingConfigComponent()
-    api_config = current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
-    _saving_config_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=api_config)
-    # result = Surveillance.monitor()
+    has_api_change = False
+    all_api_configs = api_config.apis.apis
+    all_new_api_configs = new_api_config.apis.apis
+    for api_key in all_new_api_configs.keys():
+        if api_key in all_api_configs.keys():
+            one_api_config = all_api_configs[api_key]
+            one_new_api_config = all_new_api_configs[api_key]
+            assert one_api_config is not None, "It's strange. Please check it."
+            assert one_new_api_config is not None, "It's strange. Please check it."
+            has_api_change = one_api_config == one_new_api_config
+        else:
+            has_api_change = True
+            break
 
-    print("commit the different and push to remote repository")
-    commit_change_config(action_inputs)
-    # GitHelper.commit_change()
+    if has_api_change:
+        _saving_config_component = SavingConfigComponent()
+        _saving_config_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_config)
+        # result = Surveillance.monitor()
 
-    # TODO: this is backlog task
-    # print("notify developers")
-    # Notificatier.notidy()
+        print("commit the different and push to remote repository")
+        commit_change_config(action_inputs)
+        # GitHelper.commit_change()
+
+        # TODO: this is backlog task
+        # print("notify developers")
+        # Notificatier.notidy()
