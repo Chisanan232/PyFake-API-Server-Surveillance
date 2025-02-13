@@ -28,7 +28,7 @@ on:
       - "poetry.lock"
 
 jobs:
-  e2e-test-with-required-param:
+  with-required-param:
     runs-on: ubuntu-latest
     steps:
       - name: Clone project
@@ -41,7 +41,7 @@ jobs:
           api-doc-url: "http://127.0.0.1:20080"
           dry-run: "true"
 
-  e2e-test-with-optional-param:
+  with-optional-param:
     runs-on: ubuntu-latest
     steps:
       - name: Clone project
@@ -65,7 +65,7 @@ jobs:
           divide-api: "true"
           dry-run: "true"
 
-  e2e-test-with-invalid-os:
+  with-invalid-os:
     runs-on: windows-latest
     steps:
       - name: Clone project
