@@ -18,7 +18,8 @@ class ActionInput(_BaseModel):
     def deserialize(data: Mapping) -> "ActionInput":
         return ActionInput(
             api_doc_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-            server_type=data[EnvironmentVariableKey.SERVER_TYPE.value],
+            # TODO: Still doesn't support this feature at action
+            server_type=data.get(EnvironmentVariableKey.SERVER_TYPE.value, None),
             git_info=GitInfo.deserialize(data),
             subcmd_pull_args=PullApiDocConfigArgs.deserialize(data),
         )
