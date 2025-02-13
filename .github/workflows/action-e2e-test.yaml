@@ -64,3 +64,27 @@ jobs:
           base-url: "/test/v1"
           divide-api: "true"
           dry-run: "true"
+
+  e2e-test-with-invalid-os:
+    runs-on: windows-latest
+    steps:
+      - name: Run Fake-API-Server-Surveillance
+        id: e2e-test-invalid-case
+        uses: ./
+        with:
+          repo: Chisanan232/Sample-Python-Server
+          api-doc-url: "http://127.0.0.1:20080"
+          dry-run: "true"
+        continue-on-error: true
+
+      - name: Check on failures
+        run: |
+          if [ $(echo "$RUN_ERROR") != "success" ]; then
+              echo "It runs fail as expect. Test PASS."
+              exit 0
+          else
+              echo "It runs success as unexpect. Test FAIL."
+              exit 1
+          fi
+        env:
+          RUN_ERROR: ${{ steps.e2e-test-invalid-case.outcome }}
