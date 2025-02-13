@@ -1,5 +1,5 @@
 name: "Monitor API server"
-description: "Monitor the target API server repository and "
+description: "Monitor the target API server and sync the latest version with the fake server if it has any change."
 author: "Bryant Liu"
 inputs:
   # API server info
