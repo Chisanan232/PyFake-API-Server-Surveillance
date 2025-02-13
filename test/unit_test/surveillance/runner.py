@@ -10,13 +10,15 @@ except ImportError:
 
 from unittest.mock import Mock, patch
 
-from urllib3 import BaseHTTPResponse
+from fake_api_server.model import deserialize_api_doc_config
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
 
 # isort: off
-from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse
+from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse, \
+    DummyHTTPResponse
+
 
 # isort: on
 
@@ -24,7 +26,8 @@ from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOp
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.commit_change_config")
-def test_run(mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[BaseHTTPResponse]):
+@patch("ci.surveillance.runner.load_config")
+def test_run(mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]):
     data = {
         # API documentation info
         EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
@@ -55,6 +58,8 @@ def test_run(mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp:
         reason="",
         decode_content=True,
     )
+    mock_commit_process.return_value = True
+    mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
     with patch.dict(os.environ, data, clear=True):
         run()
 
