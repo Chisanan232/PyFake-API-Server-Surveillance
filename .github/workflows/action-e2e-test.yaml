@@ -68,6 +68,9 @@ jobs:
   e2e-test-with-invalid-os:
     runs-on: windows-latest
     steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+
       - name: Run Fake-API-Server-Surveillance
         id: e2e-test-invalid-case
         uses: ./
