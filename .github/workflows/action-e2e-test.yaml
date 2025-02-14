@@ -104,7 +104,7 @@ jobs:
 
       - name: Check on failures
         run: |
-          if ( "$RUN_ERROR" -eq "success" )
+          if ( "$RUN_ERROR" -eq "failure" )
           {
               echo "It runs fail as expect. Test PASS."
               exit 0
