@@ -37,8 +37,10 @@ runs:
       shell: bash
       run: |
         pip --version
+        pip install -U poetry
         pip install -U flask
         pip install -U gunicorn
+        poetry install
 
     - name: Setup and run HTTP server for testing
       shell: bash
