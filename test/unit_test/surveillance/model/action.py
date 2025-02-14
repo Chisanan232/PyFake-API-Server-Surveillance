@@ -1,3 +1,4 @@
+import ast
 from typing import Mapping, Type
 
 import pytest
@@ -55,17 +56,17 @@ class TestActionInput(_BaseModelTestSuite):
 
         # for subcommand line *pull* options
         assert model.subcmd_pull_args.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
-        assert model.subcmd_pull_args.include_template_config == bool(
-            original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]
+        assert model.subcmd_pull_args.include_template_config == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
         )
         assert model.subcmd_pull_args.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
         assert model.subcmd_pull_args.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
-        assert model.subcmd_pull_args.divide_api == bool(original_data[EnvironmentVariableKey.DIVIDE_API.value])
-        assert model.subcmd_pull_args.divide_http == bool(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value])
-        assert model.subcmd_pull_args.divide_http_request == bool(
-            original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]
+        assert model.subcmd_pull_args.divide_api == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize())
+        assert model.subcmd_pull_args.divide_http == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize())
+        assert model.subcmd_pull_args.divide_http_request == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
         )
-        assert model.subcmd_pull_args.divide_http_response == bool(
-            original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]
+        assert model.subcmd_pull_args.divide_http_response == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
         )
-        assert model.subcmd_pull_args.dry_run == bool(original_data[EnvironmentVariableKey.DRY_RUN.value])
+        assert model.subcmd_pull_args.dry_run == ast.literal_eval(str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize())

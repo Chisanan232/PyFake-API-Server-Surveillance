@@ -1,3 +1,4 @@
+import ast
 from dataclasses import dataclass
 from typing import Mapping
 
@@ -21,12 +22,12 @@ class PullApiDocConfigArgs(_BaseModel):
     def deserialize(data: Mapping) -> "PullApiDocConfigArgs":
         return PullApiDocConfigArgs(
             config_path=data[EnvironmentVariableKey.CONFIG_PATH.value],
-            include_template_config=bool(data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]),
+            include_template_config=ast.literal_eval(str(data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()),
             base_file_path=data[EnvironmentVariableKey.BASE_FILE_PATH.value],
             base_url=data[EnvironmentVariableKey.BASE_URL.value],
-            divide_api=bool(data[EnvironmentVariableKey.DIVIDE_API.value]),
-            divide_http=bool(data[EnvironmentVariableKey.DIVIDE_HTTP.value]),
-            divide_http_request=bool(data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]),
-            divide_http_response=bool(data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]),
-            dry_run=bool(data[EnvironmentVariableKey.DRY_RUN.value]),
+            divide_api=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()),
+            divide_http=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()),
+            divide_http_request=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()),
+            divide_http_response=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()),
+            dry_run=ast.literal_eval(str(data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()),
         )
