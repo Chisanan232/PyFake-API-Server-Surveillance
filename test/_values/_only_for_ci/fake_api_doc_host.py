@@ -1,8 +1,7 @@
-from typing import Mapping, Any
+from test._values.dummy_objects import DummyOpenAPIDocConfigResponse
+from typing import Any, Mapping
 
 from flask import Flask
-
-from test._values.dummy_objects import DummyOpenAPIDocConfigResponse
 
 app: Flask = Flask(__name__)
 
