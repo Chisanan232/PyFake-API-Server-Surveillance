@@ -41,7 +41,6 @@ runs:
         pip install -U gunicorn
 
     - name: Setup and run HTTP server for testing
-      if: ${{ inputs.setup_http_server == true }}
       shell: bash
       run: |
         flask --version
