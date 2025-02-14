@@ -43,7 +43,11 @@ runs:
     - name: Setup and run HTTP server for testing
       if: ${{ inputs.setup_http_server == true }}
       shell: bash
-      run: gunicorn --bind ${{ inputs.host-ip-address }}:${{ inputs.host-port }} '${{ inputs.server-module }}:${{ inputs.server-entry-point }}' --daemon
+      run: |
+        flask --version
+        gunicorn --version
+        gunicorn --bind ${{ inputs.host-ip-address }}:${{ inputs.host-port }} '${{ inputs.server-module }}:${{ inputs.server-entry-point }}' --daemon
+        echo "Run fake server ..."
 
     - name: Set result as output value
       id: monitor-result
