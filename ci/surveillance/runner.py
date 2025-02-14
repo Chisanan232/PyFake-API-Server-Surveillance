@@ -110,6 +110,8 @@ def run() -> None:
             else:
                 has_api_change = True
                 break
+    else:
+        has_api_change = True
 
     if has_api_change:
         _saving_config_component = SavingConfigComponent()
