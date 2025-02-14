@@ -104,8 +104,8 @@ jobs:
 
       - name: Check on failures
         run: |
-          echo "[DEBUG] RUN_ERROR: $RUN_ERROR"
-          if ( "$RUN_ERROR" -eq "failure" )
+          echo "[DEBUG] RUN_ERROR: ${{ steps.e2e-test-invalid-case.outcome }}"
+          if ( ${{ steps.e2e-test-invalid-case.outcome }} -eq "failure" )
           {
               echo "It runs fail as expect. Test PASS."
               exit 0
@@ -115,5 +115,3 @@ jobs:
               echo "It runs success as unexpect. Test FAIL."
               exit 1
           }
-        env:
-          RUN_ERROR: ${{ steps.e2e-test-invalid-case.outcome }}
