@@ -52,8 +52,8 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
-        apt update && apt upgrade
-        apt install wget
+        sudo apt update && sudo apt upgrade
+        sudo apt install -y wget
         wget --version
 
     - name: Install debug tool for connection in MacOS
