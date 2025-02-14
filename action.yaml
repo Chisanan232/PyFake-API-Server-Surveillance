@@ -96,7 +96,8 @@ runs:
         poetry install
 
     - name: Run surveillance
-      run: poetry run fake rest-server run-surveillance
+      run: poetry run run-fake-server-surveillance
+#      run: poetry run fake rest-server run-surveillance
       shell: bash
       env:
         # API documentation info
