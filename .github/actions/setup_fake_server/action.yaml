@@ -48,6 +48,10 @@ runs:
         gunicorn --bind ${{ inputs.host-ip-address }}:${{ inputs.host-port }} '${{ inputs.server-module }}:${{ inputs.server-entry-point }}' --daemon
         echo "Run fake server ..."
 
+    - name: Verify the fake server health
+      shell: bash
+      run: curl "http://127.0.0.1:1111/api-doc"
+
     - name: Set result as output value
       id: monitor-result
       shell: bash
