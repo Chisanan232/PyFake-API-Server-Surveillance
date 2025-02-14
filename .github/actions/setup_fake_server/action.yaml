@@ -68,7 +68,7 @@ runs:
       shell: bash
       run: |
         ps aux | grep -E 'gunicorn'
-        wget -q "http://127.0.0.1:1111/api-doc" --debug
+        wget -q "http://127.0.0.1:1111/api-doc" --connect-timeout=10 --debug
 #        curl "http://127.0.0.1:1111/api-doc" --fail --verbose
 
     - name: Set result as output value
