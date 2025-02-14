@@ -56,8 +56,8 @@ Repository = "https://github.com/Chisanan232/PyFake-API-Server-Surveillance"
 Changelog = "https://chisanan232.github.io/PyFake-API-Server-Surveillance/latest/release_note/"
 "Project Management" = "https://app.clickup.com/9018752317/v/f/90183127005/90182605225"
 
-#[project.scripts]
-#mock-surveillance = "ci.surveillance.runner:run"
+[project.scripts]
+run-fake-server-surveillance = "ci.surveillance.runner:run"
 
 #[project.entry-points."fake_api_server.ci"]
 #ci = "ci:D"
