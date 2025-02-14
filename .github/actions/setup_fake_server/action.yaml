@@ -68,8 +68,8 @@ runs:
       shell: bash
       run: |
         ps aux | grep -E 'gunicorn'
-#        curl "http://127.0.0.1:1111/api-doc" --fail --verbose
         wget -q "http://127.0.0.1:1111/api-doc" --debug
+#        curl "http://127.0.0.1:1111/api-doc" --fail --verbose
 
     - name: Set result as output value
       id: monitor-result
