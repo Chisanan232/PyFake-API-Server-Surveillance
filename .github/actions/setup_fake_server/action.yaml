@@ -50,32 +50,13 @@ runs:
         gunicorn --bind ${{ inputs.host-ip-address }}:${{ inputs.host-port }} '${{ inputs.server-module }}:${{ inputs.server-entry-point }}' --daemon
         echo "Run fake server ..."
 
-    - name: Install debug tool for connection in Linux
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        sudo apt update && sudo apt upgrade
-        sudo apt install -y wget
-        wget --version
-
-    - name: Install debug tool for connection in MacOS
-      if: runner.os == 'macOS'
-      shell: bash
-      run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install wget
-        wget --version
-
     - name: Verify the fake server health
       shell: bash
       run: |
+        echo "[DEBUG] Check the process running state"
         ps aux | grep -E 'gunicorn'
         echo "[DEBUG] Start to test the API end point"
-        wget "http://127.0.0.1:1111/api-doc" --debug
-        echo "[DEBUG] Check files"
-        ls -la
-#        wget -q "http://127.0.0.1:1111/api-doc" --connect-timeout=10 --debug
-#        curl "http://127.0.0.1:1111/api-doc" --fail --verbose
+        curl "http://127.0.0.1:1111/api-doc" --fail --verbose
 
     - name: Set result as output value
       id: monitor-result
