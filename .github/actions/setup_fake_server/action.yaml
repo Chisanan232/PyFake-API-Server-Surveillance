@@ -1,0 +1,54 @@
+name: "Set up fake API server"
+description: "Set up a fake API server for test only"
+author: "Bryant Liu"
+inputs:
+  host-ip-address:
+    description: "The fake server host IPv4 address."
+    required: true
+    default: "0.0.0.0"
+  host-port:
+    description: "The fake server host port."
+    required: true
+    default: "6666"
+  server-module:
+    description: "The module path of the fake server."
+    required: true
+    default: "fake_server"
+  server-entry-point:
+    description: "The application entry point of the fake server."
+    required: true
+    default: "app"
+outputs:
+  monitor-result:
+    description: "Output. Currently it won't have any meaning value."
+    value: ${{ steps.monitor-result.outputs.monitor-result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Clone project
+      uses: actions/checkout@v4
+
+    - name: Install Python 3.12 for running surveillance
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        pip --version
+        pip install -U flask
+        pip install -U gunicorn
+
+    - name: Setup and run HTTP server for testing
+      if: ${{ inputs.setup_http_server == true }}
+      shell: bash
+      run: gunicorn --bind ${{ inputs.host-ip-address }}:${{ inputs.host-port }} '${{ inputs.server-module }}:${{ inputs.server-entry-point }}' --daemon
+
+    - name: Set result as output value
+      id: monitor-result
+      shell: bash
+      run: echo "monitor-result=$(echo $TODO_SOMETHING_OUTPUT)" >> $GITHUB_OUTPUT
+branding:
+  icon: 'server'
+  color: 'gray-dark'
