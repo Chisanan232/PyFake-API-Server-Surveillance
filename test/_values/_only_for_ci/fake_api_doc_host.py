@@ -8,6 +8,5 @@ app: Flask = Flask(__name__)
 
 
 @app.route("/api-doc", methods=["GET"])
-def foo_home() -> Mapping[str, Any]:
-    print(f"[DEBUG] run API ...")
+def api_doc() -> Mapping[str, Any]:
     return DummyOpenAPIDocConfigResponse.mock_data()
