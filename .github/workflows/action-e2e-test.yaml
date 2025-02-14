@@ -49,7 +49,7 @@ jobs:
         uses: ./
         with:
           repo: Chisanan232/Sample-Python-Server
-          api-doc-url: "http://127.0.0.1:20080"
+          api-doc-url: "http://127.0.0.1:1111"
           accept-not-exist-config: true
           dry-run: "true"
 
@@ -75,7 +75,7 @@ jobs:
         with:
           # API server info
           repo: Chisanan232/Sample-Python-Server
-          api-doc-url: "http://127.0.0.1:20080"
+          api-doc-url: "http://127.0.0.1:1111"
           # operation of action in CI
           accept-not-exist-config: true
           # git info
@@ -101,7 +101,7 @@ jobs:
         uses: ./
         with:
           repo: Chisanan232/Sample-Python-Server
-          api-doc-url: "http://127.0.0.1:20080"
+          api-doc-url: "http://127.0.0.1:1111"
           dry-run: "true"
         continue-on-error: true
 
