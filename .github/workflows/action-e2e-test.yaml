@@ -50,6 +50,7 @@ jobs:
         with:
           repo: Chisanan232/Sample-Python-Server
           api-doc-url: "http://127.0.0.1:20080"
+          accept-not-exist-config: true
           dry-run: "true"
 
   with-optional-param:
@@ -75,6 +76,8 @@ jobs:
           # API server info
           repo: Chisanan232/Sample-Python-Server
           api-doc-url: "http://127.0.0.1:20080"
+          # operation of action in CI
+          accept-not-exist-config: true
           # git info
           git-author-name: "e2e-test-bot"
           git-author-email: "e2e-test-bot@testmail.com"
