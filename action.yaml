@@ -25,6 +25,11 @@ inputs:
     description: "The commit message for committing the change of API interface if it has."
     required: false
     default: "✏️ Update the API interface settings."
+  # operation of action in CI
+  accept-not-exist-config:
+    description: "Whether it should raise error and stop CI process if it cannot find the Fake-API-Server configuration or not."
+    required: false
+    default: "false"
   # options about how to pull API server doc config
   config-path:
     description: "The file path of the PyFake-API-Server configuration."
@@ -103,6 +108,8 @@ runs:
         # API documentation info
         API_DOC_URL: ${{ inputs.api-doc-url }}
 #        SERVER_TYPE: ${{ inputs.server-type }}
+        # operation of action in CI
+        ACCEPT_CONFIG_NOT_EXIST: ${{ inputs.accept-not-exist-config }}
         # git info
         GIT_REPOSITORY: ${{ inputs.repo }}
         GIT_AUTHOR_NAME: ${{ inputs.git-author-name }}
