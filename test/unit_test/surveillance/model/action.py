@@ -37,6 +37,8 @@ class TestActionInput(_BaseModelTestSuite):
                 EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
                 EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
                 EnvironmentVariableKey.DRY_RUN.value: "true",
+                # operation with action in CI
+                EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "true",
             },
         ],
     )
@@ -75,4 +77,9 @@ class TestActionInput(_BaseModelTestSuite):
         )
         assert model.subcmd_pull_args.dry_run == ast.literal_eval(
             str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()
+        )
+
+        # operation of action in CI
+        assert model.accept_config_not_exist == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
         )

@@ -1,3 +1,4 @@
+import ast
 from dataclasses import dataclass
 from typing import Mapping
 
@@ -13,6 +14,7 @@ class ActionInput(_BaseModel):
     server_type: str
     git_info: GitInfo
     subcmd_pull_args: PullApiDocConfigArgs
+    accept_config_not_exist: bool
 
     @staticmethod
     def deserialize(data: Mapping) -> "ActionInput":
@@ -21,4 +23,7 @@ class ActionInput(_BaseModel):
             server_type=data[EnvironmentVariableKey.SERVER_TYPE.value],
             git_info=GitInfo.deserialize(data),
             subcmd_pull_args=PullApiDocConfigArgs.deserialize(data),
+            accept_config_not_exist=ast.literal_eval(
+                str(data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
+            ),
         )
