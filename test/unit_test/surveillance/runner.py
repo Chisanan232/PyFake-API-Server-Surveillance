@@ -32,7 +32,11 @@ from test._values.dummy_objects import (
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_exist_fake_api_server_config(
-    mock_path_exits: Mock, mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]
+    mock_path_exits: Mock,
+    mock_load_config: Mock,
+    mock_commit_process: Mock,
+    mock_request: Mock,
+    api_doc_config_resp: Type[DummyHTTPResponse],
 ):
     data = {
         # API documentation info
@@ -81,7 +85,11 @@ def test_run_with_exist_fake_api_server_config(
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config(
-    mock_path_exits: Mock, mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]
+    mock_path_exits: Mock,
+    mock_load_config: Mock,
+    mock_commit_process: Mock,
+    mock_request: Mock,
+    api_doc_config_resp: Type[DummyHTTPResponse],
 ):
     data = {
         # API documentation info
