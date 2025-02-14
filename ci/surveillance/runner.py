@@ -87,28 +87,29 @@ def run() -> None:
     # check the diff between local config and the new config (check the diff by git?)
     # if no diff = nothing, else it would update the config (commit the change and request PR by git and gh?)
     print("monitor the github repro ...")
+    has_api_change = False
     action_inputs = ActionInput.deserialize(os.environ)
-    fake_api_server_config = action_inputs.subcmd_pull_args.config_path
-    assert Path(fake_api_server_config).exists(), "The Fake-API-Server config file does not exist."
-    api_config = load_config(fake_api_server_config)
 
     response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
     current_api_doc_config = deserialize_api_doc_config(response.json())
     new_api_config = current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
 
-    has_api_change = False
-    all_api_configs = api_config.apis.apis
-    all_new_api_configs = new_api_config.apis.apis
-    for api_key in all_new_api_configs.keys():
-        if api_key in all_api_configs.keys():
-            one_api_config = all_api_configs[api_key]
-            one_new_api_config = all_new_api_configs[api_key]
-            assert one_api_config is not None, "It's strange. Please check it."
-            assert one_new_api_config is not None, "It's strange. Please check it."
-            has_api_change = one_api_config == one_new_api_config
-        else:
-            has_api_change = True
-            break
+    fake_api_server_config = action_inputs.subcmd_pull_args.config_path
+    if Path(fake_api_server_config).exists():
+        api_config = load_config(fake_api_server_config)
+
+        all_api_configs = api_config.apis.apis
+        all_new_api_configs = new_api_config.apis.apis
+        for api_key in all_new_api_configs.keys():
+            if api_key in all_api_configs.keys():
+                one_api_config = all_api_configs[api_key]
+                one_new_api_config = all_new_api_configs[api_key]
+                assert one_api_config is not None, "It's strange. Please check it."
+                assert one_new_api_config is not None, "It's strange. Please check it."
+                has_api_change = one_api_config == one_new_api_config
+            else:
+                has_api_change = True
+                break
 
     if has_api_change:
         _saving_config_component = SavingConfigComponent()
