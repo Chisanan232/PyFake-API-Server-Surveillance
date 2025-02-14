@@ -61,12 +61,18 @@ class TestActionInput(_BaseModelTestSuite):
         )
         assert model.subcmd_pull_args.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
         assert model.subcmd_pull_args.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
-        assert model.subcmd_pull_args.divide_api == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize())
-        assert model.subcmd_pull_args.divide_http == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize())
+        assert model.subcmd_pull_args.divide_api == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()
+        )
+        assert model.subcmd_pull_args.divide_http == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()
+        )
         assert model.subcmd_pull_args.divide_http_request == ast.literal_eval(
             str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
         )
         assert model.subcmd_pull_args.divide_http_response == ast.literal_eval(
             str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
         )
-        assert model.subcmd_pull_args.dry_run == ast.literal_eval(str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize())
+        assert model.subcmd_pull_args.dry_run == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()
+        )

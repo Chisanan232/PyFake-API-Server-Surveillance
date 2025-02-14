@@ -41,8 +41,16 @@ class TestActionInput(_BaseModelTestSuite):
         )
         assert model.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
         assert model.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
-        assert model.divide_api == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize())
-        assert model.divide_http == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize())
-        assert model.divide_http_request == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize())
-        assert model.divide_http_response == ast.literal_eval(str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize())
+        assert model.divide_api == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()
+        )
+        assert model.divide_http == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()
+        )
+        assert model.divide_http_request == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
+        )
+        assert model.divide_http_response == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
+        )
         assert model.dry_run == ast.literal_eval(str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize())
