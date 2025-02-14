@@ -111,6 +111,8 @@ def run() -> None:
                 has_api_change = True
                 break
     else:
+        if not action_inputs.accept_config_not_exist:
+            raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
         has_api_change = True
 
     if has_api_change:

@@ -52,6 +52,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             divide_http_response=False,
             dry_run=True,
         ),
+        accept_config_not_exist=False,
     )
 
     default_remote = "origin"
