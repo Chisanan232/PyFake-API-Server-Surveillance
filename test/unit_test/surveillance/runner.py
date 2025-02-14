@@ -30,8 +30,9 @@ from test._values.dummy_objects import (
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.commit_change_config")
 @patch("ci.surveillance.runner.load_config")
-def test_run(
-    mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]
+@patch("ci.surveillance.runner.Path.exists")
+def test_run_with_exist_fake_api_server_config(
+    mock_path_exits: Mock, mock_load_config: Mock, mock_commit_process: Mock, mock_request: Mock, api_doc_config_resp: Type[DummyHTTPResponse]
 ):
     data = {
         # API documentation info
@@ -55,6 +56,7 @@ def test_run(
         # GitHub action environment
         "GITHUB_HEAD_REF": "git-branch",
     }
+    mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
         status=200,
