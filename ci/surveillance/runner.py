@@ -88,7 +88,9 @@ def run() -> None:
     # if no diff = nothing, else it would update the config (commit the change and request PR by git and gh?)
     print("monitor the github repro ...")
     action_inputs = ActionInput.deserialize(os.environ)
-    api_config = load_config(action_inputs.subcmd_pull_args.config_path)
+    fake_api_server_config = action_inputs.subcmd_pull_args.config_path
+    assert Path(fake_api_server_config).exists(), "The Fake-API-Server config file does not exist."
+    api_config = load_config(fake_api_server_config)
 
     response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
     current_api_doc_config = deserialize_api_doc_config(response.json())
