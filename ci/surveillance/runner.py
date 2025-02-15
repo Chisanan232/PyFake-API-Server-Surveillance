@@ -43,6 +43,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     untracked = set(repo.untracked_files)
     print(f"Check untracked file ...")
     for file in untracked:
+        print(f"Found untracked files: {file}")
         if Path(file).is_file():
             if file in all_files:
                 repo.index.add(file)
@@ -58,6 +59,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     modified = {item.a_path for item in diff_index}
     print(f"Check modified file ...")
     for file in modified:
+        print(f"Found modified files: {file}")
         if Path(file).is_file():
             if file in all_files:
                 repo.index.add(file)
