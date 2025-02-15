@@ -71,6 +71,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         push_info_list.append(push_info)
 
         mock_remote = Mock()
+        mock_remote.exists = Mock(return_value=True)
+        mock_remote.create = Mock()
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
@@ -93,6 +95,10 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             message=action_inputs.git_info.commit.message,
         )
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
+        if mock_remote.exists() is True:
+            mock_remote.create.assert_not_called()
+        else:
+            mock_remote.create.assert_called_once()
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
 
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
