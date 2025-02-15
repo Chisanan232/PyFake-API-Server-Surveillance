@@ -44,10 +44,11 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     print(f"Check untracked file ...")
     for file in untracked:
         print(f"Found untracked files: {file}")
-        if Path(file).is_file():
-            if file in all_files:
-                repo.index.add(file)
-                print(f"Add file: {file}")
+        file_path_obj = Path(file)
+        if file_path_obj.is_file():
+            if file_path_obj in all_files:
+                repo.index.add(str(file_path_obj))
+                print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
@@ -60,10 +61,11 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     print(f"Check modified file ...")
     for file in modified:
         print(f"Found modified files: {file}")
-        if Path(file).is_file():
-            if file in all_files:
-                repo.index.add(file)
-                print(f"Add file: {file}")
+        file_path_obj = Path(file)
+        if file_path_obj.is_file():
+            if file_path_obj in all_files:
+                repo.index.add(str(file_path_obj))
+                print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
