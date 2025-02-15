@@ -29,6 +29,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
 
     remote_name: str = "origin"
     git_ref: str = os.environ["GITHUB_HEAD_REF"]
+    print(f"[DEBUG in GitHub Action] git_ref: {git_ref}")
 
     # Get all files in the folder
     all_files = set()
