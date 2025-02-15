@@ -72,15 +72,11 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         message=action_inputs.git_info.commit.message,
     )
     print(f"Commit the change.")
+
     git_remote = repo.remote(name=remote_name)
     if not git_remote.exists():
         git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
-    push_result = git_remote.push(f"{remote_name}:{git_ref}")
-    # Check push result
-    if push_result[0].flags & push_result[0].ERROR:
-        print("Push failed. Please check.")
-        return False
-
+    git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
     print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
     return True
 
