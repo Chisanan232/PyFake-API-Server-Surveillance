@@ -29,7 +29,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    git_ref: str = os.environ.get("GITHUB_HEAD_REF", None) or "fake-api-server-monitor-update-config"
+    git_ref: str = os.environ.get("GITHUB_HEAD_REF", "") or "fake-api-server-monitor-update-config"
 
     # Initial git remote setting
     git_remote = repo.remote(name=remote_name)
