@@ -1,7 +1,7 @@
 import os
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, PropertyMock, patch
 
 from git import Repo
 from git.remote import PushInfoList
@@ -56,7 +56,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     )
 
     default_remote = "origin"
-    git_branch_name = "test-branch"
+    git_branch_name = "fake-api-server-monitor-update-config"
     real_repo = Repo("./")
 
     try:
@@ -73,6 +73,11 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote = Mock()
         mock_remote.exists = Mock(return_value=True)
         mock_remote.create = Mock()
+        mock_remote.fetch = Mock()
+        mock_remote.refs = []
+        git_opt = Mock()
+        git_opt.checkout = Mock()
+        mock_remote.git = PropertyMock(return_value=git_opt)
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
@@ -80,7 +85,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         # when
         data = {
             "GITHUB_REPOSITORY": "tester/pyfake-test",
-            "GITHUB_HEAD_REF": git_branch_name,
+            # "GITHUB_HEAD_REF": git_branch_name,
         }
         with patch.dict(os.environ, data, clear=True):
             result = commit_change_config(action_inputs)
@@ -89,20 +94,29 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert result is True
 
         repo = Repo(base_test_dir)
-        assert len(repo.index.diff(None)) == 0
-        mock_git_commit.assert_called_once_with(
-            author=action_inputs.git_info.commit.author.serialize_for_git(),
-            message=action_inputs.git_info.commit.message,
-        )
+
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
         if mock_remote.exists() is True:
             mock_remote.create.assert_not_called()
         else:
             mock_remote.create.assert_called_once()
-        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+
+        mock_remote.fetch.assert_called_once()
+        if git_branch_name in mock_remote.refs:
+            mock_remote.git.checkout.assert_called_once()
+        else:
+            mock_remote.git.checkout.assert_called_once_with("-b", git_branch_name)
+
+        assert len(repo.index.diff(None)) == 0
+        mock_git_commit.assert_called_once_with(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
 
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         assert str(filepath) in committed_files
+
+        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:

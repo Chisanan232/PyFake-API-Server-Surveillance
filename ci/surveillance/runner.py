@@ -16,6 +16,7 @@ from .model.action import ActionInput
 
 
 def commit_change_config(action_inputs: ActionInput) -> bool:
+    # Initial a git project
     if os.path.exists(action_inputs.subcmd_pull_args.config_path):
         repo = Repo("./")
     else:
@@ -28,7 +29,20 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    git_ref: str = os.environ["GITHUB_HEAD_REF"]
+    git_ref: str = os.environ.get("GITHUB_HEAD_REF", "") or "fake-api-server-monitor-update-config"
+
+    # Initial git remote setting
+    git_remote = repo.remote(name=remote_name)
+    if not git_remote.exists():
+        git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
+
+    # Sync up the code version from git
+    git_remote.fetch()
+    # Switch to target git branch which only for Fake-API-Server
+    if git_ref in [git_remote.refs]:
+        git_remote.git.checkout(git_ref)
+    else:
+        git_remote.git.checkout("-b", git_ref)
 
     # Get all files in the folder
     all_files = set()
@@ -69,15 +83,14 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
                     repo.index.add(one_file)
                     print(f"Add file: {one_file}")
 
+    # Commit the update change
     commit = repo.index.commit(
         author=action_inputs.git_info.commit.author.serialize_for_git(),
         message=action_inputs.git_info.commit.message,
     )
     print(f"Commit the change.")
 
-    git_remote = repo.remote(name=remote_name)
-    if not git_remote.exists():
-        git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
+    # Push the change to git server
     git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
     print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
     return True
