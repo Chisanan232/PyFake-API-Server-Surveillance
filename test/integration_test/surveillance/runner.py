@@ -1,7 +1,7 @@
 import os
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, PropertyMock
 
 from git import Repo
 from git.remote import PushInfoList
@@ -73,6 +73,11 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote = Mock()
         mock_remote.exists = Mock(return_value=True)
         mock_remote.create = Mock()
+        mock_remote.fetch = Mock()
+        mock_remote.refs = []
+        git_opt = Mock()
+        git_opt.checkout = Mock()
+        mock_remote.git = PropertyMock(return_value=git_opt)
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
@@ -94,11 +99,19 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             author=action_inputs.git_info.commit.author.serialize_for_git(),
             message=action_inputs.git_info.commit.message,
         )
+
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
         if mock_remote.exists() is True:
             mock_remote.create.assert_not_called()
         else:
             mock_remote.create.assert_called_once()
+
+        mock_remote.fetch.assert_called_once()
+        if git_branch_name in mock_remote.refs:
+            mock_remote.git.checkout.assert_called_once()
+        else:
+            mock_remote.git.checkout.assert_called_once_with("-b", git_branch_name)
+
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
 
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
