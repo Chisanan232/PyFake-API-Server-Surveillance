@@ -56,7 +56,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     )
 
     default_remote = "origin"
-    git_branch_name = "test-branch"
+    git_branch_name = "fake-api-server-monitor-update-config"
     real_repo = Repo("./")
 
     try:
@@ -85,7 +85,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         # when
         data = {
             "GITHUB_REPOSITORY": "tester/pyfake-test",
-            "GITHUB_HEAD_REF": git_branch_name,
+            # "GITHUB_HEAD_REF": git_branch_name,
         }
         with patch.dict(os.environ, data, clear=True):
             result = commit_change_config(action_inputs)

@@ -28,7 +28,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    git_ref: str = os.environ["GITHUB_HEAD_REF"]
+    git_ref: str = os.environ.get("GITHUB_HEAD_REF", None) or "fake-api-server-monitor-update-config"
 
     # Get all files in the folder
     all_files = set()
