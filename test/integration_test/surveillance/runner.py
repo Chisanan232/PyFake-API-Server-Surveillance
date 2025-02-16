@@ -94,11 +94,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert result is True
 
         repo = Repo(base_test_dir)
-        assert len(repo.index.diff(None)) == 0
-        mock_git_commit.assert_called_once_with(
-            author=action_inputs.git_info.commit.author.serialize_for_git(),
-            message=action_inputs.git_info.commit.message,
-        )
 
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
         if mock_remote.exists() is True:
@@ -112,10 +107,16 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         else:
             mock_remote.git.checkout.assert_called_once_with("-b", git_branch_name)
 
-        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        assert len(repo.index.diff(None)) == 0
+        mock_git_commit.assert_called_once_with(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
 
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         assert str(filepath) in committed_files
+
+        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:

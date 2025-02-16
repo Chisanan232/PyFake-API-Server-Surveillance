@@ -31,6 +31,19 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     remote_name: str = "origin"
     git_ref: str = os.environ.get("GITHUB_HEAD_REF", None) or "fake-api-server-monitor-update-config"
 
+    # Initial git remote setting
+    git_remote = repo.remote(name=remote_name)
+    if not git_remote.exists():
+        git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
+
+    # Sync up the code version from git
+    git_remote.fetch()
+    # Switch to target git branch which only for Fake-API-Server
+    if git_ref in [git_remote.refs]:
+        git_remote.git.checkout(git_ref)
+    else:
+        git_remote.git.checkout("-b", git_ref)
+
     # Get all files in the folder
     all_files = set()
     for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
@@ -76,19 +89,6 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         message=action_inputs.git_info.commit.message,
     )
     print(f"Commit the change.")
-
-    # Initial git remote setting
-    git_remote = repo.remote(name=remote_name)
-    if not git_remote.exists():
-        git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
-
-    # Sync up the code version from git
-    git_remote.fetch()
-    # Switch to target git branch which only for Fake-API-Server
-    if git_ref in [git_remote.refs]:
-        git_remote.git.checkout(git_ref)
-    else:
-        git_remote.git.checkout("-b", git_ref)
 
     # Push the change to git server
     git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
