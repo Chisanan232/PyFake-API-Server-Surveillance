@@ -58,10 +58,13 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     default_remote = "origin"
     git_branch_name = "fake-api-server-monitor-update-config"
     real_repo = Repo("./")
+    original_branch = real_repo.active_branch
 
     try:
+        print("[DEBUG] Initial git repository")
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
+        print("[DEBUG] Initial git remote")
         repo.create_remote(name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git")
 
         push_info_list = PushInfoList()
@@ -70,19 +73,18 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         push_info.ERROR = 1024
         push_info_list.append(push_info)
 
+        print("[DEBUG] Mock git remote")
         mock_remote = Mock()
         mock_remote.exists = Mock(return_value=True)
         mock_remote.create = Mock()
         mock_remote.fetch = Mock()
         mock_remote.refs = []
-        git_opt = Mock()
-        git_opt.checkout = Mock()
-        mock_remote.git = PropertyMock(return_value=git_opt)
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
 
         # when
+        print("[DEBUG] Run target function")
         data = {
             "GITHUB_REPOSITORY": "tester/pyfake-test",
             # "GITHUB_HEAD_REF": git_branch_name,
@@ -91,22 +93,20 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             result = commit_change_config(action_inputs)
 
         # should
+        print("[DEBUG] Start checking running state")
         assert result is True
 
-        repo = Repo(base_test_dir)
-
+        print("[DEBUG] Checking remote callable state")
         mock_init_remote_fun.assert_called_once_with(name=default_remote)
         if mock_remote.exists() is True:
             mock_remote.create.assert_not_called()
         else:
             mock_remote.create.assert_called_once()
 
+        print("[DEBUG] Checkin sync state and branch operation state")
         mock_remote.fetch.assert_called_once()
-        if git_branch_name in mock_remote.refs:
-            mock_remote.git.checkout.assert_called_once()
-        else:
-            mock_remote.git.checkout.assert_called_once_with("-b", git_branch_name)
 
+        print("[DEBUG] Checkin commit running state")
         assert len(repo.index.diff(None)) == 0
         mock_git_commit.assert_called_once_with(
             author=action_inputs.git_info.commit.author.serialize_for_git(),
@@ -116,9 +116,13 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         assert str(filepath) in committed_files
 
+        print("[DEBUG] Checkin git push running state")
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
+        if real_repo.active_branch != original_branch:
+            real_repo.git.checkout(original_branch)
+            real_repo.git.branch("-D", git_branch_name)
