@@ -60,9 +60,11 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     real_repo = Repo("./")
     try:
         original_branch = real_repo.active_branch
-    except:
+    except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
-        original_branch = "DETACHED_" + real_repo.head.object.hexsha
+        if "HEAD" in str(e) and "detached" in str(e):
+            real_repo.git.checkout("master")
+        raise e
 
     try:
         print("[DEBUG] Initial git repository")
@@ -130,11 +132,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
-        try:
-            current_branch = real_repo.active_branch
-        except:
-            print("[DEBUG] Occur something wrong when trying to get git branch")
-            current_branch = "DETACHED_" + real_repo.head.object.hexsha
-        if current_branch != original_branch:
+        if real_repo.active_branch != original_branch:
             real_repo.git.checkout(original_branch)
             real_repo.git.branch("-D", git_branch_name)

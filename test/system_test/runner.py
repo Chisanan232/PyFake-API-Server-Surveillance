@@ -48,9 +48,11 @@ def test_entire_flow_with_not_exist_config(
     repo = Repo("./")
     try:
         original_branch = repo.active_branch
-    except:
+    except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
-        original_branch = "DETACHED_" + repo.head.object.hexsha
+        if "HEAD" in str(e) and "detached" in str(e):
+            repo.git.checkout("master")
+        raise e
 
     try:
         print("[DEBUG] Initial git remote")
