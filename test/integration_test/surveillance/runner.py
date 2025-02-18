@@ -66,7 +66,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print(f"[DEBUG] exception e: {e}")
         print(f"[DEBUG] exception str e: {str(e)}")
         print(f"[DEBUG] exception repr e: {repr(e)}")
-        if "HEAD" in str(e) and "detached" in repr(e):
+        if "HEAD" in repr(e) and "detached" in repr(e):
             original_branch = os.environ["GITHUB_HEAD_REF"]
         raise e
 
