@@ -51,7 +51,7 @@ def test_entire_flow_with_not_exist_config(
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
-        if "HEAD" in str(e) and "detached" in str(e):
+        if "HEAD" in str(e) and "detached" in repr(e):
             original_branch = os.environ["GITHUB_HEAD_REF"]
         raise e
 
