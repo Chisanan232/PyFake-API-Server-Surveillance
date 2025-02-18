@@ -1,3 +1,4 @@
+import ast
 import os
 import shutil
 from pathlib import Path
@@ -68,12 +69,12 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print(f"[DEBUG] exception HEAD in str e: {'HEAD' in str(e)}")
         print(f"[DEBUG] exception detached in str e: {'detached' in str(e)}")
         print(f"[DEBUG] exception repr e: {repr(e)}")
-        if "HEAD" in str(e) and "detached" in str(e) and os.getenv("GITHUB_ACTIONS"):
+        if "HEAD" in str(e) and "detached" in str(e) and ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()):
             # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"
         else:
             raise e
-    if os.getenv("GITHUB_ACTIONS") and original_branch not in [b.name for b in real_repo.branches]:
+    if ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and original_branch not in [b.name for b in real_repo.branches]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
         real_repo.git.checkout("-b", original_branch)
 
@@ -140,7 +141,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
-        if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
+        if not ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:
