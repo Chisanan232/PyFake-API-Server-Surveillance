@@ -53,7 +53,8 @@ def test_entire_flow_with_not_exist_config(
         # NOTE: Only for CI runtime environment
         if "HEAD" in str(e) and "detached" in str(e):
             original_branch = os.environ["GITHUB_HEAD_REF"]
-        raise e
+        else:
+            raise e
 
     try:
         print("[DEBUG] Initial git remote")
