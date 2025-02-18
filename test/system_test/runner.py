@@ -1,6 +1,11 @@
 import os
 import shutil
 from pathlib import Path
+from test._values.dummy_objects import (
+    DummyHTTPResponse,
+    DummyOpenAPIDocConfigResponse,
+    DummySwaggerAPIDocConfigResponse,
+)
 from typing import Type
 from unittest.mock import Mock, patch
 
@@ -11,8 +16,6 @@ from git.remote import PushInfoList
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
-from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse, \
-    DummyHTTPResponse
 
 
 @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -20,10 +23,10 @@ from test._values.dummy_objects import DummySwaggerAPIDocConfigResponse, DummyOp
 @patch("ci.surveillance.runner.load_config")
 @patch("git.remote.Remote.push")
 def test_entire_flow_with_not_exist_config(
-        mock_remote_push: Mock,
-        mock_load_config: Mock,
-        mock_request: Mock,
-        dummy_api_doc_config_resp: Type[DummyHTTPResponse],
+    mock_remote_push: Mock,
+    mock_load_config: Mock,
+    mock_request: Mock,
+    dummy_api_doc_config_resp: Type[DummyHTTPResponse],
 ):
     # given
     base_test_dir = Path("./test/_values/verify_git_feature")
@@ -95,7 +98,9 @@ def test_entire_flow_with_not_exist_config(
             reason="",
             decode_content=True,
         )
-        mock_load_config.return_value = deserialize_api_doc_config(dummy_api_doc_config_resp.mock_data()).to_api_config()
+        mock_load_config.return_value = deserialize_api_doc_config(
+            dummy_api_doc_config_resp.mock_data()
+        ).to_api_config()
         with patch.dict(os.environ, data, clear=True):
             run()
 

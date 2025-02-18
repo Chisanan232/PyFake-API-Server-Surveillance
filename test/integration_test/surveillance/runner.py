@@ -1,7 +1,7 @@
 import os
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, PropertyMock, patch
+from unittest.mock import Mock, patch
 
 from git import Repo
 from git.remote import PushInfoList
@@ -66,7 +66,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         # TODO: change the repo to sample project.
         print("[DEBUG] Initial git remote")
         if default_remote not in repo.remotes:
-            repo.create_remote(name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git")
+            repo.create_remote(
+                name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
+            )
 
         push_info_list = PushInfoList()
         push_info = Mock()
