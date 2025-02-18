@@ -63,7 +63,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
     try:
-        original_branch = real_repo.active_branch
+        original_branch = real_repo.active_branch.name
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
