@@ -52,7 +52,11 @@ def test_entire_flow_with_not_exist_config(
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
-        if "HEAD" in str(e) and "detached" in str(e) and ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()):
+        if (
+            "HEAD" in str(e)
+            and "detached" in str(e)
+            and ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
+        ):
             # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"
         else:
@@ -60,7 +64,9 @@ def test_entire_flow_with_not_exist_config(
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
     print(f"[DEBUG] original git branch exist or not: {original_branch not in [b.name for b in repo.branches]}")
-    if ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and original_branch not in [b.name for b in repo.branches]:
+    if ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and original_branch not in [
+        b.name for b in repo.branches
+    ]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
         repo.git.checkout("-b", original_branch)
 
