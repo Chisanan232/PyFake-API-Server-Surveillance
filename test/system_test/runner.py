@@ -56,7 +56,7 @@ def test_entire_flow_with_not_exist_config(
             original_branch = "github-action-ci-only"
         else:
             raise e
-    if os.getenv("GITHUB_ACTIONS"):
+    if os.getenv("GITHUB_ACTIONS") and original_branch in [b.name for b in repo.branches]:
         repo.git.checkout("-b", original_branch)
 
     try:
