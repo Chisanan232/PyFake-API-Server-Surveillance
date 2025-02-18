@@ -39,7 +39,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     # Sync up the code version from git
     git_remote.fetch()
     # Switch to target git branch which only for Fake-API-Server
-    if git_ref in [git_remote.refs]:
+    if git_ref in [b.name for b in repo.branches]:
         repo.git.checkout(git_ref)
     else:
         repo.git.checkout("-b", git_ref)
