@@ -73,7 +73,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             original_branch = "github-action-ci-only"
         else:
             raise e
-    if os.getenv("GITHUB_ACTIONS") and original_branch in [b.name for b in real_repo.branches]:
+    if os.getenv("GITHUB_ACTIONS") and original_branch not in [b.name for b in real_repo.branches]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
         real_repo.git.checkout("-b", original_branch)
 
