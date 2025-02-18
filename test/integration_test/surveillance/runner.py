@@ -68,10 +68,13 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print(f"[DEBUG] exception HEAD in str e: {'HEAD' in str(e)}")
         print(f"[DEBUG] exception detached in str e: {'detached' in str(e)}")
         print(f"[DEBUG] exception repr e: {repr(e)}")
-        if "HEAD" in str(e) and "detached" in str(e):
-            original_branch = os.environ["GITHUB_HEAD_REF"]
+        if "HEAD" in str(e) and "detached" in str(e) and os.getenv("GITHUB_ACTIONS"):
+            # original_branch = os.environ["GITHUB_HEAD_REF"]
+            original_branch = "github-action-ci-only"
         else:
             raise e
+    if os.getenv("GITHUB_ACTIONS"):
+        real_repo.git.checkout("-b", original_branch)
 
     try:
         print("[DEBUG] Initial git repository")
@@ -139,6 +142,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
-        if not os.getenv("GITHUB_ACTIONS") and real_repo.active_branch != original_branch:
+        if real_repo.active_branch != original_branch:
             real_repo.git.checkout(original_branch)
             real_repo.git.branch("-D", git_branch_name)

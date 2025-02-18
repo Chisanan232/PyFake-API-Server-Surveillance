@@ -51,10 +51,13 @@ def test_entire_flow_with_not_exist_config(
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
-        if "HEAD" in str(e) and "detached" in str(e):
-            original_branch = os.environ["GITHUB_HEAD_REF"]
+        if "HEAD" in str(e) and "detached" in str(e) and os.getenv("GITHUB_ACTIONS"):
+            # original_branch = os.environ["GITHUB_HEAD_REF"]
+            original_branch = "github-action-ci-only"
         else:
             raise e
+    if os.getenv("GITHUB_ACTIONS"):
+        repo.git.checkout("-b", original_branch)
 
     try:
         print("[DEBUG] Initial git remote")
@@ -149,6 +152,6 @@ def test_entire_flow_with_not_exist_config(
             repo.delete_remote(repo.remote(default_remote))
         if Path(filepath).exists():
             shutil.rmtree(base_test_dir)
-        if not os.getenv("GITHUB_ACTIONS") and repo.active_branch != original_branch:
+        if repo.active_branch != original_branch:
             repo.git.checkout(original_branch)
             repo.git.branch("-D", git_branch_name)
