@@ -59,6 +59,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     default_remote = "origin"
     git_branch_name = "fake-api-server-monitor-update-config"
     real_repo = Repo("./")
+    now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
+    print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
+    print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
     try:
         original_branch = real_repo.active_branch
     except TypeError as e:
@@ -69,16 +72,12 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print(f"[DEBUG] exception HEAD in str e: {'HEAD' in str(e)}")
         print(f"[DEBUG] exception detached in str e: {'detached' in str(e)}")
         print(f"[DEBUG] exception repr e: {repr(e)}")
-        if (
-            "HEAD" in str(e)
-            and "detached" in str(e)
-            and ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-        ):
+        if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
             # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"
         else:
             raise e
-    if ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and original_branch not in [
+    if now_in_ci_runtime_env and original_branch not in [
         b.name for b in real_repo.branches
     ]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
@@ -147,7 +146,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
-        if not ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and str(filepath) in committed_files:
+        if not now_in_ci_runtime_env and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:

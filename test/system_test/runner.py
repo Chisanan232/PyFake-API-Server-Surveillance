@@ -47,16 +47,15 @@ def test_entire_flow_with_not_exist_config(
 
     print("[DEBUG] Initial git repository")
     repo = Repo("./")
+    now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
+    print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
+    print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
     try:
         original_branch = repo.active_branch
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
-        if (
-            "HEAD" in str(e)
-            and "detached" in str(e)
-            and ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-        ):
+        if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
             # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"
         else:
@@ -64,7 +63,7 @@ def test_entire_flow_with_not_exist_config(
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
     print(f"[DEBUG] original git branch exist or not: {original_branch not in [b.name for b in repo.branches]}")
-    if ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and original_branch not in [
+    if now_in_ci_runtime_env and original_branch not in [
         b.name for b in repo.branches
     ]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
@@ -156,7 +155,7 @@ def test_entire_flow_with_not_exist_config(
         mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, repo.index.diff(repo.head.commit)))
-        if not ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize()) and str(filepath) in committed_files:
+        if not now_in_ci_runtime_env and str(filepath) in committed_files:
             # test finally
             repo.git.restore("--staged", str(filepath))
         if default_remote in repo.remotes:
