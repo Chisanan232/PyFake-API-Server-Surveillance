@@ -116,12 +116,14 @@ def test_entire_flow_with_not_exist_config(
             print(f"[DEBUG] commit.hexsha: {c.hexsha}")
             print(f"[DEBUG] commit.author: {c.author}")
             print(f"[DEBUG] commit.message: {c.message}")
+            print(f"[DEBUG] commit.message: {c.stats.files}")
 
         head_commit = repo.head.commit
         print(f"[DEBUG] head_commit: {head_commit}")
         print(f"[DEBUG] head_commit.hexsha: {head_commit.hexsha}")
         print(f"[DEBUG] head_commit.author: {head_commit.author}")
         print(f"[DEBUG] head_commit.message: {head_commit.message}")
+        print(f"[DEBUG] head_commit.message: {head_commit.stats.files}")
 
         assert repo.head.commit.author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
         assert repo.head.commit.author.email == data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
