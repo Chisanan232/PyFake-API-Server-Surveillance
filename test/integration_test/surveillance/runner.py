@@ -62,8 +62,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         original_branch = real_repo.active_branch
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
+        # NOTE: Only for CI runtime environment
         if "HEAD" in str(e) and "detached" in str(e):
-            real_repo.git.checkout("master")
+            original_branch = os.environ["GITHUB_HEAD_REF"]
         raise e
 
     try:
@@ -96,7 +97,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print("[DEBUG] Run target function")
         data = {
             "GITHUB_REPOSITORY": "tester/pyfake-test",
-            # "GITHUB_HEAD_REF": git_branch_name,
+            "GITHUB_HEAD_REF": git_branch_name,
         }
         with patch.dict(os.environ, data, clear=True):
             result = commit_change_config(action_inputs)

@@ -50,8 +50,9 @@ def test_entire_flow_with_not_exist_config(
         original_branch = repo.active_branch
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
+        # NOTE: Only for CI runtime environment
         if "HEAD" in str(e) and "detached" in str(e):
-            repo.git.checkout("master")
+            original_branch = os.environ["GITHUB_HEAD_REF"]
         raise e
 
     try:
@@ -94,7 +95,7 @@ def test_entire_flow_with_not_exist_config(
             EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "false",
             # GitHub action environment
             "GITHUB_REPOSITORY": "Chisanan232/Sample-Python-BackEnd",
-            # "GITHUB_HEAD_REF": "git-branch",
+            "GITHUB_HEAD_REF": "git-branch",
         }
         mock_request.return_value = dummy_api_doc_config_resp(
             request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
