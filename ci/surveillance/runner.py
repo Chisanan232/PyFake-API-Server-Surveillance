@@ -52,6 +52,8 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
 
     print(f"Found files: {all_files}")
 
+    all_ready_commit_files = set()
+
     # Check untracked files
     untracked = set(repo.untracked_files)
     print(f"Check untracked file ...")
@@ -59,11 +61,13 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
+                all_ready_commit_files.add(str(file_path_obj))
                 repo.index.add(str(file_path_obj))
                 print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
+                    all_ready_commit_files.add(str(file_path_obj))
                     repo.index.add(one_file)
                     print(f"Add file: {one_file}")
 
@@ -75,20 +79,25 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
+                all_ready_commit_files.add(str(file_path_obj))
                 repo.index.add(str(file_path_obj))
                 print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
+                    all_ready_commit_files.add(str(file_path_obj))
                     repo.index.add(one_file)
                     print(f"Add file: {one_file}")
 
     # Commit the update change
-    commit = repo.index.commit(
-        author=action_inputs.git_info.commit.author.serialize_for_git(),
-        message=action_inputs.git_info.commit.message,
-    )
-    print(f"Commit the change.")
+    if len(all_ready_commit_files) > 0:
+        commit = repo.index.commit(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
+        print(f"Commit the change.")
+    else:
+        print(f"Don't have any files be added. Won't commit the change.")
 
     # Push the change to git server
     git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
