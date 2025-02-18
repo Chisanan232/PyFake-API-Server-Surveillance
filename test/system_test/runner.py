@@ -67,9 +67,7 @@ def test_entire_flow_with_not_exist_config(
     if all_branches:
         print(f"[DEBUG] all_branches[0]: {all_branches[0]}")
         print(f"[DEBUG] all_branches[0] == original_branch: {all_branches[0] == original_branch}")
-    if now_in_ci_runtime_env and original_branch not in [
-        b.name for b in repo.branches
-    ]:
+    if now_in_ci_runtime_env and original_branch not in [b.name for b in repo.branches]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
         repo.git.checkout("-b", original_branch)
 
