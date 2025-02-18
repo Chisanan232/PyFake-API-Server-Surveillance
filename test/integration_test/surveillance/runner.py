@@ -67,11 +67,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     except TypeError as e:
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
-        print(f"[DEBUG] exception e: {e}")
-        print(f"[DEBUG] exception str e: {str(e)}")
-        print(f"[DEBUG] exception HEAD in str e: {'HEAD' in str(e)}")
-        print(f"[DEBUG] exception detached in str e: {'detached' in str(e)}")
-        print(f"[DEBUG] exception repr e: {repr(e)}")
         if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
             # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"

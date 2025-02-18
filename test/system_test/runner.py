@@ -63,10 +63,6 @@ def test_entire_flow_with_not_exist_config(
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
     all_branches = [str(b.name) for b in repo.branches]
-    print(f"[DEBUG] original git branch exist or not: {original_branch not in all_branches}")
-    if all_branches:
-        print(f"[DEBUG] all_branches[0]: {all_branches[0]}")
-        print(f"[DEBUG] all_branches[0] == original_branch: {all_branches[0] == original_branch}")
     if now_in_ci_runtime_env and original_branch not in [b.name for b in repo.branches]:
         print(f"[DEBUG] create and switch git branch {original_branch}")
         repo.git.checkout("-b", original_branch)
@@ -129,23 +125,6 @@ def test_entire_flow_with_not_exist_config(
 
         # should
         print("[DEBUG] Checkin commit running state")
-        commits = repo.iter_commits(max_count=2)
-        for c in commits:
-            print(f"[DEBUG] commit: {c}")
-            print(f"[DEBUG] commit.hexsha: {c.hexsha}")
-            print(f"[DEBUG] commit.author: {c.author}")
-            print(f"[DEBUG] commit.message: {c.message}")
-            print(f"[DEBUG] commit.stats.files: {c.stats.files}")
-            print(f"[DEBUG] commit.committed_datetime: {c.committed_datetime}")
-
-        head_commit = repo.head.commit
-        print(f"[DEBUG] head_commit: {head_commit}")
-        print(f"[DEBUG] head_commit.hexsha: {head_commit.hexsha}")
-        print(f"[DEBUG] head_commit.author: {head_commit.author}")
-        print(f"[DEBUG] head_commit.message: {head_commit.message}")
-        print(f"[DEBUG] head_commit.stats.files: {head_commit.stats.files}")
-        print(f"[DEBUG] head_commit.committed_datetime: {head_commit.committed_datetime}")
-
         assert repo.head.commit.author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
         assert repo.head.commit.author.email == data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
         assert repo.head.commit.message == data[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
