@@ -153,5 +153,5 @@ def test_entire_flow_with_not_exist_config(
         if Path(filepath).exists():
             shutil.rmtree(base_test_dir)
         if repo.active_branch != original_branch:
-            repo.git.checkout(original_branch)
+            repo.git.switch(original_branch)
             repo.git.branch("-D", git_branch_name)
