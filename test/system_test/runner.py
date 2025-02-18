@@ -114,13 +114,13 @@ def test_entire_flow_with_not_exist_config(
 
         # should
         print("[DEBUG] Checkin commit running state")
-        commits = repo.iter_commits(max_count=3)
+        commits = repo.iter_commits(max_count=2)
         for c in commits:
             print(f"[DEBUG] commit: {c}")
             print(f"[DEBUG] commit.hexsha: {c.hexsha}")
             print(f"[DEBUG] commit.author: {c.author}")
             print(f"[DEBUG] commit.message: {c.message}")
-            print(f"[DEBUG] commit.message: {c.stats.files}")
+            print(f"[DEBUG] commit.stats.files: {c.stats.files}")
             print(f"[DEBUG] commit.committed_datetime: {c.committed_datetime}")
 
         head_commit = repo.head.commit
@@ -128,7 +128,7 @@ def test_entire_flow_with_not_exist_config(
         print(f"[DEBUG] head_commit.hexsha: {head_commit.hexsha}")
         print(f"[DEBUG] head_commit.author: {head_commit.author}")
         print(f"[DEBUG] head_commit.message: {head_commit.message}")
-        print(f"[DEBUG] head_commit.message: {head_commit.stats.files}")
+        print(f"[DEBUG] head_commit.stats.files: {head_commit.stats.files}")
         print(f"[DEBUG] head_commit.committed_datetime: {head_commit.committed_datetime}")
 
         assert repo.head.commit.author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
