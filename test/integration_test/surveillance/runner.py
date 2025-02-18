@@ -58,7 +58,11 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     default_remote = "origin"
     git_branch_name = "fake-api-server-monitor-update-config"
     real_repo = Repo("./")
-    original_branch = real_repo.active_branch
+    try:
+        original_branch = real_repo.active_branch
+    except:
+        print("[DEBUG] Occur something wrong when trying to get git branch")
+        original_branch = "DETACHED_" + real_repo.head.object.hexsha
 
     try:
         print("[DEBUG] Initial git repository")
