@@ -65,7 +65,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
         print("[DEBUG] Initial git remote")
-        repo.create_remote(name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git")
+        if default_remote not in repo.remotes:
+            repo.create_remote(name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git")
 
         push_info_list = PushInfoList()
         push_info = Mock()
@@ -123,6 +124,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
+        if default_remote in real_repo.remotes:
+            real_repo.delete_remote(real_repo.remote(default_remote))
         if real_repo.active_branch != original_branch:
             real_repo.git.checkout(original_branch)
             real_repo.git.branch("-D", git_branch_name)
