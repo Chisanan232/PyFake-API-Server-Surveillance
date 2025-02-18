@@ -62,7 +62,11 @@ def test_entire_flow_with_not_exist_config(
             raise e
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
-    print(f"[DEBUG] original git branch exist or not: {original_branch not in [b.name for b in repo.branches]}")
+    all_branches = [str(b.name) for b in repo.branches]
+    print(f"[DEBUG] original git branch exist or not: {original_branch not in all_branches}")
+    if all_branches:
+        print(f"[DEBUG] all_branches[0]: {all_branches[0]}")
+        print(f"[DEBUG] all_branches[0] == original_branch: {all_branches[0] == original_branch}")
     if now_in_ci_runtime_env and original_branch not in [
         b.name for b in repo.branches
     ]:
