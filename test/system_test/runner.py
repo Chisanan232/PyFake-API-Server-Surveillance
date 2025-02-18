@@ -57,6 +57,7 @@ def test_entire_flow_with_not_exist_config(
         else:
             raise e
     if os.getenv("GITHUB_ACTIONS") and original_branch in [b.name for b in repo.branches]:
+        print(f"[DEBUG] create and switch git branch {original_branch}")
         repo.git.checkout("-b", original_branch)
 
     try:
