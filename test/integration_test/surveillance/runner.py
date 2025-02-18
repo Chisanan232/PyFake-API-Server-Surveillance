@@ -139,6 +139,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         if not os.getenv("GITHUB_ACTIONS") and str(filepath) in committed_files:
             # test finally
             real_repo.git.restore("--staged", str(filepath))
-        if real_repo.active_branch != original_branch:
+        if not os.getenv("GITHUB_ACTIONS") and real_repo.active_branch != original_branch:
             real_repo.git.checkout(original_branch)
             real_repo.git.branch("-D", git_branch_name)
