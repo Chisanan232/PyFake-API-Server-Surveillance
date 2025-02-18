@@ -101,6 +101,8 @@ def test_entire_flow_with_not_exist_config(
 
         # should
         print("[DEBUG] Checkin commit running state")
+        print(f"[DEBUG] repo.index.diff(None): {repo.index.diff(None)}")
+        print(f"[DEBUG] repo.head.commit: {repo.head.commit}")
         assert len(repo.index.diff(None)) != 0
         assert repo.head.commit.author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
         assert repo.head.commit.author.email == data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
