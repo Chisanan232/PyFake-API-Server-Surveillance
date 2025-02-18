@@ -110,6 +110,13 @@ def test_entire_flow_with_not_exist_config(
 
         # should
         print("[DEBUG] Checkin commit running state")
+        commits = repo.iter_commits(max_count=3)
+        for c in commits:
+            print(f"[DEBUG] commit: {c}")
+            print(f"[DEBUG] commit.hexsha: {c.hexsha}")
+            print(f"[DEBUG] commit.author: {c.author}")
+            print(f"[DEBUG] commit.message: {c.message}")
+
         assert repo.head.commit.author.name == data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
         assert repo.head.commit.author.email == data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
         assert repo.head.commit.message == data[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
