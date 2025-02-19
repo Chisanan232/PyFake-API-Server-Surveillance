@@ -48,7 +48,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         # git_remote.create(
         #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
         # )
-        remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}.git"
+        remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
         git_remote.create(repo=repo, name=remote_name, url=remote_url)
     else:
         print(f"[DEBUG] git_remote.url: {git_remote.url}")
@@ -58,8 +58,9 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
             # github_account = action_inputs.git_info.commit.author.name
             # git_ssh_access = f"{github_account}:{github_access_token}@"
             # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+            # "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY"
             remote_url = (
-                f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}.git"
+                f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
             )
             git_remote.set_url(new_url=remote_url)
         else:
