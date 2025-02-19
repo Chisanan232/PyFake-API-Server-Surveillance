@@ -33,7 +33,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         server_type=Mock(),
         api_doc_url=Mock(),
         git_info=GitInfo(
-            repository=Mock(),
+            repository="Chisanan232/Sample-Python-BackEnd",
             commit=GitCommit(
                 author=GitAuthor(
                     name="test-user[bot]",
@@ -98,6 +98,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote.create = Mock()
         mock_remote.fetch = Mock()
         mock_remote.refs = []
+        mock_remote.url = f"https://github.com/{action_inputs.git_info.repository}"
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
@@ -136,7 +137,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert str(filepath) in committed_files
 
         print("[DEBUG] Checkin git push running state")
-        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{git_branch_name}")
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
@@ -144,4 +146,5 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:
             real_repo.git.switch(original_branch)
+        if git_branch_name in [b.name for b in real_repo.branches]:
             real_repo.git.branch("-D", git_branch_name)
