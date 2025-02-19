@@ -37,7 +37,9 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         github_account = action_inputs.git_info.commit.author.name
         github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
         git_ssh_access = f"{github_account}:{github_access_token}@"
-        git_remote.create(name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+        git_remote.create(
+            name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
+        )
 
     # Sync up the code version from git
     git_remote.fetch()
