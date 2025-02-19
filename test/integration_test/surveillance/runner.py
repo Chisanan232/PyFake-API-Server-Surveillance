@@ -2,7 +2,7 @@ import ast
 import os
 import shutil
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, PropertyMock
 
 from git import Repo
 from git.remote import PushInfoList
@@ -33,7 +33,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         server_type=Mock(),
         api_doc_url=Mock(),
         git_info=GitInfo(
-            repository=Mock(),
+            repository="Chisanan232/Sample-Python-BackEnd",
             commit=GitCommit(
                 author=GitAuthor(
                     name="test-user[bot]",
@@ -98,6 +98,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         mock_remote.create = Mock()
         mock_remote.fetch = Mock()
         mock_remote.refs = []
+        mock_remote.url = f"https://github.com/{action_inputs.git_info.repository}"
         mock_remote.push = Mock()
         mock_remote.push.return_value = push_info_list
         mock_init_remote_fun.return_value = mock_remote
