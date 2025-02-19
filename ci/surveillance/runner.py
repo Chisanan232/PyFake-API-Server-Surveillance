@@ -42,20 +42,24 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     git_remote = repo.remote(name=remote_name)
     if not git_remote.exists():
         print("[DEBUG] Target git remote setting doesn't exist, create one.")
-        github_account = action_inputs.git_info.commit.author.name
         github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-        git_ssh_access = f"{github_account}:{github_access_token}@"
-        git_remote.create(
-            repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
-        )
+        # github_account = action_inputs.git_info.commit.author.name
+        # git_ssh_access = f"{github_account}:{github_access_token}@"
+        # git_remote.create(
+        #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
+        # )
+        remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}.git"
+        git_remote.create(repo=repo, name=remote_name, url=remote_url)
     else:
         print(f"[DEBUG] git_remote.url: {git_remote.url}")
         if action_inputs.git_info.repository not in git_remote.url:
             print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
-            github_account = action_inputs.git_info.commit.author.name
             github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-            git_ssh_access = f"{github_account}:{github_access_token}@"
-            git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+            # github_account = action_inputs.git_info.commit.author.name
+            # git_ssh_access = f"{github_account}:{github_access_token}@"
+            # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+            remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}.git"
+            git_remote.set_url(new_url=remote_url)
         else:
             print("[DEBUG] Remote info all is correct.")
 
