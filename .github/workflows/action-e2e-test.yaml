@@ -67,8 +67,6 @@ jobs:
           host-port: "1111"
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
-        env:
-          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
 
       - name: Verify the fake server health
         run: curl "http://127.0.0.1:1111/api-doc"
@@ -91,7 +89,8 @@ jobs:
           base-file-path: "./rest-server/"
           base-url: "/test/v1"
           divide-api: "true"
-#          dry-run: "true"
+        env:
+          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
