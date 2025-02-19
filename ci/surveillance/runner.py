@@ -29,8 +29,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    git_ref: str = os.environ.get("GITHUB_HEAD_REF", "") or "fake-api-server-monitor-update-config"
-    print(f"[DEBUG in GitHub Action] git_ref: {git_ref}")
+    git_ref: str = "fake-api-server-monitor-update-config"
 
     # Initial git remote setting
     git_remote = repo.remote(name=remote_name)
@@ -40,11 +39,10 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     # Sync up the code version from git
     git_remote.fetch()
     # Switch to target git branch which only for Fake-API-Server
-    if git_ref in [git_remote.refs]:
-        git_remote.git.checkout(git_ref)
+    if git_ref in [b.name for b in repo.branches]:
+        repo.git.checkout(git_ref)
     else:
-        git_remote.git.checkout("-b", git_ref)
-    git_ref: str = os.environ["GITHUB_HEAD_REF"]
+        repo.git.checkout("-b", git_ref)
 
     # Get all files in the folder
     all_files = set()
@@ -54,49 +52,58 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
 
     print(f"Found files: {all_files}")
 
+    all_ready_commit_files = set()
+
     # Check untracked files
     untracked = set(repo.untracked_files)
-    print(f"Check untracked file ...")
+    print("Check untracked file ...")
     for file in untracked:
         print(f"Found untracked files: {file}")
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
+                all_ready_commit_files.add(str(file_path_obj))
                 repo.index.add(str(file_path_obj))
                 print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
+                    all_ready_commit_files.add(str(file_path_obj))
                     repo.index.add(one_file)
                     print(f"Add file: {one_file}")
 
     # Check modified but unstaged files
     diff_index = repo.index.diff(None)
     modified = {item.a_path for item in diff_index}
-    print(f"Check modified file ...")
+    print("Check modified file ...")
     for file in modified:
         print(f"Found modified files: {file}")
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
+                all_ready_commit_files.add(str(file_path_obj))
                 repo.index.add(str(file_path_obj))
                 print(f"Add file: {file_path_obj}")
         else:
             for one_file in Path(file).rglob("*.yaml"):
                 if one_file in all_files:
+                    all_ready_commit_files.add(str(file_path_obj))
                     repo.index.add(one_file)
                     print(f"Add file: {one_file}")
 
     # Commit the update change
-    commit = repo.index.commit(
-        author=action_inputs.git_info.commit.author.serialize_for_git(),
-        message=action_inputs.git_info.commit.message,
-    )
-    print(f"Commit the change.")
+    if len(all_ready_commit_files) > 0:
+        commit = repo.index.commit(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
+        print("Commit the change.")
 
-    # Push the change to git server
-    git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
-    print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
+        # Push the change to git server
+        git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
+    else:
+        print("Don't have any files be added. Won't commit the change.")
     return True
 
 
