@@ -137,7 +137,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert str(filepath) in committed_files
 
         print("[DEBUG] Checkin git push running state")
-        mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        mock_remote.push.assert_called_once_with(refspec=f'HEAD:refs/heads/{git_branch_name}')
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:

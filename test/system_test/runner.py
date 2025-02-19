@@ -133,7 +133,8 @@ def test_entire_flow_with_not_exist_config(
         assert data[EnvironmentVariableKey.CONFIG_PATH.value] in commit_files
 
         print("[DEBUG] Checkin git push running state")
-        mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        # mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        mock_remote_push.assert_called_once_with(refspec=f'HEAD:refs/heads/{git_branch_name}')
     finally:
         committed_files = list(map(lambda i: i.a_path, repo.index.diff(repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:

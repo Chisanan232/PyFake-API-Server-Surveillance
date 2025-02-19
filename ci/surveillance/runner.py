@@ -127,7 +127,8 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         print("Commit the change.")
 
         # Push the change to git server
-        git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        git_remote.push(refspec=f'HEAD:refs/heads/{git_ref}').raise_if_error()
         print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
     else:
         print("Don't have any files be added. Won't commit the change.")
