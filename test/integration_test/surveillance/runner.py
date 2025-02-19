@@ -144,4 +144,5 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:
             real_repo.git.switch(original_branch)
+        if git_branch_name in [b.name for b in real_repo.branches]:
             real_repo.git.branch("-D", git_branch_name)
