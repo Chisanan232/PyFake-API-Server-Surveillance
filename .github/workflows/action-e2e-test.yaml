@@ -61,6 +61,7 @@ jobs:
           accept-not-exist-config: true
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -103,6 +104,7 @@ jobs:
           divide-api: "true"
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
