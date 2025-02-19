@@ -30,6 +30,10 @@ on:
 jobs:
   with-required-param:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Need this to push commits
+
     steps:
       - name: Clone project
         uses: actions/checkout@v4
@@ -60,6 +64,10 @@ jobs:
 
   with-optional-param:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Need this to push commits
+
     steps:
       - name: Clone project
         uses: actions/checkout@v4
