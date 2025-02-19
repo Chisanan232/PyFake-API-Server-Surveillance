@@ -48,7 +48,7 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-          repo: Chisanan232/Sample-Python-Server
+          repo: Chisanan232/Sample-Python-BackEnd
           api-doc-url: "http://127.0.0.1:1111/api-doc"
           accept-not-exist-config: true
 #          dry-run: "true"
@@ -74,7 +74,7 @@ jobs:
         uses: ./
         with:
           # API server info
-          repo: Chisanan232/Sample-Python-Server
+          repo: Chisanan232/Sample-Python-BackEnd
           api-doc-url: "http://127.0.0.1:1111/api-doc"
           # operation of action in CI
           accept-not-exist-config: true
@@ -100,7 +100,7 @@ jobs:
         id: e2e-test-invalid-case
         uses: ./
         with:
-          repo: Chisanan232/Sample-Python-Server
+          repo: Chisanan232/Sample-Python-BackEnd
           api-doc-url: "http://127.0.0.1:1111"
           dry-run: "true"
         continue-on-error: true
