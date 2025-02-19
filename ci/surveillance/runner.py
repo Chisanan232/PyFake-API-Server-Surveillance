@@ -18,8 +18,10 @@ from .model.action import ActionInput
 def commit_change_config(action_inputs: ActionInput) -> bool:
     # Initial a git project
     if os.path.exists(action_inputs.subcmd_pull_args.config_path):
+        print("[DEBUG] PyFake config exists, initial git directly.")
         repo = Repo("./")
     else:
+        print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
         repo = Repo.clone_from(
             url=f"https://github.com/{action_inputs.git_info.repository}",
             to_path="./",
@@ -34,6 +36,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     # Initial git remote setting
     git_remote = repo.remote(name=remote_name)
     if not git_remote.exists():
+        print("[DEBUG] Target git remote setting doesn't exist, create one.")
         github_account = action_inputs.git_info.commit.author.name
         github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
         git_ssh_access = f"{github_account}:{github_access_token}@"
