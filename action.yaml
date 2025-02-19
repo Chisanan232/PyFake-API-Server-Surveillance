@@ -125,6 +125,8 @@ runs:
         DIVIDE_HTTP_REQUEST: ${{ inputs.divide-http-request }}
         DIVIDE_HTTP_RESPONSE: ${{ inputs.divide-http-response }}
         DRY_RUN: ${{ inputs.dry-run }}
+        # for GitHub action operation with access authentication
+        FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
 
     - name: Set result as output value
       id: monitor-result
