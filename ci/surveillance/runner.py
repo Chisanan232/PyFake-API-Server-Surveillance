@@ -56,7 +56,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
 
     # Check untracked files
     untracked = set(repo.untracked_files)
-    print(f"Check untracked file ...")
+    print("Check untracked file ...")
     for file in untracked:
         file_path_obj = Path(file)
         if file_path_obj.is_file():
@@ -74,7 +74,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     # Check modified but unstaged files
     diff_index = repo.index.diff(None)
     modified = {item.a_path for item in diff_index}
-    print(f"Check modified file ...")
+    print("Check modified file ...")
     for file in modified:
         file_path_obj = Path(file)
         if file_path_obj.is_file():
@@ -95,13 +95,13 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
             author=action_inputs.git_info.commit.author.serialize_for_git(),
             message=action_inputs.git_info.commit.message,
         )
-        print(f"Commit the change.")
+        print("Commit the change.")
 
         # Push the change to git server
         git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
         print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
     else:
-        print(f"Don't have any files be added. Won't commit the change.")
+        print("Don't have any files be added. Won't commit the change.")
     return True
 
 
