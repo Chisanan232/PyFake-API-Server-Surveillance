@@ -51,7 +51,8 @@ jobs:
           repo: Chisanan232/Sample-Python-BackEnd
           api-doc-url: "http://127.0.0.1:1111/api-doc"
           accept-not-exist-config: true
-#          dry-run: "true"
+        env:
+          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -66,6 +67,8 @@ jobs:
           host-port: "1111"
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
+        env:
+          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
 
       - name: Verify the fake server health
         run: curl "http://127.0.0.1:1111/api-doc"
