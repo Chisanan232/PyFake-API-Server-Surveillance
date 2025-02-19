@@ -17,6 +17,7 @@ from .model.action import ActionInput
 
 def commit_change_config(action_inputs: ActionInput) -> bool:
     # Initial a git project
+    print(f"[DEBUG] action_inputs: {action_inputs}")
     if os.path.exists(action_inputs.subcmd_pull_args.config_path):
         print("[DEBUG] PyFake config exists, initial git directly.")
         repo = Repo("./")

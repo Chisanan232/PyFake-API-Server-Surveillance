@@ -45,6 +45,10 @@ jobs:
       - name: Verify the fake server health
         run: curl "http://127.0.0.1:1111/api-doc"
 
+      - name: Just  for debug
+        run: |
+          ls -la
+
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
