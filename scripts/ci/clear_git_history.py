@@ -5,7 +5,7 @@ from typing import List, Iterator, Optional
 
 from git import Repo, Commit, GitCommandError
 
-from ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server.ci.surveillance.model import EnvironmentVariableKey
 
 
 _SEARCH_GIT_COMMIT_COUNT: int = os.environ.get("SEARCH_GIT_COMMIT_COUNT", 5)

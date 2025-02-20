@@ -1,0 +1,39 @@
+name: "Clear commit for end-to-end test"
+description: "Remove the commit for running end-to-end test"
+author: "Bryant Liu"
+outputs:
+  monitor-result:
+    description: "Output. Currently it won't have any meaning value."
+    value: ${{ steps.monitor-result.outputs.monitor-result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Clone project
+      uses: actions/checkout@v4
+
+    - name: Install Python 3.12 for running surveillance
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        pip --version
+        pip install -U poetry
+        poetry install
+        poetry build
+        pip3 install ./dist/*.whl
+
+    - name: Run Python script to remove target git commit
+      shell: bash
+      run: |
+        python ./scripts/ci/clear_git_history.py
+
+    - name: Set result as output value
+      id: monitor-result
+      shell: bash
+      run: echo "monitor-result=$(echo $TODO_SOMETHING_OUTPUT)" >> $GITHUB_OUTPUT
+branding:
+  icon: 'server'
+  color: 'gray-dark'
