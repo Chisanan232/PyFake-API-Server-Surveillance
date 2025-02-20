@@ -37,7 +37,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    github_run_id = os.environ['GITHUB_RUN_ID']
+    github_run_id = os.environ["GITHUB_RUN_ID"]
     print(f"[DEBUG] GitHub run ID: {github_run_id}")
     git_ref: str = f"fake-api-server-monitor-update-config_{github_run_id}"
 
