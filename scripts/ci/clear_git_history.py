@@ -61,4 +61,5 @@ def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
 
 if __name__ == '__main__':
     commit = find_tes_commit()
-    remove_commit(method=RemoveCommitMethod.REVERT, commit_hash=commit.hexsha)
+    if commit:
+        remove_commit(method=RemoveCommitMethod.REVERT, commit_hash=commit.hexsha)
