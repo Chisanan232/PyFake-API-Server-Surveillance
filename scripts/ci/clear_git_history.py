@@ -1,12 +1,10 @@
 import os
 import re
 from enum import Enum
-from typing import List, Iterator, Optional
-
-from git import Repo, Commit, GitCommandError
+from typing import Iterator, Optional
 
 from fake_api_server.ci.surveillance.model import EnvironmentVariableKey
-
+from git import Commit, GitCommandError, Repo
 
 _SEARCH_GIT_COMMIT_COUNT: int = os.environ.get("SEARCH_GIT_COMMIT_COUNT", 5)
 _GIT_COMMITTER: str = os.environ[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
@@ -31,7 +29,9 @@ def display_current_commits() -> None:
 def find_tes_commit() -> Optional[Commit]:
     commits: Iterator[Commit] = repo.iter_commits(max_count=_SEARCH_GIT_COMMIT_COUNT)
     for commit in commits:
-        if re.search(re.escape(_GIT_COMMITTER), str(commit.author.name)) and re.search(re.escape(_GIT_COMMIT_MSG), str(commit.message), re.IGNORECASE):
+        if re.search(re.escape(_GIT_COMMITTER), str(commit.author.name)) and re.search(
+            re.escape(_GIT_COMMIT_MSG), str(commit.message), re.IGNORECASE
+        ):
             print("[DEBUG] Found commit.")
             return commit
     print("[WARN] No commit found, pass it.")
@@ -46,20 +46,20 @@ class RemoveCommitMethod(Enum):
 
 def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
     try:
-        if method == 'reset':
+        if method == "reset":
             # Hard reset to the commit before the one we want to remove
-            repo.git.reset('--hard', f'{commit_hash}^')
+            repo.git.reset("--hard", f"{commit_hash}^")
             print(f"Successfully reset to commit before {commit_hash}")
 
-        elif method == 'revert':
+        elif method == "revert":
             # Create a new commit that undoes the specified commit
             repo.git.revert(commit_hash)
             print(f"Successfully reverted commit {commit_hash}")
 
-        elif method == 'rebase':
+        elif method == "rebase":
             # Remove the commit while keeping subsequent changes
             try:
-                repo.git.rebase('-i', f'{commit_hash}^')
+                repo.git.rebase("-i", f"{commit_hash}^")
                 print(f"Started interactive rebase to remove commit {commit_hash}")
             except GitCommandError:
                 print("Interactive rebase requires manual intervention")
@@ -71,7 +71,7 @@ def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
         print(f"An error occurred: {str(e)}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("[DEBUG] Before running remove commit history.")
     display_current_commits()
     commit = find_tes_commit()
