@@ -45,13 +45,6 @@ jobs:
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
 
-      - name: Verify the fake server health
-        run: curl "http://127.0.0.1:1111/api-doc"
-
-      - name: Just  for debug
-        run: |
-          ls -la
-
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
@@ -76,9 +69,6 @@ jobs:
           host-port: "1111"
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
-
-      - name: Verify the fake server health
-        run: curl "http://127.0.0.1:1111/api-doc"
 
       - name: Run Fake-API-Server-Surveillance
         uses: ./
