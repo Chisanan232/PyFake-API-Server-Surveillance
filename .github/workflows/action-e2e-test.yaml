@@ -55,7 +55,8 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-          repo: Chisanan232/Sample-Python-BackEnd
+#          repo: Chisanan232/Sample-Python-BackEnd
+          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
           api-doc-url: "http://127.0.0.1:1111/api-doc"
           accept-not-exist-config: true
         env:
@@ -83,7 +84,8 @@ jobs:
         uses: ./
         with:
           # API server info
-          repo: Chisanan232/Sample-Python-BackEnd
+#          repo: Chisanan232/Sample-Python-BackEnd
+          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
           api-doc-url: "http://127.0.0.1:1111/api-doc"
           # operation of action in CI
           accept-not-exist-config: true
