@@ -189,7 +189,7 @@ def run() -> None:
         has_api_change = True
         fake_api_server_config_dir = Path(fake_api_server_config).parent
         if not fake_api_server_config_dir.exists():
-            fake_api_server_config_dir.mkdir(parents=True)
+            fake_api_server_config_dir.mkdir(parents=True, exist_ok=True)
 
     if has_api_change:
         _saving_config_component = SavingConfigComponent()
