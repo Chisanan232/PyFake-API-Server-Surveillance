@@ -8,7 +8,7 @@ from git import Repo, Commit, GitCommandError
 from ci.surveillance.model import EnvironmentVariableKey
 
 
-_SEARCH_GIT_COMMIT_COUNT: int = 5
+_SEARCH_GIT_COMMIT_COUNT: int = os.environ.get("SEARCH_GIT_COMMIT_COUNT", 5)
 _GIT_COMMITTER: str = os.environ[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
 _GIT_COMMIT_MSG: str = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 
