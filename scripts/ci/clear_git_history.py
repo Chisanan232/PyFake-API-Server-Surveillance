@@ -8,15 +8,16 @@ from git import Repo, Commit, GitCommandError
 from ci.surveillance.model import EnvironmentVariableKey
 
 
-_GIT_COMMITTER = os.environ[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
-_GIT_COMMIT_MSG = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
+_SEARCH_GIT_COMMIT_COUNT: int = 5
+_GIT_COMMITTER: str = os.environ[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
+_GIT_COMMIT_MSG: str = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 
 
 repo = Repo("./")
 
 
 def find_tes_commit() -> Optional[Commit]:
-    commits: Iterator[Commit] = repo.iter_commits()
+    commits: Iterator[Commit] = repo.iter_commits(max_count=_SEARCH_GIT_COMMIT_COUNT)
     for commit in commits:
         if re.search(re.escape(_GIT_COMMITTER), str(commit.author.name)) and re.search(re.escape(_GIT_COMMIT_MSG), str(commit.message), re.IGNORECASE):
             print("[DEBUG] Found commit.")
