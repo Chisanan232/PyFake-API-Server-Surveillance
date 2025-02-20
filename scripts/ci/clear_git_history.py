@@ -16,6 +16,18 @@ _GIT_COMMIT_MSG: str = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 repo = Repo("./")
 
 
+def display_current_commits() -> None:
+    commits: Iterator[Commit] = repo.iter_commits(max_count=_SEARCH_GIT_COMMIT_COUNT)
+    for commit in commits:
+        print(f"[DEBUG] +------------------------------------------+")
+        print(f"[DEBUG] commit author.name: {commit.author.name}")
+        print(f"[DEBUG] commit author.email: {commit.author.email}")
+        print(f"[DEBUG] commit message: {commit.message}")
+        print(f"[DEBUG] commit hexsha: {commit.hexsha}")
+        print(f"[DEBUG] commit datetime: {commit.committed_datetime}")
+    print(f"[DEBUG] +------------------------------------------+")
+
+
 def find_tes_commit() -> Optional[Commit]:
     commits: Iterator[Commit] = repo.iter_commits(max_count=_SEARCH_GIT_COMMIT_COUNT)
     for commit in commits:
@@ -60,6 +72,10 @@ def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
 
 
 if __name__ == '__main__':
+    print("[DEBUG] Before running remove commit history.")
+    display_current_commits()
     commit = find_tes_commit()
     if commit:
         remove_commit(method=RemoveCommitMethod.REVERT, commit_hash=commit.hexsha)
+    print("[DEBUG] After running remove commit history.")
+    display_current_commits()
