@@ -75,6 +75,10 @@ jobs:
 
       - name: Clear git commit before run test
         uses: ./.github/actions/clear_commit/
+        with:
+          # git info
+          git-author-name: "Chisanan232"
+          git-commit-msg: " 🧪 test commit message."
 
       - name: Run Fake-API-Server-Surveillance
         uses: ./

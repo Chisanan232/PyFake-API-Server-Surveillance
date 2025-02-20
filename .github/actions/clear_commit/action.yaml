@@ -1,6 +1,16 @@
 name: "Clear commit for end-to-end test"
 description: "Remove the commit for running end-to-end test"
 author: "Bryant Liu"
+inputs:
+  # git info
+  git-author-name:
+    description: "The author info (only name) to commit the change of API interface if it has."
+    required: false
+    default: "PyFake-API-Server-bot"
+  git-commit-msg:
+    description: "The commit message for committing the change of API interface if it has."
+    required: false
+    default: "✏️ Update the API interface settings."
 outputs:
   monitor-result:
     description: "Output. Currently it won't have any meaning value."
@@ -29,6 +39,10 @@ runs:
       shell: bash
       run: |
         python ./scripts/ci/clear_git_history.py
+      env:
+        # git info
+        GIT_AUTHOR_NAME: ${{ inputs.git-author-name }}
+        GIT_COMMIT_MSG: ${{ inputs.git-commit-msg }}
 
     - name: Set result as output value
       id: monitor-result
