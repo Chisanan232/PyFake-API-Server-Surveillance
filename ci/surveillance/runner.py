@@ -70,11 +70,13 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
 
     # Sync up the code version from git
     git_remote.fetch()
+    current_git_branch = repo.active_branch
     # Switch to target git branch which only for Fake-API-Server
-    if git_ref in [b.name for b in repo.branches]:
-        repo.git.checkout(git_ref)
-    else:
-        repo.git.checkout("-b", git_ref)
+    if current_git_branch.name != git_ref:
+        if git_ref in [b.name for b in repo.branches]:
+            repo.git.checkout(git_ref)
+        else:
+            repo.git.checkout("-b", git_ref)
 
     # Get all files in the folder
     all_files = set()

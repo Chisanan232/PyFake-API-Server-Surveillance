@@ -14,6 +14,17 @@ _GIT_COMMIT_MSG: str = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 repo = Repo("./")
 
 
+def switch_to_target_branch() -> None:
+    # Switch to target git branch which only for Fake-API-Server
+    current_git_branch = repo.active_branch
+    git_ref: str = "fake-api-server-monitor-update-config"
+    if current_git_branch.name != git_ref:
+        if git_ref in [b.name for b in repo.branches]:
+            repo.git.checkout(git_ref)
+        else:
+            repo.git.checkout("-b", git_ref)
+
+
 def display_current_commits() -> None:
     commits: Iterator[Commit] = repo.iter_commits(max_count=_SEARCH_GIT_COMMIT_COUNT)
     for commit in commits:
@@ -73,6 +84,7 @@ def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
 
 if __name__ == "__main__":
     print("[DEBUG] Before running remove commit history.")
+    switch_to_target_branch()
     display_current_commits()
     commit = find_tes_commit()
     if commit:
