@@ -68,17 +68,17 @@ class RemoveCommitMethod(Enum):
 
 def remove_commit(method: RemoveCommitMethod, commit_hash: str) -> None:
     try:
-        if method == "reset":
+        if method == RemoveCommitMethod.RESET:
             # Hard reset to the commit before the one we want to remove
             repo.git.reset("--hard", f"{commit_hash}^")
             print(f"Successfully reset to commit before {commit_hash}")
 
-        elif method == "revert":
+        elif method == RemoveCommitMethod.REVERT:
             # Create a new commit that undoes the specified commit
             repo.git.revert(commit_hash)
             print(f"Successfully reverted commit {commit_hash}")
 
-        elif method == "rebase":
+        elif method == RemoveCommitMethod.REBASE:
             # Remove the commit while keeping subsequent changes
             try:
                 repo.git.rebase("-i", f"{commit_hash}^")
