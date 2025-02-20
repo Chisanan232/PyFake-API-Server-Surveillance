@@ -8,7 +8,6 @@ from git import Repo, Commit, GitCommandError
 from ci.surveillance.model import EnvironmentVariableKey
 
 
-_TEST_BOT: str = "fake-api-server-monitor-update-config"
 _GIT_COMMITTER = os.environ[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
 _GIT_COMMIT_MSG = os.environ[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 
@@ -19,7 +18,7 @@ repo = Repo("./")
 def find_tes_commit() -> Optional[Commit]:
     commits: Iterator[Commit] = repo.iter_commits()
     for commit in commits:
-        if re.search(re.escape(_TEST_BOT), str(commit.author.name)) and re.search(re.escape(_GIT_COMMIT_MSG), str(commit.message), re.IGNORECASE):
+        if re.search(re.escape(_GIT_COMMITTER), str(commit.author.name)) and re.search(re.escape(_GIT_COMMIT_MSG), str(commit.message), re.IGNORECASE):
             print("[DEBUG] Found commit.")
             return commit
     print("[WARN] No commit found, pass it.")
