@@ -87,7 +87,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     # Switch to target git branch which only for Fake-API-Server
     if current_git_branch != git_ref:
         if git_ref in [b.name for b in repo.branches]:
-            repo.git.checkout(git_ref)
+            repo.git.switch(git_ref)
         else:
             repo.git.checkout("-b", git_ref)
 
