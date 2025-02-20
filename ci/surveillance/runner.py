@@ -42,8 +42,8 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     git_remote = repo.remote(name=remote_name)
     if not git_remote.exists():
         print("[DEBUG] Target git remote setting doesn't exist, create one.")
-        # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-        github_access_token = os.environ["GITHUB_TOKEN"]
+        github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+        # github_access_token = os.environ["GITHUB_TOKEN"]
         assert github_access_token, "Miss GitHub token"
         # github_account = action_inputs.git_info.commit.author.name
         # git_ssh_access = f"{github_account}:{github_access_token}@"
@@ -56,8 +56,8 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         print(f"[DEBUG] git_remote.url: {git_remote.url}")
         if action_inputs.git_info.repository not in git_remote.url:
             print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
-            # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-            github_access_token = os.environ["GITHUB_TOKEN"]
+            github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+            # github_access_token = os.environ["GITHUB_TOKEN"]
             assert github_access_token, "Miss GitHub token"
             # github_account = action_inputs.git_info.commit.author.name
             # git_ssh_access = f"{github_account}:{github_access_token}@"
