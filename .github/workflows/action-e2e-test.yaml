@@ -86,7 +86,7 @@ jobs:
           # options about how to pull API server doc config
           config-path: "./test/_values/_only_for_ci/rest-server/api.yaml"
           include-template-config: "true"
-          base-file-path: ".test/_values/_only_for_ci//rest-server/"
+          base-file-path: "./test/_values/_only_for_ci/rest-server/"
           base-url: "/test/v1"
           divide-api: "true"
         env:
