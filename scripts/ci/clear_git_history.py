@@ -1,3 +1,4 @@
+import ast
 import os
 import re
 from enum import Enum
@@ -16,9 +17,19 @@ repo = Repo("./")
 
 def switch_to_target_branch() -> None:
     # Switch to target git branch which only for Fake-API-Server
-    current_git_branch = repo.active_branch
+    now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
+    try:
+        current_git_branch = repo.active_branch.name
+    except TypeError as e:
+        print("[DEBUG] Occur something wrong when trying to get git branch")
+        # NOTE: Only for CI runtime environment
+        if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+            # original_branch = os.environ["GITHUB_HEAD_REF"]
+            current_git_branch = ""
+        else:
+            raise e
     git_ref: str = "fake-api-server-monitor-update-config"
-    if current_git_branch.name != git_ref:
+    if current_git_branch != git_ref:
         if git_ref in [b.name for b in repo.branches]:
             repo.git.checkout(git_ref)
         else:
