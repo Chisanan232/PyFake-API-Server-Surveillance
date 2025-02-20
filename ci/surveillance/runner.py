@@ -172,6 +172,9 @@ def run() -> None:
         if not action_inputs.accept_config_not_exist:
             raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
         has_api_change = True
+        fake_api_server_config_dir = Path(fake_api_server_config).parent
+        if not fake_api_server_config_dir.exists():
+            fake_api_server_config_dir.mkdir(parents=True)
 
     if has_api_change:
         _saving_config_component = SavingConfigComponent()
