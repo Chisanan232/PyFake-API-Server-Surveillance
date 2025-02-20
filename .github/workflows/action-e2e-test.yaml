@@ -88,8 +88,8 @@ jobs:
           # operation of action in CI
           accept-not-exist-config: true
           # git info
-          git-author-name: "e2e-test-bot"
-          git-author-email: "e2e-test-bot@testmail.com"
+          git-author-name: "Chisanan232"
+          git-author-email: "bulls23mj1991@gmail.com"
           git-commit-msg: " 🧪 test commit message."
           # options about how to pull API server doc config
           config-path: "./rest-server/api.yaml"
