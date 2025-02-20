@@ -107,6 +107,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         # when
         print("[DEBUG] Run target function")
         data = {
+            "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": "tester/pyfake-test",
             "GITHUB_HEAD_REF": git_branch_name,
             "GITHUB_RUN_ID": github_action_run_id,

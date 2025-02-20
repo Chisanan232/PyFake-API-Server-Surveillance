@@ -107,6 +107,7 @@ def test_entire_flow_with_not_exist_config(
             # operation with action in CI
             EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "false",
             # GitHub action environment
+            "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": "Chisanan232/Sample-Python-BackEnd",
             "GITHUB_HEAD_REF": "git-branch",
             "GITHUB_RUN_ID": github_action_run_id,
