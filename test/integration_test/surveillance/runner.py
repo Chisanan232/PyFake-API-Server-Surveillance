@@ -57,7 +57,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
     )
 
     default_remote = "origin"
-    git_branch_name = "fake-api-server-monitor-update-config"
+    github_action_run_id = "123456"
+    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}"
     real_repo = Repo("./")
     now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
@@ -108,6 +109,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         data = {
             "GITHUB_REPOSITORY": "tester/pyfake-test",
             "GITHUB_HEAD_REF": git_branch_name,
+            "GITHUB_RUN_ID": github_action_run_id,
         }
         with patch.dict(os.environ, data, clear=True):
             result = commit_change_config(action_inputs)
@@ -138,7 +140,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
         print("[DEBUG] Checkin git push running state")
         # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{git_branch_name}")
+        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{git_branch_name}", force=True)
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
