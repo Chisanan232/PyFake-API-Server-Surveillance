@@ -45,9 +45,6 @@ jobs:
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
 
-      - name: Clear git commit before run test
-        uses: ./.github/actions/clear_commit/
-
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
@@ -79,13 +76,6 @@ jobs:
           host-port: "1111"
           server-module: "test._values._only_for_ci.fake_api_doc_host"
           server-entry-point: "app"
-
-      - name: Clear git commit before run test
-        uses: ./.github/actions/clear_commit/
-        with:
-          # git info
-          git-author-name: "Chisanan232"
-          git-commit-msg: " 🧪 test commit message."
 
       - name: Run Fake-API-Server-Surveillance
         uses: ./
