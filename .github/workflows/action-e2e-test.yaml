@@ -59,9 +59,9 @@ jobs:
 
       - name: Remove the git branch which for end-to-end test only
         run: |
-#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
           python3 ./scripts/ci/clear_e2e_test_env.py
           echo "[DEBUG] Remove the git branch from remote repo."
+#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
         env:
           GITHUB_JOB: ${{ github.GITHUB_JOB }}
 
@@ -105,9 +105,9 @@ jobs:
 
       - name: Remove the git branch which for end-to-end test only
         run: |
-#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
           python3 ./scripts/ci/clear_e2e_test_env.py
           echo "[DEBUG] Remove the git branch from remote repo."
+#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
         env:
           GITHUB_JOB: ${{ github.GITHUB_JOB }}
 
