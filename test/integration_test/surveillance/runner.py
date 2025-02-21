@@ -12,6 +12,10 @@ from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
 from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 from ci.surveillance.runner import commit_change_config
 
+# isort: off
+from test._values._test_data import fake_github_action_values, fake_data, fake_git_data
+# isort: on
+
 
 @patch("git.IndexFile.commit")
 @patch("git.Repo.remote")
@@ -29,36 +33,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         filepath.touch()
     assert filepath.exists(), "File doesn't be created. Please check it."
 
-    action_inputs = ActionInput(
-        server_type=Mock(),
-        api_doc_url=Mock(),
-        git_info=GitInfo(
-            repository="Chisanan232/Sample-Python-BackEnd",
-            commit=GitCommit(
-                author=GitAuthor(
-                    name="test-user[bot]",
-                    email="test-bot@localhost.com",
-                ),
-                message=" 🧪 test commit message",
-            ),
-        ),
-        subcmd_pull_args=PullApiDocConfigArgs(
-            config_path=f"{base_test_dir}/api.yaml",
-            include_template_config=True,
-            base_file_path=str(base_test_dir),
-            base_url="./",
-            divide_api=True,
-            divide_http=False,
-            divide_http_request=False,
-            divide_http_response=False,
-            dry_run=True,
-        ),
-        accept_config_not_exist=False,
-    )
+    action_inputs = fake_data.action_input_model(file_path=filepath)
 
-    default_remote = "origin"
-    github_action_run_id = "123456"
-    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}"
     real_repo = Repo("./")
     now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
@@ -82,9 +58,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
         print("[DEBUG] Initial git remote")
-        if default_remote not in repo.remotes:
+        if fake_git_data.default_branch() not in repo.remotes:
             repo.create_remote(
-                name=default_remote, url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
+                name=fake_git_data.default_branch(), url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
             )
 
         push_info_list = PushInfoList()
@@ -106,13 +82,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
         # when
         print("[DEBUG] Run target function")
-        data = {
-            "GITHUB_TOKEN": "ghp_1234567890",
-            "GITHUB_REPOSITORY": "tester/pyfake-test",
-            "GITHUB_HEAD_REF": git_branch_name,
-            "GITHUB_RUN_ID": github_action_run_id,
-        }
-        with patch.dict(os.environ, data, clear=True):
+        with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
             result = commit_change_config(action_inputs)
 
         # should
@@ -120,7 +90,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert result is True
 
         print("[DEBUG] Checking remote callable state")
-        mock_init_remote_fun.assert_called_once_with(name=default_remote)
+        mock_init_remote_fun.assert_called_once_with(name=fake_git_data.default_branch())
         if mock_remote.exists() is True:
             mock_remote.create.assert_not_called()
         else:
@@ -141,7 +111,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
         print("[DEBUG] Checkin git push running state")
         # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{git_branch_name}", force=True)
+        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch()}", force=True)
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
@@ -149,5 +119,5 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:
             real_repo.git.switch(original_branch)
-        if git_branch_name in [b.name for b in real_repo.branches]:
-            real_repo.git.branch("-D", git_branch_name)
+        if fake_git_data.fake_api_server_monitor_branch() in [b.name for b in real_repo.branches]:
+            real_repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch())

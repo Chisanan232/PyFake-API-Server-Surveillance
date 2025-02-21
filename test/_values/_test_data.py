@@ -1,8 +1,11 @@
 from pathlib import Path
 from typing import Dict, Type, Union
+from unittest.mock import Mock
 
 from ci.surveillance.model import EnvironmentVariableKey
-
+from ci.surveillance.model.action import ActionInput
+from ci.surveillance.model.git import GitInfo, GitCommit, GitAuthor
+from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
 
 class fake_github_action_values:
@@ -45,6 +48,35 @@ class fake_data:
         action_inputs.update(cls.action_operation())
         action_inputs.update(fake_github_action_values.ci_env(cls.repo()))
         return action_inputs
+
+    @classmethod
+    def action_input_model(cls, file_path: Union[str, Path]) -> ActionInput:
+        return ActionInput(
+            server_type=Mock(),
+            api_doc_url=Mock(),
+            git_info=GitInfo(
+                repository="Chisanan232/Sample-Python-BackEnd",
+                commit=GitCommit(
+                    author=GitAuthor(
+                        name="test-user[bot]",
+                        email="test-bot@localhost.com",
+                    ),
+                    message=" 🧪 test commit message",
+                ),
+            ),
+            subcmd_pull_args=PullApiDocConfigArgs(
+                config_path=str(file_path),
+                include_template_config=True,
+                base_file_path=str(file_path.parent) if isinstance(file_path, Path) else str(Path(file_path).parent),
+                base_url="./",
+                divide_api=True,
+                divide_http=False,
+                divide_http_request=False,
+                divide_http_response=False,
+                dry_run=True,
+            ),
+            accept_config_not_exist=False,
+        )
 
     @classmethod
     def backend_project_info(cls) -> Dict[str, str]:
