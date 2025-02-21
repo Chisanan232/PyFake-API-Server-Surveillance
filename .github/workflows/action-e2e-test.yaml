@@ -9,6 +9,7 @@ on:
       - "develop/**"
     paths:
       - ".github/actions/clear_remote_branch/**.yaml"
+      - "scripts/ci/clear_e2e_test_env.py"
       - ".github/actions/setup_fake_server/**.yaml"
       - ".github/workflows/action-e2e-test.yaml"
       - "ci/**.py"
@@ -24,6 +25,7 @@ on:
       - "develop/**"
     paths:
       - ".github/actions/clear_remote_branch/**.yaml"
+      - "scripts/ci/clear_e2e_test_env.py"
       - ".github/actions/setup_fake_server/**.yaml"
       - ".github/workflows/action-e2e-test.yaml"
       - "ci/**.py"
