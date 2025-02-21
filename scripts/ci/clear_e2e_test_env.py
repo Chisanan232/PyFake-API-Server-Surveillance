@@ -37,7 +37,7 @@ def expect_branch_name() -> str:
 def search_branch(name: str, all_branch: List[str]) -> str:
     for branch in all_branch:
         if re.search(re.escape(name), str(branch), re.IGNORECASE):
-            return branch
+            return branch.replace("origin/", "")
     raise NotFoundTargetGitBranch(name, all_branch)
 
 
