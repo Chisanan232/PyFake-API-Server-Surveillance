@@ -1,3 +1,4 @@
+import os
 import re
 from typing import List, Optional
 
@@ -25,6 +26,14 @@ def get_all_branch() -> List[str]:
     return [ref.name for ref in REPO.refs]  # type: ignore[union-attr]
 
 
+def expect_branch_name() -> str:
+    github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
+    print(f"[DEBUG] GitHub event name: {github_action_event_name}")
+    github_action_job_id = os.environ["GITHUB_JOB"]
+    print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
+    return f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
+
+
 def search_branch(name: str, all_branch: List[str]) -> str:
     for branch in all_branch:
         if re.search(re.escape(name), str(branch), re.IGNORECASE):
@@ -40,7 +49,7 @@ def run() -> None:
     init_git()
     all_branch = get_all_branch()
     print(f"[DEBUG] All git branch: {all_branch}")
-    e2e_test_branch = search_branch(name="fake-api-server-monitor-update-config", all_branch=all_branch)
+    e2e_test_branch = search_branch(name=expect_branch_name(), all_branch=all_branch)
     print(f"[DEBUG] Target branch: {e2e_test_branch}")
     delete_remote_branch(e2e_test_branch)
 
