@@ -87,13 +87,8 @@ def test_entire_flow_with_not_exist_config(
         # when
         print("[DEBUG] Run target function")
         data = fake_data.action_input(file_path=filepath, base_test_dir=base_test_dir)
-        mock_request.return_value = dummy_api_doc_config_resp(
+        mock_request.return_value = dummy_api_doc_config_resp.generate(
             request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-            status=200,
-            version=11,
-            version_string="HTTP/1.1",
-            reason="",
-            decode_content=True,
         )
         mock_load_config.return_value = deserialize_api_doc_config(
             dummy_api_doc_config_resp.mock_data()

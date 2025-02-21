@@ -42,13 +42,8 @@ def test_run_with_exist_fake_api_server_config(
 ):
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = True
-    mock_request.return_value = api_doc_config_resp(
+    mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-        status=200,
-        version=11,
-        version_string="HTTP/1.1",
-        reason="",
-        decode_content=True,
     )
     mock_commit_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
@@ -74,13 +69,8 @@ def test_run_with_not_exist_fake_api_server_config(
 ):
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = False
-    mock_request.return_value = api_doc_config_resp(
+    mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-        status=200,
-        version=11,
-        version_string="HTTP/1.1",
-        reason="",
-        decode_content=True,
     )
     mock_commit_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
@@ -106,13 +96,8 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
 ):
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./")
     mock_path_exits.return_value = False
-    mock_request.return_value = api_doc_config_resp(
+    mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-        status=200,
-        version=11,
-        version_string="HTTP/1.1",
-        reason="",
-        decode_content=True,
     )
     mock_commit_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()

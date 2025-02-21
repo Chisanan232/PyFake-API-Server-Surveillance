@@ -12,6 +12,17 @@ class DummyHTTPResponse(BaseHTTPResponse, ABC):
     def mock_data() -> Mapping:
         pass
 
+    @classmethod
+    def generate(cls, request_url: str) -> "DummyHTTPResponse":
+        return cls(
+            request_url=request_url,
+            status=200,
+            version=11,
+            version_string="HTTP/1.1",
+            reason="",
+            decode_content=True,
+        )
+
 
 class DummySwaggerAPIDocConfigResponse(DummyHTTPResponse):
 
