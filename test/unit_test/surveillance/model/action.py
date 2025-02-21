@@ -6,7 +6,10 @@ import pytest
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.action import ActionInput
 
+# isort: off
 from ._base import _BaseModelTestSuite
+from test._values._test_data import fake_data
+# isort: on
 
 
 class TestActionInput(_BaseModelTestSuite):
@@ -18,28 +21,7 @@ class TestActionInput(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                # API documentation info
-                EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
-                EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-                # git info
-                EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-                EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-                # for subcommand line *pull* options
-                EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-                EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-                EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-                EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-                EnvironmentVariableKey.DIVIDE_API.value: "true",
-                EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-                EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-                EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-                EnvironmentVariableKey.DRY_RUN.value: "true",
-                # operation with action in CI
-                EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "true",
-            },
+            fake_data.action_input(file_path="./api.yaml", base_test_dir="./"),
         ],
     )
     def test_deserialize(self, model: Type[ActionInput], data: Mapping):
