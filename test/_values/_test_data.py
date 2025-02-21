@@ -26,11 +26,11 @@ class fake_github_action_values:
 
 class fake_git_data:
     @classmethod
-    def default_branch(cls) -> str:
+    def default_remote_name(cls) -> str:
         return "origin"
 
     @classmethod
-    def fake_api_server_monitor_branch(cls) -> str:
+    def fake_api_server_monitor_branch_name(cls) -> str:
         return f"fake-api-server-monitor-update-config_{fake_github_action_values.action_run_id()}"
 
 

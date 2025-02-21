@@ -71,8 +71,8 @@ def test_entire_flow_with_not_exist_config(
     try:
         print("[DEBUG] Initial git remote")
         # TODO: change the repo to sample project.
-        if fake_git_data.default_branch() not in repo.remotes:
-            repo.create_remote(name=fake_git_data.default_branch(), url=f"https://github.com/{fake_data.repo()}.git")
+        if fake_git_data.default_remote_name() not in repo.remotes:
+            repo.create_remote(name=fake_git_data.default_remote_name(), url=f"https://github.com/{fake_data.repo()}.git")
 
         print("[DEBUG] Mock git remote")
         push_info_list = PushInfoList()
@@ -106,17 +106,17 @@ def test_entire_flow_with_not_exist_config(
 
         print("[DEBUG] Checkin git push running state")
         # mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-        mock_remote_push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch()}", force=True)
+        mock_remote_push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True)
     finally:
         committed_files = list(map(lambda i: i.a_path, repo.index.diff(repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
             # test finally
             repo.git.restore("--staged", str(filepath))
-        if fake_git_data.default_branch() in repo.remotes:
-            repo.delete_remote(repo.remote(fake_git_data.default_branch()))
+        if fake_git_data.default_remote_name() in repo.remotes:
+            repo.delete_remote(repo.remote(fake_git_data.default_remote_name()))
         if Path(filepath).exists():
             shutil.rmtree(base_test_dir)
         if repo.active_branch != original_branch:
             repo.git.switch(original_branch)
-        if fake_git_data.fake_api_server_monitor_branch() in [b.name for b in repo.branches]:
-            repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch())
+        if fake_git_data.fake_api_server_monitor_branch_name() in [b.name for b in repo.branches]:
+            repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch_name())

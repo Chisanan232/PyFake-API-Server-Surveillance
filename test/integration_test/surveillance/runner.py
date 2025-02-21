@@ -58,9 +58,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
         print("[DEBUG] Initial git remote")
-        if fake_git_data.default_branch() not in repo.remotes:
+        if fake_git_data.default_remote_name() not in repo.remotes:
             repo.create_remote(
-                name=fake_git_data.default_branch(), url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
+                name=fake_git_data.default_remote_name(), url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
             )
 
         push_info_list = PushInfoList()
@@ -90,7 +90,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         assert result is True
 
         print("[DEBUG] Checking remote callable state")
-        mock_init_remote_fun.assert_called_once_with(name=fake_git_data.default_branch())
+        mock_init_remote_fun.assert_called_once_with(name=fake_git_data.default_remote_name())
         if mock_remote.exists() is True:
             mock_remote.create.assert_not_called()
         else:
@@ -111,7 +111,7 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
         print("[DEBUG] Checkin git push running state")
         # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch()}", force=True)
+        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True)
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
@@ -119,5 +119,5 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             real_repo.git.restore("--staged", str(filepath))
         if real_repo.active_branch != original_branch:
             real_repo.git.switch(original_branch)
-        if fake_git_data.fake_api_server_monitor_branch() in [b.name for b in real_repo.branches]:
-            real_repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch())
+        if fake_git_data.fake_api_server_monitor_branch_name() in [b.name for b in real_repo.branches]:
+            real_repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch_name())
