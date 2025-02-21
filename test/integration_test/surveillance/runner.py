@@ -110,7 +110,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
             "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": "tester/pyfake-test",
             "GITHUB_HEAD_REF": git_branch_name,
-            "GITHUB_RUN_ID": github_action_run_id,
+            "GITHUB_JOB": github_action_run_id,
+            "CI_TEST_MODE": "true",
         }
         with patch.dict(os.environ, data, clear=True):
             result = commit_change_config(action_inputs)

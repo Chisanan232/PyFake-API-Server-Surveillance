@@ -110,7 +110,8 @@ def test_entire_flow_with_not_exist_config(
             "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": "Chisanan232/Sample-Python-BackEnd",
             "GITHUB_HEAD_REF": "git-branch",
-            "GITHUB_RUN_ID": github_action_run_id,
+            "GITHUB_JOB": github_action_run_id,
+            "CI_TEST_MODE": "true",
         }
         mock_request.return_value = dummy_api_doc_config_resp(
             request_url=data[EnvironmentVariableKey.API_DOC_URL.value],

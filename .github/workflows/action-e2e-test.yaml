@@ -55,13 +55,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         run: |
-          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_RUN_ID"
+          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
           echo "[DEBUG] Remove the git branch from remote repo."
         env:
-          GITHUB_RUN_ID: ${{ github.GITHUB_RUN_ID }}
+          GITHUB_JOB: ${{ github.GITHUB_JOB }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -99,13 +100,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         run: |
-          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_RUN_ID"
+          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
           echo "[DEBUG] Remove the git branch from remote repo."
         env:
-          GITHUB_RUN_ID: ${{ github.GITHUB_RUN_ID }}
+          GITHUB_JOB: ${{ github.GITHUB_JOB }}
 
   with-invalid-os:
     runs-on: windows-latest
