@@ -27,7 +27,7 @@ def get_all_branch() -> List[str]:
 
 def search_branch(name: str, all_branch: List[str]) -> str:
     for branch in all_branch:
-        if re.search(r"", str(branch), re.IGNORECASE):
+        if re.search(re.escape(name), str(branch), re.IGNORECASE):
             return branch
     raise NotFoundTargetGitBranch(name, all_branch)
 
