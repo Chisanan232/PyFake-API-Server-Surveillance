@@ -1,6 +1,7 @@
 import ast
 import os
 import shutil
+import uuid
 from pathlib import Path
 from test._values.dummy_objects import (
     DummyHTTPResponse,
@@ -20,6 +21,7 @@ from ci.surveillance.runner import run
 
 
 @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
+@patch("ci.surveillance.runner.uuid.uuid1")
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.load_config")
 @patch("git.remote.Remote.push")
@@ -27,6 +29,7 @@ def test_entire_flow_with_not_exist_config(
     mock_remote_push: Mock,
     mock_load_config: Mock,
     mock_request: Mock,
+    mock_uuid: Mock,
     dummy_api_doc_config_resp: Type[DummyHTTPResponse],
 ):
     # given
@@ -44,7 +47,8 @@ def test_entire_flow_with_not_exist_config(
 
     default_remote = "origin"
     github_action_run_id = "123456"
-    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}"
+    action_uuid = "123-456-789"
+    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}_{action_uuid}"
 
     print("[DEBUG] Initial git repository")
     repo = Repo("./")
@@ -69,6 +73,8 @@ def test_entire_flow_with_not_exist_config(
         repo.git.checkout("-b", original_branch)
 
     try:
+        mock_uuid.return_value = action_uuid
+
         print("[DEBUG] Initial git remote")
         # TODO: change the repo to sample project.
         if default_remote not in repo.remotes:

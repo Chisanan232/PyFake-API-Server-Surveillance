@@ -1,6 +1,7 @@
 import ast
 import os
 import shutil
+import uuid
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -13,9 +14,10 @@ from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 from ci.surveillance.runner import commit_change_config
 
 
+@patch("ci.surveillance.runner.uuid.uuid1")
 @patch("git.IndexFile.commit")
 @patch("git.Repo.remote")
-def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock):
+def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock, mock_uuid: Mock):
     # given
     base_test_dir = Path("./test/_values/verify_git_feature")
     if not base_test_dir.exists():
@@ -58,7 +60,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
     default_remote = "origin"
     github_action_run_id = "123456"
-    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}"
+    action_uuid = "123-456-789"
+    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}_{action_uuid}"
     real_repo = Repo("./")
     now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
@@ -78,6 +81,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         real_repo.git.checkout("-b", original_branch)
 
     try:
+        mock_uuid.return_value = action_uuid
+
         print("[DEBUG] Initial git repository")
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
