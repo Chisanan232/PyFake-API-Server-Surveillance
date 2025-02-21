@@ -43,7 +43,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
         git_ref: str = f"fake-api-server-monitor-update-config_{github_action_job_id}"
     else:
-        git_ref: str = "fake-api-server-monitor-update-config"
+        git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
 
     # Initial git remote setting
     git_remote = repo.remote(name=remote_name)
