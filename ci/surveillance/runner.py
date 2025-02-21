@@ -1,5 +1,6 @@
 import ast
 import os
+import uuid
 from pathlib import Path
 
 import urllib3
@@ -41,7 +42,9 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     if in_ci_runtime_env:
         github_action_job_id = os.environ["GITHUB_JOB"]
         print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
-        git_ref: str = f"fake-api-server-monitor-update-config_{github_action_job_id}"
+        action_uuid = uuid.uuid1()
+        print(f"[DEBUG] GitHub action UUID: {action_uuid}")
+        git_ref: str = f"fake-api-server-monitor-update-config_{github_action_job_id}_{action_uuid}"
     else:
         git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
 
