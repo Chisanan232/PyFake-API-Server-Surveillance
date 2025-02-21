@@ -43,7 +43,8 @@ def test_entire_flow_with_not_exist_config(
     assert filepath.exists(), "File doesn't be created. Please check it."
 
     default_remote = "origin"
-    git_branch_name = "fake-api-server-monitor-update-config"
+    github_action_run_id = "123456"
+    git_branch_name = f"fake-api-server-monitor-update-config_{github_action_run_id}"
 
     print("[DEBUG] Initial git repository")
     repo = Repo("./")
@@ -106,8 +107,10 @@ def test_entire_flow_with_not_exist_config(
             # operation with action in CI
             EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "false",
             # GitHub action environment
+            "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": "Chisanan232/Sample-Python-BackEnd",
             "GITHUB_HEAD_REF": "git-branch",
+            "GITHUB_RUN_ID": github_action_run_id,
         }
         mock_request.return_value = dummy_api_doc_config_resp(
             request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -133,7 +136,8 @@ def test_entire_flow_with_not_exist_config(
         assert data[EnvironmentVariableKey.CONFIG_PATH.value] in commit_files
 
         print("[DEBUG] Checkin git push running state")
-        mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        # mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
+        mock_remote_push.assert_called_once_with(refspec=f"HEAD:refs/heads/{git_branch_name}", force=True)
     finally:
         committed_files = list(map(lambda i: i.a_path, repo.index.diff(repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
@@ -145,4 +149,5 @@ def test_entire_flow_with_not_exist_config(
             shutil.rmtree(base_test_dir)
         if repo.active_branch != original_branch:
             repo.git.switch(original_branch)
+        if git_branch_name in [b.name for b in repo.branches]:
             repo.git.branch("-D", git_branch_name)

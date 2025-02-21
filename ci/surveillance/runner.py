@@ -1,3 +1,4 @@
+import ast
 import os
 from pathlib import Path
 
@@ -17,11 +18,18 @@ from .model.action import ActionInput
 
 def commit_change_config(action_inputs: ActionInput) -> bool:
     # Initial a git project
-    if os.path.exists(action_inputs.subcmd_pull_args.config_path):
+    print(f"[DEBUG] action_inputs: {action_inputs}")
+    api_config_path = action_inputs.subcmd_pull_args.config_path
+    print(f"[DEBUG] api_config_path: {api_config_path}")
+    api_config_exists = os.path.exists(api_config_path)
+    print(f"[DEBUG] api_config_exists: {api_config_exists}")
+    if api_config_exists:
+        print("[DEBUG] PyFake config exists, initial git directly.")
         repo = Repo("./")
     else:
+        print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
         repo = Repo.clone_from(
-            url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}",
+            url=f"https://github.com/{action_inputs.git_info.repository}",
             to_path="./",
         )
         assert os.path.exists(
@@ -29,20 +37,59 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         ), "PyFake-API-Server configuration is required. Please check it."
 
     remote_name: str = "origin"
-    git_ref: str = "fake-api-server-monitor-update-config"
+    github_run_id = os.environ["GITHUB_RUN_ID"]
+    print(f"[DEBUG] GitHub run ID: {github_run_id}")
+    git_ref: str = f"fake-api-server-monitor-update-config_{github_run_id}"
 
     # Initial git remote setting
     git_remote = repo.remote(name=remote_name)
     if not git_remote.exists():
-        git_remote.create(name=remote_name, url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}")
+        print("[DEBUG] Target git remote setting doesn't exist, create one.")
+        # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+        github_access_token = os.environ["GITHUB_TOKEN"]
+        assert github_access_token, "Miss GitHub token"
+        # github_account = action_inputs.git_info.commit.author.name
+        # git_ssh_access = f"{github_account}:{github_access_token}@"
+        # git_remote.create(
+        #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
+        # )
+        remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+        git_remote.create(repo=repo, name=remote_name, url=remote_url)
+    else:
+        print(f"[DEBUG] git_remote.url: {git_remote.url}")
+        if action_inputs.git_info.repository not in git_remote.url:
+            print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
+            # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+            github_access_token = os.environ["GITHUB_TOKEN"]
+            assert github_access_token, "Miss GitHub token"
+            # github_account = action_inputs.git_info.commit.author.name
+            # git_ssh_access = f"{github_account}:{github_access_token}@"
+            # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+            # "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY"
+            remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+            git_remote.set_url(new_url=remote_url)
+        else:
+            print("[DEBUG] Remote info all is correct.")
 
     # Sync up the code version from git
     git_remote.fetch()
+    now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
+    try:
+        current_git_branch = repo.active_branch.name
+    except TypeError as e:
+        print("[DEBUG] Occur something wrong when trying to get git branch")
+        # NOTE: Only for CI runtime environment
+        if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+            # original_branch = os.environ["GITHUB_HEAD_REF"]
+            current_git_branch = ""
+        else:
+            raise e
     # Switch to target git branch which only for Fake-API-Server
-    if git_ref in [b.name for b in repo.branches]:
-        repo.git.checkout(git_ref)
-    else:
-        repo.git.checkout("-b", git_ref)
+    if current_git_branch != git_ref:
+        if git_ref in [b.name for b in repo.branches]:
+            repo.git.switch(git_ref)
+        else:
+            repo.git.checkout("-b", git_ref)
 
     # Get all files in the folder
     all_files = set()
@@ -58,6 +105,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     untracked = set(repo.untracked_files)
     print("Check untracked file ...")
     for file in untracked:
+        print(f"Found untracked files: {file}")
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
@@ -76,6 +124,7 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
     modified = {item.a_path for item in diff_index}
     print("Check modified file ...")
     for file in modified:
+        print(f"Found modified files: {file}")
         file_path_obj = Path(file)
         if file_path_obj.is_file():
             if file_path_obj in all_files:
@@ -98,7 +147,8 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         print("Commit the change.")
 
         # Push the change to git server
-        git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        git_remote.push(refspec=f"HEAD:refs/heads/{git_ref}", force=True).raise_if_error()
         print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
     else:
         print("Don't have any files be added. Won't commit the change.")
@@ -137,6 +187,9 @@ def run() -> None:
         if not action_inputs.accept_config_not_exist:
             raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
         has_api_change = True
+        fake_api_server_config_dir = Path(fake_api_server_config).parent
+        if not fake_api_server_config_dir.exists():
+            fake_api_server_config_dir.mkdir(parents=True, exist_ok=True)
 
     if has_api_change:
         _saving_config_component = SavingConfigComponent()
