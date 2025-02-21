@@ -1,7 +1,6 @@
 import ast
 import os
 import shutil
-import uuid
 from pathlib import Path
 from test._values.dummy_objects import (
     DummyHTTPResponse,

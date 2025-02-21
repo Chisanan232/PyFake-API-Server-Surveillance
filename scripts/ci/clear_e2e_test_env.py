@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List
+from typing import List, Optional
 
 from git import Repo
 
@@ -43,5 +43,5 @@ def run() -> None:
     delete_remote_branch(e2e_test_branch)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
