@@ -7,13 +7,11 @@ from unittest.mock import Mock, patch
 from git import Repo
 from git.remote import PushInfoList
 
-from ci.surveillance.model.action import ActionInput
-from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
-from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 from ci.surveillance.runner import commit_change_config
 
 # isort: off
 from test._values._test_data import fake_github_action_values, fake_data, fake_git_data
+
 # isort: on
 
 
@@ -60,7 +58,8 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print("[DEBUG] Initial git remote")
         if fake_git_data.default_remote_name() not in repo.remotes:
             repo.create_remote(
-                name=fake_git_data.default_remote_name(), url="https://github.com/Chisanan232/fake-api-server-surveillance.git"
+                name=fake_git_data.default_remote_name(),
+                url="https://github.com/Chisanan232/fake-api-server-surveillance.git",
             )
 
         push_info_list = PushInfoList()
@@ -111,7 +110,9 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
 
         print("[DEBUG] Checkin git push running state")
         # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-        mock_remote.push.assert_called_once_with(refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True)
+        mock_remote.push.assert_called_once_with(
+            refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True
+        )
     finally:
         committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
