@@ -39,7 +39,9 @@ def delete_remote_branch(name: str) -> None:
 def run() -> None:
     init_git()
     all_branch = get_all_branch()
+    print(f"[DEBUG] All git branch: {all_branch}")
     e2e_test_branch = search_branch(name="fake-api-server-monitor-update-config", all_branch=all_branch)
+    print(f"[DEBUG] Target branch: {e2e_test_branch}")
     delete_remote_branch(e2e_test_branch)
 
 
