@@ -58,12 +58,7 @@ jobs:
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
-        run: |
-          python3 ./scripts/ci/clear_e2e_test_env.py
-          echo "[DEBUG] Remove the git branch from remote repo."
-#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
-        env:
-          GITHUB_JOB: ${{ github.GITHUB_JOB }}
+        uses: ./.github/actions/clear_remote_branch/
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -104,12 +99,7 @@ jobs:
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
-        run: |
-          python3 ./scripts/ci/clear_e2e_test_env.py
-          echo "[DEBUG] Remove the git branch from remote repo."
-#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
-        env:
-          GITHUB_JOB: ${{ github.GITHUB_JOB }}
+        uses: ./.github/actions/clear_remote_branch/
 
   with-invalid-os:
     runs-on: windows-latest
