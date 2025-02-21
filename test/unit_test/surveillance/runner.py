@@ -3,8 +3,6 @@ from typing import Type
 
 import pytest
 
-from test._values._test_data import fake_data
-
 try:
     from http import HTTPMethod
 except ImportError:
@@ -18,6 +16,7 @@ from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
 
 # isort: off
+from test._values._test_data import fake_data
 from test._values.dummy_objects import (
     DummySwaggerAPIDocConfigResponse,
     DummyOpenAPIDocConfigResponse,
