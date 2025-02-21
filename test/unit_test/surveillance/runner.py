@@ -3,6 +3,8 @@ from typing import Type
 
 import pytest
 
+from test._values._test_data import fake_data
+
 try:
     from http import HTTPMethod
 except ImportError:
@@ -38,30 +40,7 @@ def test_run_with_exist_fake_api_server_config(
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
-    data = {
-        # API documentation info
-        EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
-        EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-        # git info
-        EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-        EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-        EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-        EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-        # for subcommand line *pull* options
-        EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-        EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-        EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-        EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-        EnvironmentVariableKey.DIVIDE_API.value: "true",
-        EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-        EnvironmentVariableKey.DRY_RUN.value: "true",
-        # operation with action in CI
-        EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "true",
-        # GitHub action environment
-        "GITHUB_HEAD_REF": "git-branch",
-    }
+    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -93,30 +72,7 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
-    data = {
-        # API documentation info
-        EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
-        EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-        # git info
-        EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-        EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-        EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-        EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-        # for subcommand line *pull* options
-        EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-        EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-        EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-        EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-        EnvironmentVariableKey.DIVIDE_API.value: "true",
-        EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-        EnvironmentVariableKey.DRY_RUN.value: "true",
-        # operation with action in CI
-        EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "true",
-        # GitHub action environment
-        "GITHUB_HEAD_REF": "git-branch",
-    }
+    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -148,30 +104,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
-    data = {
-        # API documentation info
-        EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
-        EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-        # git info
-        EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-        EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-        EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-        EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-        # for subcommand line *pull* options
-        EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-        EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-        EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-        EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-        EnvironmentVariableKey.DIVIDE_API.value: "true",
-        EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-        EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-        EnvironmentVariableKey.DRY_RUN.value: "true",
-        # operation with action in CI
-        EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "false",
-        # GitHub action environment
-        "GITHUB_HEAD_REF": "git-branch",
-    }
+    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],

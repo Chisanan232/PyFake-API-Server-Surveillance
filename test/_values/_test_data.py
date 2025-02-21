@@ -40,12 +40,12 @@ class fake_data:
         return "Chisanan232/Sample-Python-BackEnd"
 
     @classmethod
-    def action_input(cls, file_path: Union[str, Path], base_test_dir: Union[str, Path]) -> Dict[str, str]:
+    def action_input(cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: str = "false") -> Dict[str, str]:
         action_inputs = {}
         action_inputs.update(cls.backend_project_info())
         action_inputs.update(cls.git_operation_info())
         action_inputs.update(cls.subcmd_pull_args(file_path=file_path, base_test_dir=base_test_dir))
-        action_inputs.update(cls.action_operation())
+        action_inputs.update(cls.action_operation(accept_config_not_exist=accept_config_not_exist))
         action_inputs.update(fake_github_action_values.ci_env(cls.repo()))
         return action_inputs
 
@@ -112,8 +112,8 @@ class fake_data:
         }
 
     @classmethod
-    def action_operation(cls) -> Dict[str, str]:
+    def action_operation(cls, accept_config_not_exist: str = "false") -> Dict[str, str]:
         return {
             # operation with action in CI
-            EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: "false",
+            EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: accept_config_not_exist,
         }
