@@ -22,7 +22,7 @@ def init_git() -> None:
 
 
 def get_all_branch() -> List[str]:
-    return [ref.name for ref in REPO.refs]
+    return [ref.name for ref in REPO.refs]  # type: ignore[union-attr]
 
 
 def search_branch(name: str, all_branch: List[str]) -> str:
@@ -33,7 +33,7 @@ def search_branch(name: str, all_branch: List[str]) -> str:
 
 
 def delete_remote_branch(name: str) -> None:
-    REPO.git.push("origin", "--delete", name)
+    REPO.git.push("origin", "--delete", name)  # type: ignore[union-attr]
 
 
 def run() -> None:
