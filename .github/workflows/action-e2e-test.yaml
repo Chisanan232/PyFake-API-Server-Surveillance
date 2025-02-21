@@ -9,7 +9,7 @@ on:
       - "develop/**"
     paths:
       - ".github/workflows/action-e2e-test.yaml"
-      - "ci/**"
+      - "ci/**.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
@@ -22,7 +22,7 @@ on:
       - "develop/**"
     paths:
       - ".github/workflows/action-e2e-test.yaml"
-      - "ci/**"
+      - "ci/**.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
