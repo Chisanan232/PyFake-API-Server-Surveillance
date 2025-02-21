@@ -8,6 +8,8 @@ on:
       - "master"
       - "develop/**"
     paths:
+      - ".github/actions/clear_remote_branch/**.yaml"
+      - ".github/actions/setup_fake_server/**.yaml"
       - ".github/workflows/action-e2e-test.yaml"
       - "ci/**.py"
       - "action.yaml"
@@ -21,6 +23,8 @@ on:
       - "master"
       - "develop/**"
     paths:
+      - ".github/actions/clear_remote_branch/**.yaml"
+      - ".github/actions/setup_fake_server/**.yaml"
       - ".github/workflows/action-e2e-test.yaml"
       - "ci/**.py"
       - "action.yaml"
