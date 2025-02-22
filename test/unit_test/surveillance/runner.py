@@ -22,6 +22,7 @@ from test._values.dummy_objects import (
     DummyOpenAPIDocConfigResponse,
     DummyHTTPResponse,
 )
+
 # isort: on
 
 

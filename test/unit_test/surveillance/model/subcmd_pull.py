@@ -9,6 +9,7 @@ from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 # isort: off
 from ._base import _BaseModelTestSuite
 from test._values._test_data import fake_data
+
 # isort: on
 
 

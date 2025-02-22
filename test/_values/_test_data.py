@@ -1,10 +1,10 @@
 from pathlib import Path
-from typing import Dict, Type, Union
+from typing import Dict, Union
 from unittest.mock import Mock
 
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.action import ActionInput
-from ci.surveillance.model.git import GitInfo, GitCommit, GitAuthor
+from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
 from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
 
@@ -46,7 +46,9 @@ class fake_data:
         return "Chisanan232/Sample-Python-BackEnd"
 
     @classmethod
-    def action_input(cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: str = "false") -> Dict[str, str]:
+    def action_input(
+        cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: str = "false"
+    ) -> Dict[str, str]:
         action_inputs = {}
         action_inputs.update(cls.backend_project_info())
         action_inputs.update(cls.git_operation_info())
