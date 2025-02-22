@@ -102,24 +102,24 @@ class GitOperation:
             print("Don't have any files be added. Won't commit the change.")
         return True
 
-    def _push_to_remote(self, git_remote: Remote) -> None:
-        # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
-        git_remote.push(refspec=f"HEAD:refs/heads/{self.fake_api_server_monitor_git_branch}", force=True).raise_if_error()
-
-    def _commit_changes(self, action_inputs: ActionInput) -> Commit:
-        commit = self.repository.index.commit(
-            author=action_inputs.git_info.commit.author.serialize_for_git(),
-            message=action_inputs.git_info.commit.message,
-        )
-        print("Commit the change.")
-        return commit
-
-    def _switch_git_branch(self, git_ref: str) -> None:
-        if self._current_git_branch != git_ref:
-            if git_ref in [b.name for b in self.repository.branches]:
-                self.repository.git.switch(git_ref)
-            else:
-                self.repository.git.checkout("-b", git_ref)
+    def _init_git(self, action_inputs: ActionInput) -> Repo:
+        api_config_path = action_inputs.subcmd_pull_args.config_path
+        print(f"[DEBUG] api_config_path: {api_config_path}")
+        api_config_exists = os.path.exists(api_config_path)
+        print(f"[DEBUG] api_config_exists: {api_config_exists}")
+        if api_config_exists:
+            print("[DEBUG] PyFake config exists, initial git directly.")
+            repo = Repo("./")
+        else:
+            print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
+            repo = Repo.clone_from(
+                url=f"https://github.com/{action_inputs.git_info.repository}",
+                to_path="./",
+            )
+            assert os.path.exists(
+                action_inputs.subcmd_pull_args.config_path
+            ), "PyFake-API-Server configuration is required. Please check it."
+        return repo
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
         git_remote = self.repository.remote(name=remote_name)
@@ -152,24 +152,12 @@ class GitOperation:
                 print("[DEBUG] Remote info all is correct.")
         return git_remote
 
-    def _init_git(self, action_inputs: ActionInput) -> Repo:
-        api_config_path = action_inputs.subcmd_pull_args.config_path
-        print(f"[DEBUG] api_config_path: {api_config_path}")
-        api_config_exists = os.path.exists(api_config_path)
-        print(f"[DEBUG] api_config_exists: {api_config_exists}")
-        if api_config_exists:
-            print("[DEBUG] PyFake config exists, initial git directly.")
-            repo = Repo("./")
-        else:
-            print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
-            repo = Repo.clone_from(
-                url=f"https://github.com/{action_inputs.git_info.repository}",
-                to_path="./",
-            )
-            assert os.path.exists(
-                action_inputs.subcmd_pull_args.config_path
-            ), "PyFake-API-Server configuration is required. Please check it."
-        return repo
+    def _switch_git_branch(self, git_ref: str) -> None:
+        if self._current_git_branch != git_ref:
+            if git_ref in [b.name for b in self.repository.branches]:
+                self.repository.git.switch(git_ref)
+            else:
+                self.repository.git.checkout("-b", git_ref)
 
     def _get_all_fake_api_server_configs(self, action_inputs: ActionInput) -> Set[Path]:
         all_files: Set[Path] = set()
@@ -194,3 +182,15 @@ class GitOperation:
             else:
                 for one_file in Path(file).rglob("*.yaml"):
                     _add_file(one_file)
+
+    def _commit_changes(self, action_inputs: ActionInput) -> Commit:
+        commit = self.repository.index.commit(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
+        print("Commit the change.")
+        return commit
+
+    def _push_to_remote(self, git_remote: Remote) -> None:
+        # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        git_remote.push(refspec=f"HEAD:refs/heads/{self.fake_api_server_monitor_git_branch}", force=True).raise_if_error()
