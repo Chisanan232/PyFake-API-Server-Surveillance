@@ -175,7 +175,7 @@ class GitOperation:
                 all_files.add(file_path)
         return all_files
 
-    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str]) -> None:
+    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: Set[str]) -> None:
 
         def _add_file(_file: Union[Path, str]) -> None:
             if _file in all_files:
