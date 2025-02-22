@@ -43,8 +43,6 @@ def commit_change_config(action_inputs: ActionInput) -> bool:
         print(f"[DEBUG] GitHub event name: {github_action_event_name}")
         github_action_job_id = os.environ["GITHUB_JOB"]
         print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
-        # action_uuid = uuid.uuid1()
-        # print(f"[DEBUG] GitHub action UUID: {action_uuid}")
         git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
     else:
         git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]

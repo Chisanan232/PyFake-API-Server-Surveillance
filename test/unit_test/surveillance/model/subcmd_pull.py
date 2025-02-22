@@ -6,7 +6,11 @@ import pytest
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
+# isort: off
 from ._base import _BaseModelTestSuite
+from test._values._test_data import fake_data
+
+# isort: on
 
 
 class TestActionInput(_BaseModelTestSuite):
@@ -18,17 +22,7 @@ class TestActionInput(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-                EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "true",
-                EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-                EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-                EnvironmentVariableKey.DIVIDE_API.value: "True",
-                EnvironmentVariableKey.DIVIDE_HTTP.value: "False",
-                EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-                EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "False",
-                EnvironmentVariableKey.DRY_RUN.value: "True",
-            },
+            fake_data.subcmd_pull_args(file_path="./api.yaml", base_test_dir="./"),
         ],
     )
     def test_deserialize(self, model: Type[PullApiDocConfigArgs], data: Mapping):
