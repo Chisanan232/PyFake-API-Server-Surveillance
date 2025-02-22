@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import List, Set
 
-from git import Repo, Remote
+from git import Repo, Remote, Commit
 
 from ci.surveillance.model.action import ActionInput
 
@@ -48,11 +48,7 @@ class GitOperation:
 
         # Commit the update change
         if len(all_ready_commit_files) > 0:
-            commit = repo.index.commit(
-                author=action_inputs.git_info.commit.author.serialize_for_git(),
-                message=action_inputs.git_info.commit.message,
-            )
-            print("Commit the change.")
+            commit = self._commit_changes(action_inputs, repo)
 
             # Push the change to git server
             # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
@@ -61,6 +57,14 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _commit_changes(self, action_inputs: ActionInput, repo: Repo) -> Commit:
+        commit = repo.index.commit(
+            author=action_inputs.git_info.commit.author.serialize_for_git(),
+            message=action_inputs.git_info.commit.message,
+        )
+        print("Commit the change.")
+        return commit
 
     def _switch_git_branch(self, current_git_branch: str, git_ref: str, repo: Repo) -> None:
         if current_git_branch != git_ref:
