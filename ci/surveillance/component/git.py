@@ -105,23 +105,11 @@ class GitOperation:
         return True
 
     def _init_git(self, action_inputs: ActionInput) -> Repo:
-        api_config_path = action_inputs.subcmd_pull_args.config_path
-        print(f"[DEBUG] api_config_path: {api_config_path}")
-        api_config_exists = os.path.exists(api_config_path)
-        print(f"[DEBUG] api_config_exists: {api_config_exists}")
-        if api_config_exists:
-            print("[DEBUG] PyFake config exists, initial git directly.")
-            repo = Repo("./")
-        else:
-            print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
-            repo = Repo.clone_from(
-                url=f"https://github.com/{action_inputs.git_info.repository}",
-                to_path="./",
-            )
-            assert os.path.exists(
-                action_inputs.subcmd_pull_args.config_path
-            ), "PyFake-API-Server configuration is required. Please check it."
-        return repo
+        assert os.path.exists(
+            action_inputs.subcmd_pull_args.config_path
+        ), "PyFake-API-Server configuration is required. Please check it."
+        print("[DEBUG] PyFake config exists, initial git directly.")
+        return Repo("./")
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
         git_remote = self.repository.remote(name=remote_name)
