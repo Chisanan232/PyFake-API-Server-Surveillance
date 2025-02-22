@@ -1,7 +1,7 @@
 import ast
 import os
 from pathlib import Path
-from typing import List, Set
+from typing import List, Set, Optional
 
 from git import Repo, Remote, Commit
 
@@ -9,46 +9,60 @@ from ci.surveillance.model.action import ActionInput
 
 
 class GitOperation:
+    def __init__(self):
+        self._action_inputs: Optional[ActionInput] = None
+        self._git_repo: Optional[Repo] = None
+
+    @property
+    def repository(self) -> Repo:
+        assert self._git_repo is not None, "Should set the repository instance before using it."
+        return self._git_repo
+
+    @repository.setter
+    def repository(self, repo: Repo) -> None:
+        assert repo is not None, "Should not set the repository as empty."
+        self._git_repo = repo
 
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
-        print(f"[DEBUG] action_inputs: {action_inputs}")
-        repo = self._init_git(action_inputs)
+        self._action_inputs: ActionInput = action_inputs
+        print(f"[DEBUG] action_inputs: {self._action_inputs}")
+        self.repository: Repo = self._init_git(action_inputs)
 
         remote_name: str = "origin"
         in_ci_runtime_env = ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
         git_ref = self._fake_api_server_git_branch(in_ci_runtime_env)
 
         # Initial git remote setting
-        git_remote = self._init_git_remote(action_inputs, remote_name, repo)
+        git_remote = self._init_git_remote(self._action_inputs, remote_name)
 
         # Sync up the code version from git
         git_remote.fetch()
         now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-        current_git_branch = self._get_current_git_branch(now_in_ci_runtime_env, repo)
+        current_git_branch = self._get_current_git_branch(now_in_ci_runtime_env)
         # Switch to target git branch which only for Fake-API-Server
-        self._switch_git_branch(current_git_branch, git_ref, repo)
+        self._switch_git_branch(current_git_branch, git_ref)
 
         # Get all files in the folder
-        all_files = self._get_all_configs(action_inputs)
+        all_files = self._get_all_configs(self._action_inputs)
         print(f"Found files: {all_files}")
 
         all_ready_commit_files = set()
 
         # Check untracked files
-        untracked = set(repo.untracked_files)
+        untracked = set(self.repository.untracked_files)
         print("Check untracked file ...")
-        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=untracked, repo=repo)
+        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=untracked)
 
         # Check modified but unstaged files
-        diff_index = repo.index.diff(None)
+        diff_index = self.repository.index.diff(None)
         modified = {item.a_path for item in diff_index}
         print("Check modified file ...")
-        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=modified, repo=repo)
+        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=modified)
 
         # Commit the update change
         if len(all_ready_commit_files) > 0:
-            commit = self._commit_changes(action_inputs, repo)
+            commit = self._commit_changes(self._action_inputs)
 
             # Push the change to git server
             self._push_to_remote(git_ref, git_remote)
@@ -61,24 +75,24 @@ class GitOperation:
         # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
         git_remote.push(refspec=f"HEAD:refs/heads/{git_ref}", force=True).raise_if_error()
 
-    def _commit_changes(self, action_inputs: ActionInput, repo: Repo) -> Commit:
-        commit = repo.index.commit(
+    def _commit_changes(self, action_inputs: ActionInput) -> Commit:
+        commit = self.repository.index.commit(
             author=action_inputs.git_info.commit.author.serialize_for_git(),
             message=action_inputs.git_info.commit.message,
         )
         print("Commit the change.")
         return commit
 
-    def _switch_git_branch(self, current_git_branch: str, git_ref: str, repo: Repo) -> None:
+    def _switch_git_branch(self, current_git_branch: str, git_ref: str) -> None:
         if current_git_branch != git_ref:
-            if git_ref in [b.name for b in repo.branches]:
-                repo.git.switch(git_ref)
+            if git_ref in [b.name for b in self.repository.branches]:
+                self.repository.git.switch(git_ref)
             else:
-                repo.git.checkout("-b", git_ref)
+                self.repository.git.checkout("-b", git_ref)
 
-    def _get_current_git_branch(self, now_in_ci_runtime_env: bool, repo: Repo) -> str:
+    def _get_current_git_branch(self, now_in_ci_runtime_env: bool) -> str:
         try:
-            current_git_branch = repo.active_branch.name
+            current_git_branch = self.repository.active_branch.name
         except TypeError as e:
             print("[DEBUG] Occur something wrong when trying to get git branch")
             # NOTE: Only for CI runtime environment
@@ -89,8 +103,8 @@ class GitOperation:
                 raise e
         return current_git_branch
 
-    def _init_git_remote(self, action_inputs: ActionInput, remote_name: str, repo: Repo) -> Remote:
-        git_remote = repo.remote(name=remote_name)
+    def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
+        git_remote = self.repository.remote(name=remote_name)
         if not git_remote.exists():
             print("[DEBUG] Target git remote setting doesn't exist, create one.")
             # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
@@ -102,7 +116,7 @@ class GitOperation:
             #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
             # )
             remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
-            git_remote.create(repo=repo, name=remote_name, url=remote_url)
+            git_remote.create(repo=self.repository, name=remote_name, url=remote_url)
         else:
             print(f"[DEBUG] git_remote.url: {git_remote.url}")
             if action_inputs.git_info.repository not in git_remote.url:
@@ -157,18 +171,18 @@ class GitOperation:
                 all_files.add(file_path)
         return all_files
 
-    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str], repo: Repo) -> None:
+    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str]) -> None:
         for file in target_files:
             print(f"Found some file: {file}")
             file_path_obj = Path(file)
             if file_path_obj.is_file():
                 if file_path_obj in all_files:
                     all_ready_commit_files.add(str(file_path_obj))
-                    repo.index.add(str(file_path_obj))
+                    self.repository.index.add(str(file_path_obj))
                     print(f"Add file: {file_path_obj}")
             else:
                 for one_file in Path(file).rglob("*.yaml"):
                     if one_file in all_files:
                         all_ready_commit_files.add(str(file_path_obj))
-                        repo.index.add(one_file)
+                        self.repository.index.add(one_file)
                         print(f"Add file: {one_file}")
