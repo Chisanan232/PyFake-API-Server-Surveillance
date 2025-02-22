@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import List, Set
 
-from git import Repo
+from git import Repo, Remote
 
 from ci.surveillance.model.action import ActionInput
 
@@ -20,34 +20,7 @@ class GitOperation:
         git_ref = self._fake_api_server_git_branch(in_ci_runtime_env)
 
         # Initial git remote setting
-        git_remote = repo.remote(name=remote_name)
-        if not git_remote.exists():
-            print("[DEBUG] Target git remote setting doesn't exist, create one.")
-            # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-            github_access_token = os.environ["GITHUB_TOKEN"]
-            assert github_access_token, "Miss GitHub token"
-            # github_account = action_inputs.git_info.commit.author.name
-            # git_ssh_access = f"{github_account}:{github_access_token}@"
-            # git_remote.create(
-            #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
-            # )
-            remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
-            git_remote.create(repo=repo, name=remote_name, url=remote_url)
-        else:
-            print(f"[DEBUG] git_remote.url: {git_remote.url}")
-            if action_inputs.git_info.repository not in git_remote.url:
-                print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
-                # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
-                github_access_token = os.environ["GITHUB_TOKEN"]
-                assert github_access_token, "Miss GitHub token"
-                # github_account = action_inputs.git_info.commit.author.name
-                # git_ssh_access = f"{github_account}:{github_access_token}@"
-                # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
-                # "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY"
-                remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
-                git_remote.set_url(new_url=remote_url)
-            else:
-                print("[DEBUG] Remote info all is correct.")
+        git_remote = self._init_git_remote(action_inputs, remote_name, repo)
 
         # Sync up the code version from git
         git_remote.fetch()
@@ -101,6 +74,37 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _init_git_remote(self, action_inputs: ActionInput, remote_name: str, repo: Repo) -> Remote:
+        git_remote = repo.remote(name=remote_name)
+        if not git_remote.exists():
+            print("[DEBUG] Target git remote setting doesn't exist, create one.")
+            # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+            github_access_token = os.environ["GITHUB_TOKEN"]
+            assert github_access_token, "Miss GitHub token"
+            # github_account = action_inputs.git_info.commit.author.name
+            # git_ssh_access = f"{github_account}:{github_access_token}@"
+            # git_remote.create(
+            #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
+            # )
+            remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+            git_remote.create(repo=repo, name=remote_name, url=remote_url)
+        else:
+            print(f"[DEBUG] git_remote.url: {git_remote.url}")
+            if action_inputs.git_info.repository not in git_remote.url:
+                print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
+                # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
+                github_access_token = os.environ["GITHUB_TOKEN"]
+                assert github_access_token, "Miss GitHub token"
+                # github_account = action_inputs.git_info.commit.author.name
+                # git_ssh_access = f"{github_account}:{github_access_token}@"
+                # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
+                # "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY"
+                remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+                git_remote.set_url(new_url=remote_url)
+            else:
+                print("[DEBUG] Remote info all is correct.")
+        return git_remote
 
     def _fake_api_server_git_branch(self, in_ci_runtime_env: bool) -> str:
         if in_ci_runtime_env:
