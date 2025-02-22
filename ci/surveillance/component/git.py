@@ -17,14 +17,7 @@ class GitOperation:
 
         remote_name: str = "origin"
         in_ci_runtime_env = ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
-        if in_ci_runtime_env:
-            github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
-            print(f"[DEBUG] GitHub event name: {github_action_event_name}")
-            github_action_job_id = os.environ["GITHUB_JOB"]
-            print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
-            git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
-        else:
-            git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
+        git_ref = self._fake_api_server_git_branch(in_ci_runtime_env)
 
         # Initial git remote setting
         git_remote = repo.remote(name=remote_name)
@@ -108,6 +101,17 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _fake_api_server_git_branch(self, in_ci_runtime_env: bool) -> str:
+        if in_ci_runtime_env:
+            github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
+            print(f"[DEBUG] GitHub event name: {github_action_event_name}")
+            github_action_job_id = os.environ["GITHUB_JOB"]
+            print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
+            git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
+        else:
+            git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
+        return git_ref
 
     def _init_git(self, action_inputs: ActionInput) -> Repo:
         api_config_path = action_inputs.subcmd_pull_args.config_path
