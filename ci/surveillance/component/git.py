@@ -10,7 +10,6 @@ from ci.surveillance.model.action import ActionInput
 
 class GitOperation:
     def __init__(self):
-        self._action_inputs: Optional[ActionInput] = None
         self._git_repo: Optional[Repo] = None
         self._all_staged_files: Set[str] = set()
 
@@ -63,15 +62,13 @@ class GitOperation:
 
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
-        self._action_inputs: ActionInput = action_inputs
-        print(f"[DEBUG] action_inputs: {self._action_inputs}")
         self.repository: Repo = self._init_git(action_inputs)
 
         # remote_name: str = "origin"
         # git_ref = self._fake_api_server_git_branch
 
         # Initial git remote setting
-        git_remote = self._init_git_remote(self._action_inputs, self.default_remote_name)
+        git_remote = self._init_git_remote(action_inputs, self.default_remote_name)
 
         # Sync up the code version from git
         git_remote.fetch()
@@ -79,7 +76,7 @@ class GitOperation:
         self._switch_git_branch(self.fake_api_server_monitor_git_branch)
 
         # Get all files in the folder
-        all_files = self._get_all_fake_api_server_configs(self._action_inputs)
+        all_files = self._get_all_fake_api_server_configs(action_inputs)
         print(f"Found files: {all_files}")
 
         # Check untracked files
@@ -95,7 +92,7 @@ class GitOperation:
 
         # Commit the update change
         if len(self._all_staged_files) > 0:
-            commit = self._commit_changes(self._action_inputs)
+            commit = self._commit_changes(action_inputs)
 
             # Push the change to git server
             self._push_to_remote(git_remote)
