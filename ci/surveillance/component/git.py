@@ -27,6 +27,18 @@ class GitOperation:
     def is_in_ci_env(self) -> bool:
         return ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
 
+    @property
+    def fake_api_server_monitor_git_branch(self) -> str:
+        if self.is_in_ci_env:
+            github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
+            print(f"[DEBUG] GitHub event name: {github_action_event_name}")
+            github_action_job_id = os.environ["GITHUB_JOB"]
+            print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
+            git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
+        else:
+            git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
+        return git_ref
+
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         self._action_inputs: ActionInput = action_inputs
@@ -34,7 +46,7 @@ class GitOperation:
         self.repository: Repo = self._init_git(action_inputs)
 
         remote_name: str = "origin"
-        git_ref = self._fake_api_server_git_branch()
+        # git_ref = self._fake_api_server_git_branch
 
         # Initial git remote setting
         git_remote = self._init_git_remote(self._action_inputs, remote_name)
@@ -44,7 +56,7 @@ class GitOperation:
         now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
         current_git_branch = self._get_current_git_branch(now_in_ci_runtime_env)
         # Switch to target git branch which only for Fake-API-Server
-        self._switch_git_branch(current_git_branch, git_ref)
+        self._switch_git_branch(current_git_branch)
 
         # Get all files in the folder
         all_files = self._get_all_configs(self._action_inputs)
@@ -68,15 +80,15 @@ class GitOperation:
             commit = self._commit_changes(self._action_inputs)
 
             # Push the change to git server
-            self._push_to_remote(git_ref, git_remote)
-            print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
+            self._push_to_remote(git_remote)
+            print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{self.fake_api_server_monitor_git_branch}")
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
 
-    def _push_to_remote(self, git_ref: str, git_remote: Remote) -> None:
+    def _push_to_remote(self, git_remote: Remote) -> None:
         # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
-        git_remote.push(refspec=f"HEAD:refs/heads/{git_ref}", force=True).raise_if_error()
+        git_remote.push(refspec=f"HEAD:refs/heads/{self.fake_api_server_monitor_git_branch}", force=True).raise_if_error()
 
     def _commit_changes(self, action_inputs: ActionInput) -> Commit:
         commit = self.repository.index.commit(
@@ -86,7 +98,8 @@ class GitOperation:
         print("Commit the change.")
         return commit
 
-    def _switch_git_branch(self, current_git_branch: str, git_ref: str) -> None:
+    def _switch_git_branch(self, current_git_branch: str) -> None:
+        git_ref = self.fake_api_server_monitor_git_branch
         if current_git_branch != git_ref:
             if git_ref in [b.name for b in self.repository.branches]:
                 self.repository.git.switch(git_ref)
@@ -136,17 +149,6 @@ class GitOperation:
             else:
                 print("[DEBUG] Remote info all is correct.")
         return git_remote
-
-    def _fake_api_server_git_branch(self) -> str:
-        if self.is_in_ci_env:
-            github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
-            print(f"[DEBUG] GitHub event name: {github_action_event_name}")
-            github_action_job_id = os.environ["GITHUB_JOB"]
-            print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
-            git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
-        else:
-            git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
-        return git_ref
 
     def _init_git(self, action_inputs: ActionInput) -> Repo:
         api_config_path = action_inputs.subcmd_pull_args.config_path
