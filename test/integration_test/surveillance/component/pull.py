@@ -34,7 +34,7 @@ class TestGitOperation:
 
         action_inputs = fake_data.action_input_model(file_path=filepath)
 
-        real_repo = Repo("../")
+        real_repo = Repo("./")
         now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
         print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
         print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
