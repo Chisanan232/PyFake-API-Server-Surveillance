@@ -53,8 +53,7 @@ class GitOperation:
 
         # Sync up the code version from git
         git_remote.fetch()
-        now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-        current_git_branch = self._get_current_git_branch(now_in_ci_runtime_env)
+        current_git_branch = self._get_current_git_branch()
         # Switch to target git branch which only for Fake-API-Server
         self._switch_git_branch(current_git_branch)
 
@@ -106,13 +105,13 @@ class GitOperation:
             else:
                 self.repository.git.checkout("-b", git_ref)
 
-    def _get_current_git_branch(self, now_in_ci_runtime_env: bool) -> str:
+    def _get_current_git_branch(self) -> str:
         try:
             current_git_branch = self.repository.active_branch.name
         except TypeError as e:
             print("[DEBUG] Occur something wrong when trying to get git branch")
             # NOTE: Only for CI runtime environment
-            if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+            if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
                 # original_branch = os.environ["GITHUB_HEAD_REF"]
                 current_git_branch = ""
             else:
