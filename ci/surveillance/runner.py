@@ -12,7 +12,7 @@ except ImportError:
 from fake_api_server.model import deserialize_api_doc_config, load_config
 from git import Repo
 
-from .component import SavingConfigComponent
+from .component.pull import SavingConfigComponent
 from .model.action import ActionInput
 
 
