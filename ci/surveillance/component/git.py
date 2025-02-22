@@ -13,22 +13,7 @@ class GitOperation:
     def commit_change_config(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         print(f"[DEBUG] action_inputs: {action_inputs}")
-        api_config_path = action_inputs.subcmd_pull_args.config_path
-        print(f"[DEBUG] api_config_path: {api_config_path}")
-        api_config_exists = os.path.exists(api_config_path)
-        print(f"[DEBUG] api_config_exists: {api_config_exists}")
-        if api_config_exists:
-            print("[DEBUG] PyFake config exists, initial git directly.")
-            repo = Repo("./")
-        else:
-            print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
-            repo = Repo.clone_from(
-                url=f"https://github.com/{action_inputs.git_info.repository}",
-                to_path="./",
-            )
-            assert os.path.exists(
-                action_inputs.subcmd_pull_args.config_path
-            ), "PyFake-API-Server configuration is required. Please check it."
+        repo = self._init_git(action_inputs)
 
         remote_name: str = "origin"
         in_ci_runtime_env = ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
@@ -123,6 +108,25 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _init_git(self, action_inputs: ActionInput) -> Repo:
+        api_config_path = action_inputs.subcmd_pull_args.config_path
+        print(f"[DEBUG] api_config_path: {api_config_path}")
+        api_config_exists = os.path.exists(api_config_path)
+        print(f"[DEBUG] api_config_exists: {api_config_exists}")
+        if api_config_exists:
+            print("[DEBUG] PyFake config exists, initial git directly.")
+            repo = Repo("./")
+        else:
+            print("[DEBUG] PyFake config doesn't exist, clone the project from GitHub repository.")
+            repo = Repo.clone_from(
+                url=f"https://github.com/{action_inputs.git_info.repository}",
+                to_path="./",
+            )
+            assert os.path.exists(
+                action_inputs.subcmd_pull_args.config_path
+            ), "PyFake-API-Server configuration is required. Please check it."
+        return repo
 
     def _get_all_configs(self, action_inputs: ActionInput) -> Set[Path]:
         all_files: Set[Path] = set()
