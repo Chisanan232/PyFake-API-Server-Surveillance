@@ -58,7 +58,7 @@ class GitOperation:
         self._switch_git_branch(current_git_branch)
 
         # Get all files in the folder
-        all_files = self._get_all_configs(self._action_inputs)
+        all_files = self._get_all_fake_api_server_configs(self._action_inputs)
         print(f"Found files: {all_files}")
 
         all_ready_commit_files = set()
@@ -168,7 +168,7 @@ class GitOperation:
             ), "PyFake-API-Server configuration is required. Please check it."
         return repo
 
-    def _get_all_configs(self, action_inputs: ActionInput) -> Set[Path]:
+    def _get_all_fake_api_server_configs(self, action_inputs: ActionInput) -> Set[Path]:
         all_files: Set[Path] = set()
         for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
             if file_path.is_file():
