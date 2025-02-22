@@ -10,7 +10,7 @@ from ci.surveillance.model.action import ActionInput
 
 class GitOperation:
 
-    def commit_change_config(self, action_inputs: ActionInput) -> bool:
+    def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         print(f"[DEBUG] action_inputs: {action_inputs}")
         repo = self._init_git(action_inputs)

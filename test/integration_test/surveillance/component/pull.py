@@ -18,7 +18,7 @@ from test._values._test_data import fake_github_action_values, fake_data, fake_g
 class TestGitOperation:
     @patch("git.IndexFile.commit")
     @patch("git.Repo.remote")
-    def test_commit_change_config(self, mock_init_remote_fun: Mock, mock_git_commit: Mock):
+    def test_version_change(self, mock_init_remote_fun: Mock, mock_git_commit: Mock):
         # given
         base_test_dir = Path("./test/_values/verify_git_feature")
         if not base_test_dir.exists():
@@ -82,7 +82,7 @@ class TestGitOperation:
             # when
             print("[DEBUG] Run target function")
             with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
-                result = GitOperation().commit_change_config(action_inputs)
+                result = GitOperation().version_change(action_inputs)
 
             # should
             print("[DEBUG] Start checking running state")

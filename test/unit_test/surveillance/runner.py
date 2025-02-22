@@ -29,7 +29,7 @@ from test._values.dummy_objects import (
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch.object(GitOperation, "commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_exist_fake_api_server_config(
@@ -56,7 +56,7 @@ def test_run_with_exist_fake_api_server_config(
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch.object(GitOperation, "commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config(
@@ -83,7 +83,7 @@ def test_run_with_not_exist_fake_api_server_config(
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch.object(GitOperation, "commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_config(

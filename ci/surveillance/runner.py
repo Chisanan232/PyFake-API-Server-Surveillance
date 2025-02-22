@@ -59,7 +59,7 @@ def run() -> None:
         # result = Surveillance.monitor()
 
         print("commit the different and push to remote repository")
-        GitOperation().commit_change_config(action_inputs)
+        GitOperation().version_change(action_inputs)
         # GitHelper.commit_change()
 
         # TODO: this is backlog task
