@@ -25,16 +25,7 @@ class GitOperation:
         # Sync up the code version from git
         git_remote.fetch()
         now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-        try:
-            current_git_branch = repo.active_branch.name
-        except TypeError as e:
-            print("[DEBUG] Occur something wrong when trying to get git branch")
-            # NOTE: Only for CI runtime environment
-            if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
-                # original_branch = os.environ["GITHUB_HEAD_REF"]
-                current_git_branch = ""
-            else:
-                raise e
+        current_git_branch = self._get_current_git_branch(now_in_ci_runtime_env, repo)
         # Switch to target git branch which only for Fake-API-Server
         if current_git_branch != git_ref:
             if git_ref in [b.name for b in repo.branches]:
@@ -74,6 +65,19 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _get_current_git_branch(self, now_in_ci_runtime_env: bool, repo: Repo) -> str:
+        try:
+            current_git_branch = repo.active_branch.name
+        except TypeError as e:
+            print("[DEBUG] Occur something wrong when trying to get git branch")
+            # NOTE: Only for CI runtime environment
+            if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+                # original_branch = os.environ["GITHUB_HEAD_REF"]
+                current_git_branch = ""
+            else:
+                raise e
+        return current_git_branch
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str, repo: Repo) -> Remote:
         git_remote = repo.remote(name=remote_name)
