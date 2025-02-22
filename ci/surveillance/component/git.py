@@ -1,7 +1,7 @@
 import ast
 import os
 from pathlib import Path
-from typing import List, Set, Optional
+from typing import List, Set, Optional, Union
 
 from git import Repo, Remote, Commit
 
@@ -176,17 +176,18 @@ class GitOperation:
         return all_files
 
     def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str]) -> None:
+
+        def _add_file(_file: Union[Path, str]) -> None:
+            if _file in all_files:
+                all_ready_commit_files.add(str(_file))
+                self.repository.index.add(str(_file))
+                print(f"Add file: {_file}")
+
         for file in target_files:
             print(f"Found some file: {file}")
             file_path_obj = Path(file)
             if file_path_obj.is_file():
-                if file_path_obj in all_files:
-                    all_ready_commit_files.add(str(file_path_obj))
-                    self.repository.index.add(str(file_path_obj))
-                    print(f"Add file: {file_path_obj}")
+                _add_file(file_path_obj)
             else:
                 for one_file in Path(file).rglob("*.yaml"):
-                    if one_file in all_files:
-                        all_ready_commit_files.add(str(file_path_obj))
-                        self.repository.index.add(one_file)
-                        print(f"Add file: {one_file}")
+                    _add_file(one_file)
