@@ -72,7 +72,7 @@ class GitOperation:
         # Sync up the code version from git
         git_remote.fetch()
         # Switch to target git branch which only for Fake-API-Server
-        self._switch_git_branch()
+        self._switch_git_branch(self.fake_api_server_monitor_git_branch)
 
         # Get all files in the folder
         all_files = self._get_all_fake_api_server_configs(self._action_inputs)
@@ -114,8 +114,7 @@ class GitOperation:
         print("Commit the change.")
         return commit
 
-    def _switch_git_branch(self) -> None:
-        git_ref = self.fake_api_server_monitor_git_branch
+    def _switch_git_branch(self, git_ref: str) -> None:
         if self._current_git_branch != git_ref:
             if git_ref in [b.name for b in self.repository.branches]:
                 self.repository.git.switch(git_ref)
