@@ -23,6 +23,10 @@ class GitOperation:
         assert repo is not None, "Should not set the repository as empty."
         self._git_repo = repo
 
+    @property
+    def is_in_ci_env(self) -> bool:
+        return ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
+
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         self._action_inputs: ActionInput = action_inputs
@@ -30,8 +34,7 @@ class GitOperation:
         self.repository: Repo = self._init_git(action_inputs)
 
         remote_name: str = "origin"
-        in_ci_runtime_env = ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
-        git_ref = self._fake_api_server_git_branch(in_ci_runtime_env)
+        git_ref = self._fake_api_server_git_branch()
 
         # Initial git remote setting
         git_remote = self._init_git_remote(self._action_inputs, remote_name)
@@ -134,8 +137,8 @@ class GitOperation:
                 print("[DEBUG] Remote info all is correct.")
         return git_remote
 
-    def _fake_api_server_git_branch(self, in_ci_runtime_env: bool) -> str:
-        if in_ci_runtime_env:
+    def _fake_api_server_git_branch(self) -> str:
+        if self.is_in_ci_env:
             github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
             print(f"[DEBUG] GitHub event name: {github_action_event_name}")
             github_action_job_id = os.environ["GITHUB_JOB"]
