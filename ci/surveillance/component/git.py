@@ -51,7 +51,6 @@ class GitOperation:
             print("[DEBUG] Occur something wrong when trying to get git branch")
             # NOTE: Only for CI runtime environment
             if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
-                # original_branch = os.environ["GITHUB_HEAD_REF"]
                 current_git_branch = ""
             else:
                 raise e
@@ -63,9 +62,6 @@ class GitOperation:
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         self.repository: Repo = self._init_git(action_inputs)
-
-        # remote_name: str = "origin"
-        # git_ref = self._fake_api_server_git_branch
 
         # Initial git remote setting
         git_remote = self._init_git_remote(action_inputs, self.default_remote_name)
@@ -80,18 +76,18 @@ class GitOperation:
         print(f"Found files: {all_files}")
 
         # Check untracked files
-        untracked = set(self.repository.untracked_files)
         print("Check untracked file ...")
+        untracked = set(self.repository.untracked_files)
         self._add_files(all_files=all_files, target_files=untracked)
 
         # Check modified but unstaged files
+        print("Check modified file ...")
         diff_index = self.repository.index.diff(None)
         modified = {item.a_path for item in diff_index}
-        print("Check modified file ...")
         self._add_files(all_files=all_files, target_files=modified)
 
-        # Commit the update change
         if len(self._all_staged_files) > 0:
+            # Commit the update change
             commit = self._commit_changes(action_inputs)
 
             # Push the change to git server
@@ -105,7 +101,6 @@ class GitOperation:
         assert os.path.exists(
             action_inputs.subcmd_pull_args.config_path
         ), "PyFake-API-Server configuration is required. Please check it."
-        print("[DEBUG] PyFake config exists, initial git directly.")
         return Repo("./")
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
