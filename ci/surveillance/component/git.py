@@ -51,12 +51,15 @@ class GitOperation:
             commit = self._commit_changes(action_inputs, repo)
 
             # Push the change to git server
-            # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
-            git_remote.push(refspec=f"HEAD:refs/heads/{git_ref}", force=True).raise_if_error()
+            self._push_to_remote(git_ref, git_remote)
             print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{git_ref}")
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _push_to_remote(self, git_ref: str, git_remote: Remote) -> None:
+        # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
+        git_remote.push(refspec=f"HEAD:refs/heads/{git_ref}", force=True).raise_if_error()
 
     def _commit_changes(self, action_inputs: ActionInput, repo: Repo) -> Commit:
         commit = repo.index.commit(
