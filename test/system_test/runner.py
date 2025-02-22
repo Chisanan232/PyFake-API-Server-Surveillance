@@ -23,6 +23,7 @@ from test._values.dummy_objects import (
 
 # isort: on
 
+
 @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.load_config")
