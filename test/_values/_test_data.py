@@ -10,7 +10,7 @@ from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
 class fake_github_action_values:
     @classmethod
-    def action_run_id(cls) -> str:
+    def action_job_id(cls) -> str:
         return "123456"
 
     @classmethod
@@ -24,7 +24,7 @@ class fake_github_action_values:
             "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": repo,
             "GITHUB_HEAD_REF": "git-branch",
-            "GITHUB_JOB": fake_github_action_values.action_run_id(),
+            "GITHUB_JOB": fake_github_action_values.action_job_id(),
             "GITHUB_EVENT_NAME": cls.event_name(),
             "CI_TEST_MODE": "true",
         }
@@ -37,7 +37,7 @@ class fake_git_data:
 
     @classmethod
     def fake_api_server_monitor_branch_name(cls) -> str:
-        return f"fake-api-server-monitor-update-config_{fake_github_action_values.event_name()}_{fake_github_action_values.action_run_id()}"
+        return f"fake-api-server-monitor-update-config_{fake_github_action_values.event_name()}_{fake_github_action_values.action_job_id()}"
 
 
 class fake_data:
