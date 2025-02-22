@@ -92,11 +92,7 @@ class GitOperation:
                 repo.git.checkout("-b", git_ref)
 
         # Get all files in the folder
-        all_files: Set[Path] = set()
-        for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
-            if file_path.is_file():
-                all_files.add(file_path)
-
+        all_files = self._get_all_configs(action_inputs)
         print(f"Found files: {all_files}")
 
         all_ready_commit_files = set()
@@ -127,6 +123,13 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _get_all_configs(self, action_inputs: ActionInput) -> Set[Path]:
+        all_files: Set[Path] = set()
+        for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
+            if file_path.is_file():
+                all_files.add(file_path)
+        return all_files
 
     def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str], repo: Repo) -> None:
         for file in target_files:
