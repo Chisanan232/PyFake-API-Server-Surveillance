@@ -40,6 +40,10 @@ class GitOperation:
         return git_ref
 
     @property
+    def default_remote_name(self) -> str:
+        return "origin"
+
+    @property
     def _current_git_branch(self) -> str:
         try:
             current_git_branch = self.repository.active_branch.name
@@ -59,11 +63,11 @@ class GitOperation:
         print(f"[DEBUG] action_inputs: {self._action_inputs}")
         self.repository: Repo = self._init_git(action_inputs)
 
-        remote_name: str = "origin"
+        # remote_name: str = "origin"
         # git_ref = self._fake_api_server_git_branch
 
         # Initial git remote setting
-        git_remote = self._init_git_remote(self._action_inputs, remote_name)
+        git_remote = self._init_git_remote(self._action_inputs, self.default_remote_name)
 
         # Sync up the code version from git
         git_remote.fetch()
@@ -93,7 +97,7 @@ class GitOperation:
 
             # Push the change to git server
             self._push_to_remote(git_remote)
-            print(f"Successfully pushed commit {commit.hexsha[:8]} to {remote_name}/{self.fake_api_server_monitor_git_branch}")
+            print(f"Successfully pushed commit {commit.hexsha[:8]} to {self.default_remote_name}/{self.fake_api_server_monitor_git_branch}")
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
