@@ -15,7 +15,6 @@ from test._values._test_data import fake_github_action_values, fake_data, fake_g
 # isort: on
 
 
-# @patch("ci.surveillance.runner.uuid.uuid1")
 @patch("git.IndexFile.commit")
 @patch("git.Repo.remote")
 def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock):
@@ -44,7 +43,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         print("[DEBUG] Occur something wrong when trying to get git branch")
         # NOTE: Only for CI runtime environment
         if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
-            # original_branch = os.environ["GITHUB_HEAD_REF"]
             original_branch = "github-action-ci-only"
         else:
             raise e
@@ -53,8 +51,6 @@ def test_commit_change_config(mock_init_remote_fun: Mock, mock_git_commit: Mock)
         real_repo.git.checkout("-b", original_branch)
 
     try:
-        # mock_uuid.return_value = action_uuid
-
         print("[DEBUG] Initial git repository")
         repo = Repo.init(base_test_dir)
         # TODO: change the repo to sample project.
