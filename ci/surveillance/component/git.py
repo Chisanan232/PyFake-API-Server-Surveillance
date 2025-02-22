@@ -12,6 +12,7 @@ class GitOperation:
     def __init__(self):
         self._action_inputs: Optional[ActionInput] = None
         self._git_repo: Optional[Repo] = None
+        self._all_staged_files: Set[str] = set()
 
     @property
     def repository(self) -> Repo:
@@ -57,6 +58,9 @@ class GitOperation:
                 raise e
         return current_git_branch
 
+    def _reset_all_staged_files(self) -> None:
+        self._all_staged_files.clear()
+
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         self._action_inputs: ActionInput = action_inputs
@@ -78,21 +82,19 @@ class GitOperation:
         all_files = self._get_all_fake_api_server_configs(self._action_inputs)
         print(f"Found files: {all_files}")
 
-        all_ready_commit_files = set()
-
         # Check untracked files
         untracked = set(self.repository.untracked_files)
         print("Check untracked file ...")
-        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=untracked)
+        self._add_files(all_files=all_files, target_files=untracked)
 
         # Check modified but unstaged files
         diff_index = self.repository.index.diff(None)
         modified = {item.a_path for item in diff_index}
         print("Check modified file ...")
-        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=modified)
+        self._add_files(all_files=all_files, target_files=modified)
 
         # Commit the update change
-        if len(all_ready_commit_files) > 0:
+        if len(self._all_staged_files) > 0:
             commit = self._commit_changes(self._action_inputs)
 
             # Push the change to git server
@@ -166,11 +168,11 @@ class GitOperation:
                 all_files.add(file_path)
         return all_files
 
-    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: Set[str]) -> None:
+    def _add_files(self, all_files: Set[Path], target_files: Set[str]) -> None:
 
         def _add_file(_file: Union[Path, str]) -> None:
             if _file in all_files:
-                all_ready_commit_files.add(str(_file))
+                self._all_staged_files.add(str(_file))
                 self.repository.index.add(str(_file))
                 print(f"Add file: {_file}")
 
@@ -189,6 +191,7 @@ class GitOperation:
             message=action_inputs.git_info.commit.message,
         )
         print("Commit the change.")
+        self._reset_all_staged_files()
         return commit
 
     def _push_to_remote(self, git_remote: Remote) -> None:
