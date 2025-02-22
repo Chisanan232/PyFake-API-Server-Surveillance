@@ -14,13 +14,19 @@ class fake_github_action_values:
         return "123456"
 
     @classmethod
+    def event_name(cls) -> str:
+        return "pull_request"
+
+    @classmethod
     def ci_env(cls, repo: str) -> Dict[str, str]:
         return {
             # GitHub action environment
             "GITHUB_TOKEN": "ghp_1234567890",
             "GITHUB_REPOSITORY": repo,
             "GITHUB_HEAD_REF": "git-branch",
-            "GITHUB_RUN_ID": fake_github_action_values.action_run_id(),
+            "GITHUB_JOB": fake_github_action_values.action_run_id(),
+            "GITHUB_EVENT_NAME": cls.event_name(),
+            "CI_TEST_MODE": "true",
         }
 
 
@@ -31,7 +37,7 @@ class fake_git_data:
 
     @classmethod
     def fake_api_server_monitor_branch_name(cls) -> str:
-        return f"fake-api-server-monitor-update-config_{fake_github_action_values.action_run_id()}"
+        return f"fake-api-server-monitor-update-config_{fake_github_action_values.event_name()}_{fake_github_action_values.action_run_id()}"
 
 
 class fake_data:
