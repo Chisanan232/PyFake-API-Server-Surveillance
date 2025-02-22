@@ -39,6 +39,20 @@ class GitOperation:
             git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
         return git_ref
 
+    @property
+    def _current_git_branch(self) -> str:
+        try:
+            current_git_branch = self.repository.active_branch.name
+        except TypeError as e:
+            print("[DEBUG] Occur something wrong when trying to get git branch")
+            # NOTE: Only for CI runtime environment
+            if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
+                # original_branch = os.environ["GITHUB_HEAD_REF"]
+                current_git_branch = ""
+            else:
+                raise e
+        return current_git_branch
+
     def version_change(self, action_inputs: ActionInput) -> bool:
         # Initial a git project
         self._action_inputs: ActionInput = action_inputs
@@ -53,9 +67,8 @@ class GitOperation:
 
         # Sync up the code version from git
         git_remote.fetch()
-        current_git_branch = self._get_current_git_branch()
         # Switch to target git branch which only for Fake-API-Server
-        self._switch_git_branch(current_git_branch)
+        self._switch_git_branch()
 
         # Get all files in the folder
         all_files = self._get_all_fake_api_server_configs(self._action_inputs)
@@ -97,26 +110,13 @@ class GitOperation:
         print("Commit the change.")
         return commit
 
-    def _switch_git_branch(self, current_git_branch: str) -> None:
+    def _switch_git_branch(self) -> None:
         git_ref = self.fake_api_server_monitor_git_branch
-        if current_git_branch != git_ref:
+        if self._current_git_branch != git_ref:
             if git_ref in [b.name for b in self.repository.branches]:
                 self.repository.git.switch(git_ref)
             else:
                 self.repository.git.checkout("-b", git_ref)
-
-    def _get_current_git_branch(self) -> str:
-        try:
-            current_git_branch = self.repository.active_branch.name
-        except TypeError as e:
-            print("[DEBUG] Occur something wrong when trying to get git branch")
-            # NOTE: Only for CI runtime environment
-            if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
-                # original_branch = os.environ["GITHUB_HEAD_REF"]
-                current_git_branch = ""
-            else:
-                raise e
-        return current_git_branch
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
         git_remote = self.repository.remote(name=remote_name)
