@@ -1,6 +1,7 @@
 import ast
 import os
 from pathlib import Path
+from typing import List, Set
 
 from git import Repo
 
@@ -91,7 +92,7 @@ class GitOperation:
                 repo.git.checkout("-b", git_ref)
 
         # Get all files in the folder
-        all_files = set()
+        all_files: Set[Path] = set()
         for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
             if file_path.is_file():
                 all_files.add(file_path)
@@ -103,39 +104,13 @@ class GitOperation:
         # Check untracked files
         untracked = set(repo.untracked_files)
         print("Check untracked file ...")
-        for file in untracked:
-            print(f"Found untracked files: {file}")
-            file_path_obj = Path(file)
-            if file_path_obj.is_file():
-                if file_path_obj in all_files:
-                    all_ready_commit_files.add(str(file_path_obj))
-                    repo.index.add(str(file_path_obj))
-                    print(f"Add file: {file_path_obj}")
-            else:
-                for one_file in Path(file).rglob("*.yaml"):
-                    if one_file in all_files:
-                        all_ready_commit_files.add(str(file_path_obj))
-                        repo.index.add(one_file)
-                        print(f"Add file: {one_file}")
+        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=untracked, repo=repo)
 
         # Check modified but unstaged files
         diff_index = repo.index.diff(None)
         modified = {item.a_path for item in diff_index}
         print("Check modified file ...")
-        for file in modified:
-            print(f"Found modified files: {file}")
-            file_path_obj = Path(file)
-            if file_path_obj.is_file():
-                if file_path_obj in all_files:
-                    all_ready_commit_files.add(str(file_path_obj))
-                    repo.index.add(str(file_path_obj))
-                    print(f"Add file: {file_path_obj}")
-            else:
-                for one_file in Path(file).rglob("*.yaml"):
-                    if one_file in all_files:
-                        all_ready_commit_files.add(str(file_path_obj))
-                        repo.index.add(one_file)
-                        print(f"Add file: {one_file}")
+        self._add_files(all_files=all_files, all_ready_commit_files=all_ready_commit_files, target_files=modified, repo=repo)
 
         # Commit the update change
         if len(all_ready_commit_files) > 0:
@@ -152,3 +127,19 @@ class GitOperation:
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
+
+    def _add_files(self, all_files: Set[Path], all_ready_commit_files: Set[str], target_files: List[str], repo: Repo) -> None:
+        for file in target_files:
+            print(f"Found some file: {file}")
+            file_path_obj = Path(file)
+            if file_path_obj.is_file():
+                if file_path_obj in all_files:
+                    all_ready_commit_files.add(str(file_path_obj))
+                    repo.index.add(str(file_path_obj))
+                    print(f"Add file: {file_path_obj}")
+            else:
+                for one_file in Path(file).rglob("*.yaml"):
+                    if one_file in all_files:
+                        all_ready_commit_files.add(str(file_path_obj))
+                        repo.index.add(one_file)
+                        print(f"Add file: {one_file}")
