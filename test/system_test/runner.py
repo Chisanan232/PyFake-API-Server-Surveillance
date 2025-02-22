@@ -2,7 +2,11 @@ import ast
 import os
 import shutil
 from pathlib import Path
-
+from test._values.dummy_objects import (
+    DummyHTTPResponse,
+    DummyOpenAPIDocConfigResponse,
+    DummySwaggerAPIDocConfigResponse,
+)
 from typing import Type
 from unittest.mock import Mock, patch
 
@@ -24,6 +28,7 @@ from test._values.dummy_objects import (
 
 # isort: on
 
+# @patch("ci.surveillance.runner.uuid.uuid1")
 @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch("ci.surveillance.runner.load_config")
@@ -32,6 +37,7 @@ def test_entire_flow_with_not_exist_config(
     mock_remote_push: Mock,
     mock_load_config: Mock,
     mock_request: Mock,
+    # mock_uuid: Mock,
     dummy_api_doc_config_resp: Type[DummyHTTPResponse],
 ):
     # given
@@ -69,6 +75,8 @@ def test_entire_flow_with_not_exist_config(
         repo.git.checkout("-b", original_branch)
 
     try:
+        # mock_uuid.return_value = action_uuid
+
         print("[DEBUG] Initial git remote")
         # TODO: change the repo to sample project.
         if fake_git_data.default_remote_name() not in repo.remotes:

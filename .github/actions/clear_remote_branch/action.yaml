@@ -1,0 +1,39 @@
+name: "Clear the end-to-end test side effect"
+description: "Clear the end-to-end test side effect"
+author: "Bryant Liu"
+outputs:
+  monitor-result:
+    description: "Output. Currently it won't have any meaning value."
+    value: ${{ steps.monitor-result.outputs.monitor-result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Clone project
+      uses: actions/checkout@v4
+
+    - name: Install Python 3.12 for running surveillance
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        pip --version
+        pip install -U poetry
+        poetry install
+
+    - name: Remove the git branch which for end-to-end test only
+      shell: bash
+      run: |
+          poetry run python3 ./scripts/ci/clear_e2e_test_env.py
+          echo "[DEBUG] Remove the git branch from remote repo."
+#          git push --delete origin "fake-api-server-monitor-update-config_$GITHUB_JOB"
+
+    - name: Set result as output value
+      id: monitor-result
+      shell: bash
+      run: echo "monitor-result=$(echo $TODO_SOMETHING_OUTPUT)" >> $GITHUB_OUTPUT
+branding:
+  icon: 'server'
+  color: 'gray-dark'
