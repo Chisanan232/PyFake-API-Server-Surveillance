@@ -17,7 +17,7 @@ from test._values._test_data import fake_github_action_values, fake_data, fake_g
 
 class TestGitOperation:
     @patch("git.IndexFile.commit")
-    @patch("git.Repo.remote")
+    @patch("git.Repo.create_remote")
     def test_version_change(self, mock_init_remote_fun: Mock, mock_git_commit: Mock):
         # given
         base_test_dir = Path("./test/_values/verify_git_feature")
@@ -55,12 +55,6 @@ class TestGitOperation:
             print("[DEBUG] Initial git repository")
             repo = Repo.init(base_test_dir)
             # TODO: change the repo to sample project.
-            print("[DEBUG] Initial git remote")
-            if fake_git_data.default_remote_name() not in repo.remotes:
-                repo.create_remote(
-                    name=fake_git_data.default_remote_name(),
-                    url="https://github.com/Chisanan232/fake-api-server-surveillance.git",
-                )
 
             push_info_list = PushInfoList()
             push_info = Mock()
@@ -81,7 +75,8 @@ class TestGitOperation:
 
             # when
             print("[DEBUG] Run target function")
-            with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
+            dummy_ci_env = fake_github_action_values.ci_env(fake_data.repo())
+            with patch.dict(os.environ, dummy_ci_env, clear=True):
                 result = GitOperation().version_change(action_inputs)
 
             # should
@@ -89,7 +84,10 @@ class TestGitOperation:
             assert result is True
 
             print("[DEBUG] Checking remote callable state")
-            mock_init_remote_fun.assert_called_once_with(name=fake_git_data.default_remote_name())
+            mock_init_remote_fun.assert_called_once_with(
+                name=fake_git_data.default_remote_name(),
+                url=f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}",
+            )
             if mock_remote.exists() is True:
                 mock_remote.create.assert_not_called()
             else:
