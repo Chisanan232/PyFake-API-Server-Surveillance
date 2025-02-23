@@ -8,6 +8,7 @@ from ci.surveillance.model.action import ActionInput
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values
+
 # isort: on
 
 
@@ -100,7 +101,10 @@ class TestGitOperation:
             assert test_remote_name in git_operation.repository.remotes
             remote = git_operation.repository.remote(name=test_remote_name)
             assert remote.name == test_remote_name
-            assert remote.url == f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}"
+            assert (
+                remote.url
+                == f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}"
+            )
         except Exception as e:
             raise e
         finally:
@@ -127,7 +131,10 @@ class TestGitOperation:
             assert test_remote_name in git_operation.repository.remotes
             remote = git_operation.repository.remote(name=test_remote_name)
             assert remote.name == test_remote_name
-            assert remote.url == f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}"
+            assert (
+                remote.url
+                == f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}"
+            )
         finally:
             # clean test
             if test_remote_name in git_operation.repository.remotes:
