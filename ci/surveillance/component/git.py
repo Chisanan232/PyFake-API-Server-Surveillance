@@ -48,8 +48,8 @@ class GitOperation:
         try:
             current_git_branch = self.repository.active_branch.name
         except TypeError as e:
-            print("[DEBUG] Occur something wrong when trying to get git branch")
             # NOTE: Only for CI runtime environment
+            print("[DEBUG] Occur something wrong when trying to get git branch")
             if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
                 current_git_branch = ""
             else:
@@ -104,8 +104,7 @@ class GitOperation:
         return Repo("./")
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
-        git_remote = self.repository.remote(name=remote_name)
-        if not git_remote.exists():
+        if remote_name not in self.repository.remotes:
             print("[DEBUG] Target git remote setting doesn't exist, create one.")
             # github_access_token = os.environ["FAKE_API_SERVER_BOT_GITHUB_TOKEN"]
             github_access_token = os.environ["GITHUB_TOKEN"]
@@ -116,8 +115,9 @@ class GitOperation:
             #     repo=repo, name=remote_name, url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}"
             # )
             remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
-            git_remote.create(repo=self.repository, name=remote_name, url=remote_url)
+            git_remote = self.repository.create_remote(name=remote_name, url=remote_url)
         else:
+            git_remote = self.repository.remote(name=remote_name)
             print(f"[DEBUG] git_remote.url: {git_remote.url}")
             if action_inputs.git_info.repository not in git_remote.url:
                 print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
