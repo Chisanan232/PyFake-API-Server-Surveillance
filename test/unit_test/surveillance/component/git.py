@@ -4,7 +4,10 @@ from unittest.mock import patch
 import pytest
 
 from ci.surveillance.component.git import GitOperation
+
+# isort: off
 from test._values._test_data import fake_data, fake_github_action_values
+# isort: on
 
 
 class TestGitOperation:

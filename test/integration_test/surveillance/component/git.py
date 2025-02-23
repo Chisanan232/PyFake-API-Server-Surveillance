@@ -6,7 +6,9 @@ import pytest
 from ci.surveillance.component.git import GitOperation
 from ci.surveillance.model.action import ActionInput
 
+# isort: off
 from test._values._test_data import fake_data, fake_github_action_values
+# isort: on
 
 
 class TestGitOperation:
