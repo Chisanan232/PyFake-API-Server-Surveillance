@@ -28,8 +28,12 @@ class GitOperation:
         return ast.literal_eval(str(os.getenv("GITHUB_ACTION", "false")).capitalize())
 
     @property
+    def is_ci_test_mode(self) -> bool:
+        return ast.literal_eval(str(os.getenv("CI_TEST_MODE", "false")).capitalize())
+
+    @property
     def fake_api_server_monitor_git_branch(self) -> str:
-        if self.is_in_ci_env:
+        if self.is_ci_test_mode:
             github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
             print(f"[DEBUG] GitHub event name: {github_action_event_name}")
             github_action_job_id = os.environ["GITHUB_JOB"]
