@@ -52,11 +52,10 @@ class TestGitOperation:
             assert git_operation.repository.active_branch.name == test_remote_name
         finally:
             # clean test
-            if not git_operation.is_in_ci_env:
-                if git_operation.repository.active_branch.name != original_branch:
-                    git_operation.repository.git.switch(original_branch)
-                if test_remote_name in [b.name for b in git_operation.repository.branches]:
-                    git_operation.repository.git.branch("-D", test_remote_name)
+            if git_operation.repository.active_branch.name != original_branch:
+                git_operation.repository.git.switch(original_branch)
+            if test_remote_name in [b.name for b in git_operation.repository.branches]:
+                git_operation.repository.git.branch("-D", test_remote_name)
 
     def test_switch_git_branch_with_exist(self, git_operation: GitOperation):
         # given
@@ -85,11 +84,10 @@ class TestGitOperation:
             assert git_operation.repository.active_branch.name == test_remote_name
         finally:
             # clean test
-            if not git_operation.is_in_ci_env:
-                if git_operation.repository.active_branch.name != original_branch:
-                    git_operation.repository.git.switch(original_branch)
-                if test_remote_name in [b.name for b in git_operation.repository.branches]:
-                    git_operation.repository.git.branch("-D", test_remote_name)
+            if git_operation.repository.active_branch.name != original_branch:
+                git_operation.repository.git.switch(original_branch)
+            if test_remote_name in [b.name for b in git_operation.repository.branches]:
+                git_operation.repository.git.branch("-D", test_remote_name)
 
     def test_init_git_remote_with_not_exist_remote(self, git_operation: GitOperation):
         # given
