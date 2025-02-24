@@ -2,7 +2,7 @@ import ast
 import os
 import shutil
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 import pytest
 from git import Repo
