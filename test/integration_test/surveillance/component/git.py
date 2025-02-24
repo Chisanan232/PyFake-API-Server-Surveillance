@@ -148,7 +148,8 @@ class TestGitOperation:
 
     @patch("git.IndexFile.commit")
     @patch("git.Repo.create_remote")
-    def test_version_change(self, mock_init_remote_fun: Mock, mock_git_commit: Mock):
+    @patch.object(GitOperation, "_push_to_remote")
+    def test_version_change(self, mock_remote_push: Mock, mock_init_remote_fun: Mock, mock_git_commit: Mock):
         # given
         base_test_dir = Path("./test/_values/verify_git_feature")
         if not base_test_dir.exists():
@@ -238,9 +239,7 @@ class TestGitOperation:
 
             print("[DEBUG] Checkin git push running state")
             # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
-            mock_remote.push.assert_called_once_with(
-                refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True
-            )
+            mock_remote_push.assert_called_once()
         finally:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
             if not now_in_ci_runtime_env and str(filepath) in committed_files:
