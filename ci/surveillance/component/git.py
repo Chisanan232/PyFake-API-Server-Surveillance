@@ -25,7 +25,7 @@ class GitOperation:
 
     @property
     def is_in_ci_env(self) -> bool:
-        return ast.literal_eval(str(os.getenv("GITHUB_ACTION", "false")).capitalize())
+        return ast.literal_eval(str(os.getenv("GITHUB_ACTIONS", "false")).capitalize())
 
     @property
     def is_ci_test_mode(self) -> bool:
