@@ -1,4 +1,3 @@
-import ast
 import os
 from pathlib import Path
 
@@ -10,10 +9,9 @@ except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from fake_api_server.model import deserialize_api_doc_config, load_config
-from git import Repo
 
-from .component.pull import SavingConfigComponent
 from .component.git import GitOperation
+from .component.pull import SavingConfigComponent
 from .model.action import ActionInput
 
 

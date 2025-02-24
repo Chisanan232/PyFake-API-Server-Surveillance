@@ -1,9 +1,9 @@
 import ast
 import os
 from pathlib import Path
-from typing import List, Set, Optional, Union
+from typing import Optional, Set, Union
 
-from git import Repo, Remote, Commit
+from git import Commit, Remote, Repo
 
 from ci.surveillance.model.action import ActionInput
 
@@ -92,7 +92,9 @@ class GitOperation:
 
             # Push the change to git server
             self._push_to_remote(git_remote)
-            print(f"Successfully pushed commit {commit.hexsha[:8]} to {self.default_remote_name}/{self.fake_api_server_monitor_git_branch}")
+            print(
+                f"Successfully pushed commit {commit.hexsha[:8]} to {self.default_remote_name}/{self.fake_api_server_monitor_git_branch}"
+            )
         else:
             print("Don't have any files be added. Won't commit the change.")
         return True
@@ -128,7 +130,9 @@ class GitOperation:
                 # git_ssh_access = f"{github_account}:{github_access_token}@"
                 # git_remote.set_url(new_url=f"https://{git_ssh_access}github.com/{action_inputs.git_info.repository}")
                 # "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY"
-                remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+                remote_url = (
+                    f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+                )
                 git_remote.set_url(new_url=remote_url)
             else:
                 print("[DEBUG] Remote info all is correct.")
@@ -176,4 +180,6 @@ class GitOperation:
 
     def _push_to_remote(self, git_remote: Remote) -> None:
         # git_remote.push(f"{remote_name}:{git_ref}").raise_if_error()
-        git_remote.push(refspec=f"HEAD:refs/heads/{self.fake_api_server_monitor_git_branch}", force=True).raise_if_error()
+        git_remote.push(
+            refspec=f"HEAD:refs/heads/{self.fake_api_server_monitor_git_branch}", force=True
+        ).raise_if_error()
