@@ -41,7 +41,7 @@ class TestGitOperation:
                 print("[DEBUG] Occur something wrong when trying to get git branch")
                 # NOTE: Only for CI runtime environment
                 if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
-                    original_branch = "github-action-ci-only"
+                    original_branch = os.getenv("GITHUB_HEAD_REF", "")
                 else:
                     raise e
 
@@ -72,7 +72,7 @@ class TestGitOperation:
                 print("[DEBUG] Occur something wrong when trying to get git branch")
                 # NOTE: Only for CI runtime environment
                 if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
-                    original_branch = "github-action-ci-only"
+                    original_branch = os.getenv("GITHUB_HEAD_REF", "")
                 else:
                     raise e
             git_operation.repository.git.checkout("-b", test_remote_name)
