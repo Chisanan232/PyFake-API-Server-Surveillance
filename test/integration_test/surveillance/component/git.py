@@ -35,15 +35,7 @@ class TestGitOperation:
         try:
             with patch("os.path.exists", return_value=True):
                 git_operation.repository = git_operation._init_git(self._given_action_inputs)
-            try:
-                original_branch = git_operation.repository.active_branch.name
-            except TypeError as e:
-                print("[DEBUG] Occur something wrong when trying to get git branch")
-                # NOTE: Only for CI runtime environment
-                if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
-                    original_branch = os.getenv("GITHUB_HEAD_REF", "")
-                else:
-                    raise e
+            original_branch = self._get_current_git_branch(git_operation)
 
             # when
             git_operation._switch_git_branch(git_ref=test_remote_name)
@@ -65,15 +57,7 @@ class TestGitOperation:
         try:
             with patch("os.path.exists", return_value=True):
                 git_operation.repository = git_operation._init_git(self._given_action_inputs)
-            try:
-                original_branch = git_operation.repository.active_branch.name
-            except TypeError as e:
-                print("[DEBUG] Occur something wrong when trying to get git branch")
-                # NOTE: Only for CI runtime environment
-                if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
-                    original_branch = os.getenv("GITHUB_HEAD_REF", "")
-                else:
-                    raise e
+            original_branch = self._get_current_git_branch(git_operation)
             git_operation.repository.git.checkout("-b", test_remote_name)
             git_operation.repository.git.switch(original_branch)
 
@@ -88,6 +72,18 @@ class TestGitOperation:
                 git_operation.repository.git.switch(original_branch)
             if test_remote_name in [b.name for b in git_operation.repository.branches]:
                 git_operation.repository.git.branch("-D", test_remote_name)
+
+    def _get_current_git_branch(self, git_operation: GitOperation) -> str:
+        try:
+            original_branch = git_operation.repository.active_branch.name
+        except TypeError as e:
+            print("[DEBUG] Occur something wrong when trying to get git branch")
+            # NOTE: Only for CI runtime environment
+            if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
+                original_branch = os.getenv("GITHUB_HEAD_REF", "")
+            else:
+                raise e
+        return original_branch
 
     def test_init_git_remote_with_not_exist_remote(self, git_operation: GitOperation):
         # given
