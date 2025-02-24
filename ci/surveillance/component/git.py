@@ -71,8 +71,10 @@ class GitOperation:
         git_remote = self._init_git_remote(action_inputs, self.default_remote_name)
 
         # Sync up the code version from git
+        print("Fetch to update the git ...")
         git_remote.fetch()
         # Switch to target git branch which only for Fake-API-Server
+        print("Switch to target branch ...")
         self._switch_git_branch(self.fake_api_server_monitor_git_branch)
 
         # Get all files in the folder
