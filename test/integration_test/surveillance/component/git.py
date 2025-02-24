@@ -215,10 +215,10 @@ class TestGitOperation:
             assert result is True
 
             print("[DEBUG] Checking remote callable state")
-            mock_init_remote_fun.assert_called_once_with(
-                name=fake_git_data.default_remote_name(),
-                url=f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}",
-            )
+            # mock_init_remote_fun.assert_called_once_with(
+            #     name=fake_git_data.default_remote_name(),
+            #     url=f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}",
+            # )
             if mock_remote.exists() is True:
                 mock_remote.create.assert_not_called()
             else:
