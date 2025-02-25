@@ -58,7 +58,8 @@ class TestGitOperation:
             with patch("os.path.exists", return_value=True):
                 git_operation.repository = git_operation._init_git(self._given_action_inputs)
             original_branch = self._get_current_git_branch(git_operation)
-            git_operation.repository.git.checkout("-b", test_remote_name)
+            if test_remote_name not in [b.name for b in git_operation.repository.branches]:
+                git_operation.repository.git.checkout("-b", test_remote_name)
             git_operation.repository.git.switch(original_branch)
 
             # when
