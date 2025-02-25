@@ -14,7 +14,6 @@ from ci.surveillance.model.action import ActionInput
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data
 
-
 # isort: on
 
 
@@ -99,8 +98,6 @@ class TestGitOperation:
                 remote.url
                 == f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}"
             )
-        except Exception as e:
-            raise e
         finally:
             # clean test
             if test_remote_name in git_operation.repository.remotes:
