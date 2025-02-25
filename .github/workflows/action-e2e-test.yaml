@@ -50,6 +50,8 @@ jobs:
     steps:
       - name: Clone project
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up fake server
         uses: ./.github/actions/setup_fake_server/
@@ -79,6 +81,8 @@ jobs:
     steps:
       - name: Clone project
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up fake server
         uses: ./.github/actions/setup_fake_server/
@@ -120,6 +124,8 @@ jobs:
     steps:
       - name: Clone project
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Run Fake-API-Server-Surveillance
         id: e2e-test-invalid-case
