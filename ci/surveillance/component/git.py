@@ -49,16 +49,7 @@ class GitOperation:
 
     @property
     def _current_git_branch(self) -> str:
-        try:
-            current_git_branch = self.repository.active_branch.name
-        except TypeError as e:
-            # NOTE: Only for CI runtime environment
-            print("[DEBUG] Occur something wrong when trying to get git branch")
-            if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
-                current_git_branch = ""
-            else:
-                raise e
-        return current_git_branch
+        return self.repository.active_branch.name
 
     def _reset_all_staged_files(self) -> None:
         self._all_staged_files.clear()

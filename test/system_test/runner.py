@@ -52,15 +52,15 @@ def test_entire_flow_with_not_exist_config(
     now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
-    try:
-        original_branch = repo.active_branch.name
-    except TypeError as e:
-        print("[DEBUG] Occur something wrong when trying to get git branch")
-        # NOTE: Only for CI runtime environment
-        if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
-            original_branch = "github-action-ci-only"
-        else:
-            raise e
+    # try:
+    original_branch = repo.active_branch.name
+    # except TypeError as e:
+    #     print("[DEBUG] Occur something wrong when trying to get git branch")
+    #     # NOTE: Only for CI runtime environment
+    #     if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+    #         original_branch = "github-action-ci-only"
+    #     else:
+    #         raise e
     print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
     print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
     if now_in_ci_runtime_env and original_branch not in [b.name for b in repo.branches]:
