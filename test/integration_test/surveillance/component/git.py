@@ -162,19 +162,17 @@ class TestGitOperation:
         action_inputs = fake_data.action_input_model(file_path=filepath)
 
         real_repo = Repo("./")
-        now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
         print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
-        print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
         try:
             original_branch = real_repo.active_branch.name
         except TypeError as e:
             print("[DEBUG] Occur something wrong when trying to get git branch")
             # NOTE: Only for CI runtime environment
-            if "HEAD" in str(e) and "detached" in str(e) and now_in_ci_runtime_env:
+            if "HEAD" in str(e) and "detached" in str(e) and self._is_in_ci_env:
                 original_branch = "github-action-ci-only"
             else:
                 raise e
-        if now_in_ci_runtime_env and original_branch not in [b.name for b in real_repo.branches]:
+        if self._is_in_ci_env and original_branch not in [b.name for b in real_repo.branches]:
             print(f"[DEBUG] create and switch git branch {original_branch}")
             real_repo.git.checkout("-b", original_branch)
 
@@ -238,10 +236,14 @@ class TestGitOperation:
             mock_remote_push.assert_called_once()
         finally:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
-            if not now_in_ci_runtime_env and str(filepath) in committed_files:
+            if not self._is_in_ci_env and str(filepath) in committed_files:
                 # test finally
                 real_repo.git.restore("--staged", str(filepath))
             if real_repo.active_branch != original_branch:
                 real_repo.git.switch(original_branch)
             if fake_git_data.fake_api_server_monitor_branch_name() in [b.name for b in real_repo.branches]:
                 real_repo.git.branch("-D", fake_git_data.fake_api_server_monitor_branch_name())
+
+    @property
+    def _is_in_ci_env(self) -> bool:
+        return ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
