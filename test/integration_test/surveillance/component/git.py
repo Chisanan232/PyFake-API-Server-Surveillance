@@ -75,16 +75,7 @@ class TestGitOperation:
                 git_operation.repository.git.branch("-D", test_remote_name)
 
     def _get_current_git_branch(self, git_operation: GitOperation) -> str:
-        # try:
-        original_branch = git_operation.repository.active_branch.name
-        # except TypeError as e:
-        #     print("[DEBUG] Occur something wrong when trying to get git branch")
-        #     # NOTE: Only for CI runtime environment
-        #     if "HEAD" in str(e) and "detached" in str(e) and git_operation.is_in_ci_env:
-        #         original_branch = os.getenv("GITHUB_REF", "")
-        #     else:
-        #         raise e
-        return original_branch
+        return git_operation.repository.active_branch.name
 
     def test_init_git_remote_with_not_exist_remote(self, git_operation: GitOperation):
         # given
@@ -164,15 +155,7 @@ class TestGitOperation:
 
         real_repo = Repo("./")
         print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
-        # try:
         original_branch = real_repo.active_branch.name
-        # except TypeError as e:
-        #     print("[DEBUG] Occur something wrong when trying to get git branch")
-        #     # NOTE: Only for CI runtime environment
-        #     if "HEAD" in str(e) and "detached" in str(e) and self._is_in_ci_env:
-        #         original_branch = "github-action-ci-only"
-        #     else:
-        #         raise e
         if self._is_in_ci_env and original_branch not in [b.name for b in real_repo.branches]:
             print(f"[DEBUG] create and switch git branch {original_branch}")
             real_repo.git.checkout("-b", original_branch)
