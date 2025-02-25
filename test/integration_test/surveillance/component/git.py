@@ -26,7 +26,8 @@ class TestGitOperation:
     def _given_action_inputs(self) -> ActionInput:
         return fake_data.action_input_model(file_path="./api.yaml")
 
-    def test_switch_git_branch_with_not_exist(self, git_operation: GitOperation):
+    @pytest.mark.parametrize("branch_already_exist", [False, True])
+    def test_switch_git_branch(self, git_operation: GitOperation, branch_already_exist: bool):
         # given
         original_branch = ""
         test_remote_name = "pytest-branch"
@@ -34,7 +35,11 @@ class TestGitOperation:
         try:
             with patch("os.path.exists", return_value=True):
                 git_operation.repository = git_operation._init_git(self._given_action_inputs)
-            original_branch = self._get_current_git_branch(git_operation)
+            original_branch = git_operation.repository.active_branch.name
+            if branch_already_exist:
+                if test_remote_name not in [b.name for b in git_operation.repository.branches]:
+                    git_operation.repository.git.checkout("-b", test_remote_name)
+                git_operation.repository.git.switch(original_branch)
 
             # when
             git_operation._switch_git_branch(git_ref=test_remote_name)
@@ -47,34 +52,6 @@ class TestGitOperation:
                 git_operation.repository.git.switch(original_branch)
             if test_remote_name in [b.name for b in git_operation.repository.branches]:
                 git_operation.repository.git.branch("-D", test_remote_name)
-
-    def test_switch_git_branch_with_exist(self, git_operation: GitOperation):
-        # given
-        original_branch = ""
-        test_remote_name = "pytest-branch"
-
-        try:
-            with patch("os.path.exists", return_value=True):
-                git_operation.repository = git_operation._init_git(self._given_action_inputs)
-            original_branch = self._get_current_git_branch(git_operation)
-            if test_remote_name not in [b.name for b in git_operation.repository.branches]:
-                git_operation.repository.git.checkout("-b", test_remote_name)
-            git_operation.repository.git.switch(original_branch)
-
-            # when
-            git_operation._switch_git_branch(git_ref=test_remote_name)
-
-            # should
-            assert git_operation.repository.active_branch.name == test_remote_name
-        finally:
-            # clean test
-            if git_operation.repository.active_branch.name != original_branch:
-                git_operation.repository.git.switch(original_branch)
-            if test_remote_name in [b.name for b in git_operation.repository.branches]:
-                git_operation.repository.git.branch("-D", test_remote_name)
-
-    def _get_current_git_branch(self, git_operation: GitOperation) -> str:
-        return git_operation.repository.active_branch.name
 
     def test_init_git_remote_with_not_exist_remote(self, git_operation: GitOperation):
         # given
