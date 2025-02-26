@@ -12,6 +12,7 @@ from unittest.mock import Mock, patch
 
 from fake_api_server.model import deserialize_api_doc_config
 
+from ci.surveillance.component.git import GitOperation
 from ci.surveillance.model import EnvironmentVariableKey
 from ci.surveillance.runner import run
 
@@ -28,13 +29,13 @@ from test._values.dummy_objects import (
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch("ci.surveillance.runner.commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_exist_fake_api_server_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,
-    mock_commit_process: Mock,
+    mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
@@ -43,25 +44,25 @@ def test_run_with_exist_fake_api_server_config(
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
     )
-    mock_commit_process.return_value = True
+    mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
     with patch.dict(os.environ, data, clear=True):
         run()
 
     mock_load_config.assert_called_once()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
-    mock_commit_process.assert_called_once()
+    mock_version_change_process.assert_called_once()
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch("ci.surveillance.runner.commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,
-    mock_commit_process: Mock,
+    mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
@@ -70,25 +71,25 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
     )
-    mock_commit_process.return_value = True
+    mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
     with patch.dict(os.environ, data, clear=True):
         run()
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
-    mock_commit_process.assert_called_once()
+    mock_version_change_process.assert_called_once()
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch("ci.surveillance.runner.commit_change_config")
+@patch.object(GitOperation, "version_change")
 @patch("ci.surveillance.runner.load_config")
 @patch("ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,
-    mock_commit_process: Mock,
+    mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
@@ -97,7 +98,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
     )
-    mock_commit_process.return_value = True
+    mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
     with patch.dict(os.environ, data, clear=True):
         with pytest.raises(FileNotFoundError):
@@ -105,4 +106,4 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
-    mock_commit_process.assert_not_called()
+    mock_version_change_process.assert_not_called()
