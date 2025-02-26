@@ -1,0 +1,27 @@
+from enum import Enum
+
+
+class EnvironmentVariableKey(Enum):
+    # API documentation info
+    API_DOC_URL = "API_DOC_URL"
+    SERVER_TYPE = "SERVER_TYPE"
+
+    # git info
+    GIT_REPOSITORY = "GIT_REPOSITORY"
+    GIT_AUTHOR_NAME = "GIT_AUTHOR_NAME"
+    GIT_AUTHOR_EMAIL = "GIT_AUTHOR_EMAIL"
+    GIT_COMMIT_MSG = "GIT_COMMIT_MSG"
+
+    # for subcommand line *pull* options
+    CONFIG_PATH = "CONFIG_PATH"
+    INCLUDE_TEMPLATE_CONFIG = "INCLUDE_TEMPLATE_CONFIG"
+    BASE_FILE_PATH = "BASE_FILE_PATH"
+    BASE_URL = "BASE_URL"
+    DIVIDE_API = "DIVIDE_API"
+    DIVIDE_HTTP = "DIVIDE_HTTP"
+    DIVIDE_HTTP_REQUEST = "DIVIDE_HTTP_REQUEST"
+    DIVIDE_HTTP_RESPONSE = "DIVIDE_HTTP_RESPONSE"
+    DRY_RUN = "DRY_RUN"
+
+    # operation with action in CI
+    ACCEPT_CONFIG_NOT_EXIST = "ACCEPT_CONFIG_NOT_EXIST"
