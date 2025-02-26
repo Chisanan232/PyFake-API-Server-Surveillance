@@ -157,5 +157,5 @@ jobs:
   pre-building_test:
 #    name: Check about it could work finely by installing the Python package with setup.py file
     needs: [unit-test_codecov_finish, integration-test_codecov_finish, system-test_codecov_finish, all-test_codecov_finish, sonarcloud_finish]
-#    if: ${{ github.ref_name == 'release' || github.ref_name == 'master' }}
+    if: ${{ github.ref_name == 'release' || github.ref_name == 'master' }}
     uses: ./.github/workflows/rw_test_package_path.yaml
