@@ -26,7 +26,10 @@ jobs:
           poetry --version
           poetry install
           poetry build
-          poetry shell
+
+      - name: Install the fake-api-server plugin by whl files
+        run: |
+          pip3 install ./dist/*.whl
 
       - name: Try to import the plugin source by Python package
         shell: python
