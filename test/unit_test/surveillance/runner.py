@@ -12,9 +12,9 @@ from unittest.mock import Mock, patch
 
 from fake_api_server.model import deserialize_api_doc_config
 
-from ci.surveillance.component.git import GitOperation
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.runner import run
+from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.runner import run
 
 # isort: off
 from test._values._test_data import fake_data
@@ -30,8 +30,8 @@ from test._values.dummy_objects import (
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch.object(GitOperation, "version_change")
-@patch("ci.surveillance.runner.load_config")
-@patch("ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
+@patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
 def test_run_with_exist_fake_api_server_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,
@@ -57,8 +57,8 @@ def test_run_with_exist_fake_api_server_config(
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch.object(GitOperation, "version_change")
-@patch("ci.surveillance.runner.load_config")
-@patch("ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
+@patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,
@@ -84,8 +84,8 @@ def test_run_with_not_exist_fake_api_server_config(
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch.object(GitOperation, "version_change")
-@patch("ci.surveillance.runner.load_config")
-@patch("ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
+@patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
 def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_config(
     mock_path_exits: Mock,
     mock_load_config: Mock,

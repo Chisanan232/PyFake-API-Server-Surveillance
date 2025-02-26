@@ -8,8 +8,8 @@ import pytest
 from git import Repo
 from git.remote import PushInfoList
 
-from ci.surveillance.component.git import GitOperation
-from ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
+from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data

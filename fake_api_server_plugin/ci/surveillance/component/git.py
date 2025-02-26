@@ -5,7 +5,7 @@ from typing import Optional, Set, Union
 
 from git import Commit, Remote, Repo
 
-from ci.surveillance.model.action import ActionInput
+from ..model.action import ActionInput
 
 
 class GitOperation:

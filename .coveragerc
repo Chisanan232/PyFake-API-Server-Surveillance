@@ -1,7 +1,7 @@
 [run]
 parallel = True
 relative_files = True
-include=./ci
+include=./fake_api_server_plugin/ci
 
 omit =
     */__pkg_info__.py
