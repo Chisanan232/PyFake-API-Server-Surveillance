@@ -6,7 +6,9 @@ from fake_api_server._utils import YAML
 from fake_api_server.model.api_config import FakeAPIConfig
 from fake_api_server.model.api_config.template._divide import DivideStrategy
 
-from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
+from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import (
+    PullApiDocConfigArgs,
+)
 
 logger = logging.getLogger(__name__)
 

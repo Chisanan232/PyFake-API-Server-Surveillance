@@ -4,7 +4,11 @@ import pytest
 from git import Actor
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
+from fake_api_server_plugin.ci.surveillance.model.git import (
+    GitAuthor,
+    GitCommit,
+    GitInfo,
+)
 
 # isort: off
 from ._base import _BaseModelTestSuite
