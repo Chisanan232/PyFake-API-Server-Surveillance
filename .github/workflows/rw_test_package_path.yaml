@@ -1,0 +1,34 @@
+name: Run pre-build test about the package path after pip install
+
+on:
+  workflow_call:
+
+jobs:
+  run_test_items:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          pip --version
+          pip install -U poetry
+
+      - name: Build Python runtime environment by Poetry
+        run: |
+          poetry --version
+          poetry install
+          poetry build
+
+      - name: Try to import the plugin source by Python package
+        shell: python
+        run: |
+          import fake_api_server
+          import fake_api_server.ci
