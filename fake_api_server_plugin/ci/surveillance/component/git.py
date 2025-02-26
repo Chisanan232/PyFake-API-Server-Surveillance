@@ -5,7 +5,7 @@ from typing import Optional, Set, Union
 
 from git import Commit, Remote, Repo
 
-from ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 
 class GitOperation:
@@ -109,7 +109,7 @@ class GitOperation:
         assert os.path.exists(
             action_inputs.subcmd_pull_args.config_path
         ), "PyFake-API-Server configuration is required. Please check it."
-        return Repo("./")
+        return Repo("/")
 
     def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
         if remote_name not in self.repository.remotes:

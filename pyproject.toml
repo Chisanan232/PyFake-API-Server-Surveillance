@@ -46,7 +46,7 @@ authors = [
     "Liu, Bryant <chi10211201@cycu.org.tw>",
 ]
 packages = [
-    { include = "ci", to = "fake_api_server" },
+    { include = "fake_api_server_plugin/ci", to = "fake_api_server" },
 ]
 
 [project.urls]
@@ -57,7 +57,7 @@ Changelog = "https://chisanan232.github.io/PyFake-API-Server-Surveillance/latest
 "Project Management" = "https://app.clickup.com/9018752317/v/f/90183127005/90182605225"
 
 [project.scripts]
-run-fake-server-surveillance = "ci.surveillance.runner:run"
+run-fake-server-surveillance = "fake_api_server_plugin.ci.surveillance.runner:run"
 
 #[project.entry-points."fake_api_server.ci"]
 #ci = "ci:D"

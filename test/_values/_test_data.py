@@ -2,10 +2,10 @@ from pathlib import Path
 from typing import Dict, Union
 from unittest.mock import Mock
 
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.model.action import ActionInput
-from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
-from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
+from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
 
 class fake_github_action_values:

@@ -10,8 +10,8 @@ from fake_api_server.model import deserialize_api_doc_config
 from git import Repo
 from git.remote import PushInfoList
 
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.runner import run
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.runner import run
 
 # isort: off
 from test._values._test_data import fake_data, fake_git_data
@@ -26,7 +26,7 @@ from test._values.dummy_objects import (
 
 @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
-@patch("ci.surveillance.runner.load_config")
+@patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("git.remote.Remote.push")
 def test_entire_flow_with_not_exist_config(
     mock_remote_push: Mock,

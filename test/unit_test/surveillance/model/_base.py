@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ci.surveillance.model._base import _BaseModel
+from fake_api_server_plugin.ci.surveillance.model._base import _BaseModel
 
 
 class _BaseModelTestSuite(metaclass=ABCMeta):

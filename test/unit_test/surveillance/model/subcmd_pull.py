@@ -3,8 +3,8 @@ from typing import Mapping, Type
 
 import pytest
 
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import PullApiDocConfigArgs
 
 # isort: off
 from ._base import _BaseModelTestSuite

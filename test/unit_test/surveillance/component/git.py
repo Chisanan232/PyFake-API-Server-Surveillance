@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ci.surveillance.component.git import GitOperation
+from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values
