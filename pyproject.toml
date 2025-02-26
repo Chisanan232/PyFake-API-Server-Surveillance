@@ -46,7 +46,7 @@ authors = [
     "Liu, Bryant <chi10211201@cycu.org.tw>",
 ]
 packages = [
-    { include = "fake_api_server_plugin/ci", to = "fake_api_server" },
+    { include = "ci", from = "fake_api_server_plugin", to = "fake_api_server" },
 ]
 
 [project.urls]
