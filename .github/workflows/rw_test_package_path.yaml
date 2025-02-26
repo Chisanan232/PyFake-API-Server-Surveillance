@@ -26,6 +26,7 @@ jobs:
           poetry --version
           poetry install
           poetry build
+          poetry shell
 
       - name: Try to import the plugin source by Python package
         shell: python
