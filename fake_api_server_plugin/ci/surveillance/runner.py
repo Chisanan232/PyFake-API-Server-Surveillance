@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Mapping
 
 import urllib3
 
@@ -22,7 +23,7 @@ class FakeApiServerSurveillance:
         # if no diff = nothing, else it would update the config (commit the change and request PR by git and gh?)
         print("monitor the github repro ...")
         has_api_change = False
-        action_inputs = ActionInput.deserialize(os.environ)
+        action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
 
         response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
         current_api_doc_config = deserialize_api_doc_config(response.json())
@@ -64,6 +65,12 @@ class FakeApiServerSurveillance:
             # TODO: this is backlog task
             # print("notify developers")
             # Notificatier.notidy()
+
+    def _get_action_inputs(self) -> Mapping:
+        return os.environ
+
+    def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
+        return ActionInput.deserialize(action_inputs)
 
 
 def run() -> None:
