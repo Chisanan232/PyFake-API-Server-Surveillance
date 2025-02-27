@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Mapping
 
 import urllib3
+from fake_api_server import FakeAPIConfig
 
 try:
     from http import HTTPMethod
@@ -25,9 +26,7 @@ class FakeApiServerSurveillance:
         has_api_change = False
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
 
-        response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
-        current_api_doc_config = deserialize_api_doc_config(response.json())
-        new_api_config = current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
+        new_api_config = self._get_latest_api_doc_config(action_inputs)
 
         fake_api_server_config = action_inputs.subcmd_pull_args.config_path
         if Path(fake_api_server_config).exists():
@@ -65,6 +64,11 @@ class FakeApiServerSurveillance:
             # TODO: this is backlog task
             # print("notify developers")
             # Notificatier.notidy()
+
+    def _get_latest_api_doc_config(self, action_inputs: ActionInput) -> FakeAPIConfig:
+        response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
+        current_api_doc_config = deserialize_api_doc_config(response.json())
+        return current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
 
     def _get_action_inputs(self) -> Mapping:
         return os.environ
