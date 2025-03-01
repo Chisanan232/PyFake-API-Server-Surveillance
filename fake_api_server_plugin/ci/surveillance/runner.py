@@ -25,12 +25,13 @@ class FakeApiServerSurveillance:
         new_api_doc_config = self._get_latest_api_doc_config(action_inputs)
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
-            self._update_api_doc_config(action_inputs, new_api_doc_config)
+            self._process_api_change(action_inputs, new_api_doc_config)
 
-            print("commit the different and push to remote repository")
-            self._process_versioning(action_inputs)
-
-            self._notify(action_inputs)
+    def _process_api_change(self, action_inputs, new_api_doc_config) -> None:
+        self._update_api_doc_config(action_inputs, new_api_doc_config)
+        print("commit the different and push to remote repository")
+        self._process_versioning(action_inputs)
+        self._notify(action_inputs)
 
     def _notify(self, action_inputs: ActionInput) -> None:
         # TODO: this is backlog task
