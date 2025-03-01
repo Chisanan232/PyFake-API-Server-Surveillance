@@ -19,9 +19,6 @@ from .model.action import ActionInput
 
 class FakeApiServerSurveillance:
     def monitor(self) -> None:
-        # get the API doc config from end point (request API doc config and get response)
-        # check the diff between local config and the new config (check the diff by git?)
-        # if no diff = nothing, else it would update the config (commit the change and request PR by git and gh?)
         print("monitor the github repro ...")
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
 
@@ -29,15 +26,11 @@ class FakeApiServerSurveillance:
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
             self._update_api_doc_config(action_inputs, new_api_doc_config)
-            # result = Surveillance.monitor()
 
             print("commit the different and push to remote repository")
             self._process_versioning(action_inputs)
-            # GitHelper.commit_change()
 
             # TODO: this is backlog task
-            # print("notify developers")
-            # Notificatier.notidy()
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
         GitOperation().version_change(action_inputs)
