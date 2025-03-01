@@ -28,8 +28,7 @@ class FakeApiServerSurveillance:
         new_api_doc_config = self._get_latest_api_doc_config(action_inputs)
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
-            _saving_config_component = SavingConfigComponent()
-            _saving_config_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
+            SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
             # result = Surveillance.monitor()
 
             print("commit the different and push to remote repository")
