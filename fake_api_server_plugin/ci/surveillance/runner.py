@@ -18,6 +18,10 @@ from .model.action import ActionInput
 
 
 class FakeApiServerSurveillance:
+    def __init__(self):
+        self.subcmd_pull_component = SavingConfigComponent()
+        self.git_operation = GitOperation()
+
     def monitor(self) -> None:
         print("monitor the github repro ...")
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
@@ -74,10 +78,10 @@ class FakeApiServerSurveillance:
         self._notify(action_inputs)
 
     def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
-        SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
+        self.subcmd_pull_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
-        GitOperation().version_change(action_inputs)
+        self.git_operation.version_change(action_inputs)
 
     def _notify(self, action_inputs: ActionInput) -> None:
         # TODO: this is backlog task
