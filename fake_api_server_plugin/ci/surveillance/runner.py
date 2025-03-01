@@ -30,7 +30,11 @@ class FakeApiServerSurveillance:
             print("commit the different and push to remote repository")
             self._process_versioning(action_inputs)
 
-            # TODO: this is backlog task
+            self._notify(action_inputs)
+
+    def _notify(self, action_inputs: ActionInput) -> None:
+        # TODO: this is backlog task
+        pass
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
         GitOperation().version_change(action_inputs)
