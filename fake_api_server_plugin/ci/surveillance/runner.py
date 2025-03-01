@@ -28,7 +28,7 @@ class FakeApiServerSurveillance:
         new_api_doc_config = self._get_latest_api_doc_config(action_inputs)
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
-            SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
+            self._update_api_doc_config(action_inputs, new_api_doc_config)
             # result = Surveillance.monitor()
 
             print("commit the different and push to remote repository")
@@ -38,6 +38,9 @@ class FakeApiServerSurveillance:
             # TODO: this is backlog task
             # print("notify developers")
             # Notificatier.notidy()
+
+    def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
+        SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
 
     def _compare_with_current_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> bool:
         has_api_change = False
