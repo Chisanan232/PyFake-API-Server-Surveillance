@@ -29,24 +29,16 @@ class FakeApiServerSurveillance:
         else:
             self._process_no_api_change(action_inputs)
 
-    def _process_no_api_change(self, action_inputs: ActionInput) -> None:
-        pass
+    def _get_action_inputs(self) -> Mapping:
+        return os.environ
 
-    def _process_api_change(self, action_inputs, new_api_doc_config) -> None:
-        self._update_api_doc_config(action_inputs, new_api_doc_config)
-        print("commit the different and push to remote repository")
-        self._process_versioning(action_inputs)
-        self._notify(action_inputs)
+    def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
+        return ActionInput.deserialize(action_inputs)
 
-    def _notify(self, action_inputs: ActionInput) -> None:
-        # TODO: this is backlog task
-        pass
-
-    def _process_versioning(self, action_inputs: ActionInput) -> None:
-        GitOperation().version_change(action_inputs)
-
-    def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
-        SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
+    def _get_latest_api_doc_config(self, action_inputs: ActionInput) -> FakeAPIConfig:
+        response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
+        current_api_doc_config = deserialize_api_doc_config(response.json())
+        return current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
 
     def _compare_with_current_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> bool:
         has_api_change = False
@@ -75,16 +67,24 @@ class FakeApiServerSurveillance:
                 fake_api_server_config_dir.mkdir(parents=True, exist_ok=True)
         return has_api_change
 
-    def _get_latest_api_doc_config(self, action_inputs: ActionInput) -> FakeAPIConfig:
-        response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
-        current_api_doc_config = deserialize_api_doc_config(response.json())
-        return current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
+    def _process_api_change(self, action_inputs, new_api_doc_config) -> None:
+        self._update_api_doc_config(action_inputs, new_api_doc_config)
+        print("commit the different and push to remote repository")
+        self._process_versioning(action_inputs)
+        self._notify(action_inputs)
 
-    def _get_action_inputs(self) -> Mapping:
-        return os.environ
+    def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
+        SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
 
-    def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
-        return ActionInput.deserialize(action_inputs)
+    def _process_versioning(self, action_inputs: ActionInput) -> None:
+        GitOperation().version_change(action_inputs)
+
+    def _notify(self, action_inputs: ActionInput) -> None:
+        # TODO: this is backlog task
+        pass
+
+    def _process_no_api_change(self, action_inputs: ActionInput) -> None:
+        pass
 
 
 def run() -> None:
