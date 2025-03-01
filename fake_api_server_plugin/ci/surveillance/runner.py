@@ -32,12 +32,15 @@ class FakeApiServerSurveillance:
             # result = Surveillance.monitor()
 
             print("commit the different and push to remote repository")
-            GitOperation().version_change(action_inputs)
+            self._process_versioning(action_inputs)
             # GitHelper.commit_change()
 
             # TODO: this is backlog task
             # print("notify developers")
             # Notificatier.notidy()
+
+    def _process_versioning(self, action_inputs: ActionInput) -> None:
+        GitOperation().version_change(action_inputs)
 
     def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
         SavingConfigComponent().serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
