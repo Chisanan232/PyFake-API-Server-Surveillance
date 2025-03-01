@@ -26,6 +26,11 @@ class FakeApiServerSurveillance:
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
             self._process_api_change(action_inputs, new_api_doc_config)
+        else:
+            self._process_no_api_change(action_inputs)
+
+    def _process_no_api_change(self, action_inputs: ActionInput) -> None:
+        pass
 
     def _process_api_change(self, action_inputs, new_api_doc_config) -> None:
         self._update_api_doc_config(action_inputs, new_api_doc_config)
