@@ -4,6 +4,7 @@ relative_files = True
 include=./fake_api_server_plugin/ci
 
 omit =
+    */__pkg_info__.py
 #    */__init__.py
 
 
