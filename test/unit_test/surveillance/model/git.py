@@ -3,10 +3,18 @@ from typing import Mapping, Type
 import pytest
 from git import Actor
 
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.model.git import GitAuthor, GitCommit, GitInfo
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.git import (
+    GitAuthor,
+    GitCommit,
+    GitInfo,
+)
 
+# isort: off
 from ._base import _BaseModelTestSuite
+from test._values._test_data import fake_data
+
+# isort: on
 
 
 class TestGitAuthor(_BaseModelTestSuite):
@@ -18,10 +26,7 @@ class TestGitAuthor(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-            },
+            fake_data.git_operation_info(),
         ],
     )
     def test_deserialize(self, model: Type[GitAuthor], data: Mapping):
@@ -34,10 +39,7 @@ class TestGitAuthor(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-            },
+            fake_data.git_operation_info(),
         ],
     )
     def test_serialize_for_git(self, model: Type[GitAuthor], data: Mapping) -> None:
@@ -56,11 +58,7 @@ class TestGitCommit(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-                EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-            },
+            fake_data.git_operation_info(),
         ],
     )
     def test_deserialize(self, model: Type[GitCommit], data: Mapping):
@@ -81,12 +79,7 @@ class TestGitInfo(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-                EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-            },
+            fake_data.git_operation_info(),
         ],
     )
     def test_deserialize(self, model: Type[GitInfo], data: Mapping):

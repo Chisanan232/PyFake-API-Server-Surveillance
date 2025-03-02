@@ -1,11 +1,16 @@
+import ast
 from typing import Mapping, Type
 
 import pytest
 
-from ci.surveillance.model import EnvironmentVariableKey
-from ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
+# isort: off
 from ._base import _BaseModelTestSuite
+from test._values._test_data import fake_data
+
+# isort: on
 
 
 class TestActionInput(_BaseModelTestSuite):
@@ -17,26 +22,7 @@ class TestActionInput(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            {
-                # API documentation info
-                EnvironmentVariableKey.API_DOC_URL.value: "http://10.20.0.13:8080",
-                EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-                # git info
-                EnvironmentVariableKey.GIT_REPOSITORY.value: "test/sample-project",
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test",
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test@gmail.com",
-                EnvironmentVariableKey.GIT_COMMIT_MSG.value: "✏️ Update the API interface settings.",
-                # for subcommand line *pull* options
-                EnvironmentVariableKey.CONFIG_PATH.value: "./api.yaml",
-                EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-                EnvironmentVariableKey.BASE_FILE_PATH.value: "./",
-                EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-                EnvironmentVariableKey.DIVIDE_API.value: "true",
-                EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-                EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-                EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-                EnvironmentVariableKey.DRY_RUN.value: "true",
-            },
+            fake_data.action_input(file_path="./api.yaml", base_test_dir="./"),
         ],
     )
     def test_deserialize(self, model: Type[ActionInput], data: Mapping):
@@ -55,17 +41,28 @@ class TestActionInput(_BaseModelTestSuite):
 
         # for subcommand line *pull* options
         assert model.subcmd_pull_args.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
-        assert model.subcmd_pull_args.include_template_config == bool(
-            original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]
+        assert model.subcmd_pull_args.include_template_config == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
         )
         assert model.subcmd_pull_args.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
         assert model.subcmd_pull_args.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
-        assert model.subcmd_pull_args.divide_api == bool(original_data[EnvironmentVariableKey.DIVIDE_API.value])
-        assert model.subcmd_pull_args.divide_http == bool(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value])
-        assert model.subcmd_pull_args.divide_http_request == bool(
-            original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]
+        assert model.subcmd_pull_args.divide_api == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()
         )
-        assert model.subcmd_pull_args.divide_http_response == bool(
-            original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]
+        assert model.subcmd_pull_args.divide_http == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()
         )
-        assert model.subcmd_pull_args.dry_run == bool(original_data[EnvironmentVariableKey.DRY_RUN.value])
+        assert model.subcmd_pull_args.divide_http_request == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
+        )
+        assert model.subcmd_pull_args.divide_http_response == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
+        )
+        assert model.subcmd_pull_args.dry_run == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()
+        )
+
+        # operation of action in CI
+        assert model.accept_config_not_exist == ast.literal_eval(
+            str(original_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
+        )

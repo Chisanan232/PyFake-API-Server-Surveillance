@@ -22,3 +22,6 @@ class EnvironmentVariableKey(Enum):
     DIVIDE_HTTP_REQUEST = "DIVIDE_HTTP_REQUEST"
     DIVIDE_HTTP_RESPONSE = "DIVIDE_HTTP_RESPONSE"
     DRY_RUN = "DRY_RUN"
+
+    # operation with action in CI
+    ACCEPT_CONFIG_NOT_EXIST = "ACCEPT_CONFIG_NOT_EXIST"
