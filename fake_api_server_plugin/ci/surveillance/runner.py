@@ -78,7 +78,9 @@ class FakeApiServerSurveillance:
         self._notify(action_inputs)
 
     def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
-        self.subcmd_pull_component.serialize_and_save(cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config)
+        self.subcmd_pull_component.serialize_and_save(
+            cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config
+        )
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
         self.git_operation.version_change(action_inputs)
