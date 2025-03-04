@@ -18,10 +18,7 @@ from ._base import _BaseModelTestSuite
 def test_get_github_action_env():
     model = get_github_action_env()
     assert model is not None
-    assert model.github_actions is True
-    assert model.base_branch == os.environ["GITHUB_BASE_REF"]
-    assert model.head_branch == os.environ["GITHUB_HEAD_REF"]
-    assert model.github_token == os.environ["GITHUB_TOKEN"]
+    TestGitHubActionEnvironmentVariable()._verify_model_props(model, os.environ)
 
 
 class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
@@ -38,8 +35,12 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
     def test_deserialize(self, model: Type[GitHubActionEnvironmentVariable], data: Mapping):
         super().test_deserialize(model, data)
 
-    def _verify_model_props(self, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
+    def _verify_model_props(cls, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
         assert model.github_actions is True
-        assert model.base_branch == os.environ["GITHUB_BASE_REF"]
-        assert model.head_branch == os.environ["GITHUB_HEAD_REF"]
-        assert model.github_token == os.environ["GITHUB_TOKEN"]
+        assert model.repository == original_data["GITHUB_REPOSITORY"]
+        assert model.repository_owner_name
+        assert model.repository_name
+        assert f"{model.repository_owner_name}/{model.repository_name}" == original_data["GITHUB_REPOSITORY"]
+        assert model.base_branch == original_data["GITHUB_BASE_REF"]
+        assert model.head_branch == original_data["GITHUB_HEAD_REF"]
+        assert model.github_token == original_data["GITHUB_TOKEN"]
