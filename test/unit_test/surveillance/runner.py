@@ -13,7 +13,7 @@ from unittest.mock import Mock, patch, MagicMock
 from fake_api_server.model import deserialize_api_doc_config
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.runner import run
+from fake_api_server_plugin.ci.surveillance.runner import run, FakeApiServerSurveillance
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values
@@ -58,7 +58,7 @@ def test_run_with_exist_fake_api_server_config(
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
-        run()
+        FakeApiServerSurveillance().monitor()
 
     mock_load_config.assert_called_once()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
@@ -97,7 +97,7 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
-        run()
+        FakeApiServerSurveillance().monitor()
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
@@ -137,7 +137,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
 
     with patch.dict(os.environ, data, clear=True):
         with pytest.raises(FileNotFoundError):
-            run()
+            FakeApiServerSurveillance().monitor()
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
