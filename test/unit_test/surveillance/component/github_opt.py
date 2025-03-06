@@ -47,8 +47,7 @@ class TestGitHubOperationClass:
         mock_github.get_repo.return_value = mock_repo
         mock_repo.create_pull.return_value = mock_pr
 
-        github_operation(repo_owner="test_owner", repo_name="test_repo")
-        with github_operation:
+        with github_operation(repo_owner="test_owner", repo_name="test_repo"):
             pr = github_operation.create_pull_request(
                 title="Test PR", body="Test body", base_branch="main", head_branch="feature"
             )
@@ -70,8 +69,7 @@ class TestGitHubOperationClass:
         mock_github.get_repo.return_value = mock_repo
         mock_repo.create_pull.side_effect = GithubException(404, "Not Found")
 
-        github_operation(repo_owner="test_owner", repo_name="test_repo")
-        with github_operation:
+        with github_operation(repo_owner="test_owner", repo_name="test_repo"):
             pr = github_operation.create_pull_request(
                 title="Test PR", body="Test body", base_branch="main", head_branch="feature"
             )
@@ -83,8 +81,7 @@ class TestGitHubOperationClass:
         github_operation._github = mock_github
         mock_github.get_repo.return_value = mock_repo
 
-        github_operation(repo_owner="test_owner", repo_name="test_repo")
-        with github_operation as repo:
+        with github_operation(repo_owner="test_owner", repo_name="test_repo") as repo:
             assert repo is mock_repo
             mock_github.get_repo.assert_called_once_with("test_owner/test_repo")
         mock_github.close.assert_called_once()
