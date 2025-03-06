@@ -101,9 +101,10 @@ class GitOperation:
             print(
                 f"Successfully pushed commit {commit.hexsha[:8]} to {self.default_remote_name}/{self.fake_api_server_monitor_git_branch}"
             )
+            return True
         else:
             print("Don't have any files be added. Won't commit the change.")
-        return True
+            return False
 
     def _init_git(self, action_inputs: ActionInput) -> Repo:
         assert os.path.exists(

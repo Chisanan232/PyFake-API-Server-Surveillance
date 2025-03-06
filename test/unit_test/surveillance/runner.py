@@ -31,15 +31,15 @@ from test._values.dummy_objects import (
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
-@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_exist_fake_api_server_config(
-    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
+    surveillance = FakeApiServerSurveillance()
+
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp.generate(
@@ -53,16 +53,26 @@ def test_run_with_exist_fake_api_server_config(
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
-    mock_github_opt._github = mock_github
+    surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
-        FakeApiServerSurveillance().monitor()
+        surveillance.monitor()
 
     mock_load_config.assert_called_once()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
+
+    github_pr_info = fake_data.github_pr_info()
+    ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.name])
+    mock_repo.create_pull.assert_called_with(
+        title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
+        body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
+        base=ci_env["GITHUB_BASE_REF"],
+        head=ci_env["GITHUB_HEAD_REF"],
+        draft=False,
+    )
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -70,15 +80,15 @@ def test_run_with_exist_fake_api_server_config(
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
-@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_not_exist_fake_api_server_config(
-    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
+    surveillance = FakeApiServerSurveillance()
+
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
@@ -92,16 +102,26 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
-    mock_github_opt._github = mock_github
+    surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
-        FakeApiServerSurveillance().monitor()
+        surveillance.monitor()
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
+
+    github_pr_info = fake_data.github_pr_info()
+    ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.name])
+    mock_repo.create_pull.assert_called_with(
+        title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
+        body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
+        base=ci_env["GITHUB_BASE_REF"],
+        head=ci_env["GITHUB_HEAD_REF"],
+        draft=False,
+    )
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -109,15 +129,15 @@ def test_run_with_not_exist_fake_api_server_config(
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
-@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_config(
-    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
     mock_request: Mock,
     api_doc_config_resp: Type[DummyHTTPResponse],
 ):
+    surveillance = FakeApiServerSurveillance()
+
     data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
@@ -131,14 +151,15 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
-    mock_github_opt._github = mock_github
+    surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
         with pytest.raises(FileNotFoundError):
-            FakeApiServerSurveillance().monitor()
+            surveillance.monitor()
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_not_called()
+    mock_repo.create_pull.assert_not_called()
