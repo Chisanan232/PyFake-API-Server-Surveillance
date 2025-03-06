@@ -12,7 +12,7 @@ from ._base import _BaseModelTestSuite
 
 
 @pytest.mark.skipif(
-    os.getenv("GITHUB_ACTIONS", "false") == "true",
+    os.getenv("GITHUB_ACTIONS", "false") != "true",
     reason="It should test the really environment to guarantee that it could correctly initial this data model.",
 )
 def test_get_github_action_env():
@@ -28,7 +28,7 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
         return GitHubActionEnvironmentVariable
 
     @pytest.mark.skipif(
-        os.getenv("GITHUB_ACTIONS", "false") == "true",
+        os.getenv("GITHUB_ACTIONS", "false") != "true",
         reason="It should test the really environment to guarantee that it could correctly initial this data model.",
     )
     @pytest.mark.parametrize("data", [os.environ])
