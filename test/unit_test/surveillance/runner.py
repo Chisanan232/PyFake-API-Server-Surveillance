@@ -8,16 +8,15 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod
 
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 
 from fake_api_server.model import deserialize_api_doc_config
-
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.runner import run
 
 # isort: off
-from test._values._test_data import fake_data
+from test._values._test_data import fake_data, fake_github_action_values
 from test._values.dummy_objects import (
     DummySwaggerAPIDocConfigResponse,
     DummyOpenAPIDocConfigResponse,
@@ -32,7 +31,9 @@ from test._values.dummy_objects import (
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_exist_fake_api_server_config(
+    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
@@ -46,6 +47,16 @@ def test_run_with_exist_fake_api_server_config(
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+
+    # Setup mocks
+    mock_github = Mock()
+    mock_repo = Mock()
+    mock_pr = Mock()
+    mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_github_opt._github = mock_github
+    mock_github.get_repo.return_value = mock_repo
+    mock_repo.create_pull.return_value = mock_pr
+
     with patch.dict(os.environ, data, clear=True):
         run()
 
@@ -59,7 +70,9 @@ def test_run_with_exist_fake_api_server_config(
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_not_exist_fake_api_server_config(
+    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
@@ -73,6 +86,16 @@ def test_run_with_not_exist_fake_api_server_config(
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+
+    # Setup mocks
+    mock_github = Mock()
+    mock_repo = Mock()
+    mock_pr = Mock()
+    mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_github_opt._github = mock_github
+    mock_github.get_repo.return_value = mock_repo
+    mock_repo.create_pull.return_value = mock_pr
+
     with patch.dict(os.environ, data, clear=True):
         run()
 
@@ -86,7 +109,9 @@ def test_run_with_not_exist_fake_api_server_config(
 @patch.object(GitOperation, "version_change")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("fake_api_server_plugin.ci.surveillance.runner.Path.exists")
+@patch("fake_api_server_plugin.ci.surveillance.runner.GitHubOperation")
 def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_config(
+    mock_github_opt: Mock,
     mock_path_exits: Mock,
     mock_load_config: Mock,
     mock_version_change_process: Mock,
@@ -100,6 +125,16 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+
+    # Setup mocks
+    mock_github = Mock()
+    mock_repo = Mock()
+    mock_pr = Mock()
+    mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_github_opt._github = mock_github
+    mock_github.get_repo.return_value = mock_repo
+    mock_repo.create_pull.return_value = mock_pr
+
     with patch.dict(os.environ, data, clear=True):
         with pytest.raises(FileNotFoundError):
             run()

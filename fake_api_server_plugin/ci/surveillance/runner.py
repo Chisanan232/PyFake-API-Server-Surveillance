@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Mapping
+from typing import Mapping, Optional
 
 import urllib3
 from fake_api_server import FakeAPIConfig
@@ -15,12 +15,15 @@ from fake_api_server.model import deserialize_api_doc_config, load_config
 from .component.git import GitOperation
 from .component.pull import SavingConfigComponent
 from .model.action import ActionInput
+from .component.github_opt import GitHubOperation
+from .model.github_action import get_github_action_env
 
 
 class FakeApiServerSurveillance:
     def __init__(self):
         self.subcmd_pull_component = SavingConfigComponent()
         self.git_operation = GitOperation()
+        self.github_operation: GitHubOperation = GitHubOperation()
 
     def monitor(self) -> None:
         print("monitor the github repro ...")
@@ -84,6 +87,15 @@ class FakeApiServerSurveillance:
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
         self.git_operation.version_change(action_inputs)
+        github_action_env = get_github_action_env()
+        with self.github_operation(repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name) as github_opt:
+            pull_request_info = action_inputs.github_info.pull_request
+            github_opt.create_pull_request(
+                title=pull_request_info.title,
+                body=pull_request_info.body,
+                base_branch=github_action_env.base_branch,
+                head_branch=github_action_env.head_branch,
+            )
 
     def _notify(self, action_inputs: ActionInput) -> None:
         # TODO: this is backlog task
