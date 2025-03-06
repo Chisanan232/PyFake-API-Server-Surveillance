@@ -1,9 +1,9 @@
 import ast
 import os
 from dataclasses import dataclass, field
-from typing import Mapping
+from typing import Mapping, Optional
 
-from ci.surveillance.model._base import _BaseModel
+from ._base import _BaseModel
 
 
 @dataclass
@@ -34,8 +34,11 @@ class GitHubActionEnvironmentVariable(_BaseModel):
         )
 
 
-_Global_Environment_Var: GitHubActionEnvironmentVariable = GitHubActionEnvironmentVariable.deserialize(os.environ)
+_Global_Environment_Var: Optional[GitHubActionEnvironmentVariable] = None
 
 
 def get_github_action_env() -> GitHubActionEnvironmentVariable:
+    global _Global_Environment_Var
+    if _Global_Environment_Var is None:
+        _Global_Environment_Var = GitHubActionEnvironmentVariable.deserialize(os.environ)
     return _Global_Environment_Var
