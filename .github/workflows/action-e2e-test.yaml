@@ -71,12 +71,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -119,12 +121,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
