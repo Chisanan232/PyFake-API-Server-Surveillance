@@ -1,9 +1,12 @@
+import ast
 import os
 from typing import Mapping, Type
+from unittest.mock import patch
 
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model.github_action import get_github_action_env, GitHubActionEnvironmentVariable
+from test._values._test_data import fake_github_action_values
 
 # isort: off
 from ._base import _BaseModelTestSuite
@@ -12,9 +15,10 @@ from ._base import _BaseModelTestSuite
 
 
 def test_get_github_action_env():
-    model = get_github_action_env()
-    assert model is not None
-    TestGitHubActionEnvironmentVariable()._verify_model_props(model, os.environ)
+    with patch.dict(os.environ, fake_github_action_values.ci_env("Chisanan232/Sample-Python-BackEnd"), clear=True):
+        model = get_github_action_env()
+        assert model is not None
+        TestGitHubActionEnvironmentVariable()._verify_model_props(model, os.environ)
 
 
 class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
@@ -23,12 +27,12 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
     def model(self) -> Type[GitHubActionEnvironmentVariable]:
         return GitHubActionEnvironmentVariable
 
-    @pytest.mark.parametrize("data", [os.environ])
+    @pytest.mark.parametrize("data", [fake_github_action_values.ci_env("Chisanan232/Sample-Python-BackEnd")])
     def test_deserialize(self, model: Type[GitHubActionEnvironmentVariable], data: Mapping):
         super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
-        assert model.github_actions is True
+        assert model.github_actions is ast.literal_eval(str(original_data["GITHUB_ACTIONS"]).capitalize())
         assert model.repository == original_data["GITHUB_REPOSITORY"]
         assert model.repository_owner_name
         assert model.repository_name
