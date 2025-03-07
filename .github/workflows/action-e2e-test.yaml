@@ -16,7 +16,7 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**.py"
+      - "fake_api_server_plugin/ci/**"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
@@ -36,13 +36,17 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**.py"
+      - "fake_api_server_plugin/ci/**"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
 
 permissions:
   contents: write  # Need this to push commits
+  pull-requests: write
+  issues: write
+  actions: write
+  statuses: write
 
 jobs:
   with-required-param:
@@ -69,10 +73,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -101,6 +109,11 @@ jobs:
           git-author-name: "Chisanan232"
           git-author-email: "bulls23mj1991@gmail.com"
           git-commit-msg: " 🧪 test commit message."
+          # github info for pull request
+          pr-title: "🤖 Test the PR feature by end-to-end test"
+          pr-body: "🚧 test content ..."
+          pr-labels: "🤖 test by e2e"
+          pr-is-draft: "true"
           # options about how to pull API server doc config
           config-path: "./test/_values/_only_for_ci/rest-server/api.yaml"
           include-template-config: "true"
@@ -110,10 +123,14 @@ jobs:
         env:
           FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
