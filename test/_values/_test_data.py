@@ -86,6 +86,7 @@ class fake_data:
                     title="✏️ Update the API configuration because API change.",
                     body="Monitor the project and found changes. Update the configuration.",
                     draft=True,
+                    labels=["label1", "label2"],
                 ),
             ),
             subcmd_pull_args=PullApiDocConfigArgs(
@@ -127,6 +128,7 @@ class fake_data:
             EnvironmentVariableKey.PR_TITLE.value: "✏️ Update the API configuration because API change.",
             EnvironmentVariableKey.PR_BODY.value: "Monitor the project and found changes. Update the configuration.",
             EnvironmentVariableKey.PR_IS_DRAFT.value: "true",
+            EnvironmentVariableKey.PR_LABELS.value: "label1, label2",
         }
 
     @classmethod

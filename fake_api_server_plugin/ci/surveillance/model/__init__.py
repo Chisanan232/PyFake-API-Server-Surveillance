@@ -16,6 +16,7 @@ class EnvironmentVariableKey(Enum):
     PR_TITLE = "PR_TITLE"
     PR_BODY = "PR_BODY"
     PR_IS_DRAFT = "PR_IS_DRAFT"
+    PR_LABELS = "PR_LABELS"
 
     # for subcommand line *pull* options
     CONFIG_PATH = "CONFIG_PATH"
