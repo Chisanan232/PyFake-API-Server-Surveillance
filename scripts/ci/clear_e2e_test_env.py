@@ -54,6 +54,7 @@ def init_github() -> None:
 
 
 def search_github_repo_pr(head_branch: str) -> PullRequest:
+    assert GITHUB
     prs = GITHUB.get_repo(os.environ["GITHUB_REPOSITORY"]).get_pulls(
         state="open",
         base=os.environ["GITHUB_BASE_REF"] or "master",

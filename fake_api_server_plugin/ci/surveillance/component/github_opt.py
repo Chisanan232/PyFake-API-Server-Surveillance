@@ -27,16 +27,13 @@ class GitHubOperation:
         return self
 
     def __enter__(self) -> Repository:
+        assert self._repo_init_params
         self.connect_repo(self._repo_init_params.owner, self._repo_init_params.name)
         assert self._github_repo
         return self._github_repo
 
     def __exit__(self, *args):
         self._github.close()
-
-    # def _check_params(self, **kwargs) -> True:
-    #     assert kwargs.get("repo_owner", None) is not None, "Miss required parameter *repo_owner*."
-    #     assert kwargs.get("repo_name", None) is not None, "Miss required parameter *repo_name*."
 
     def connect_repo(self, repo_owner: str, repo_name: str) -> None:
         self._github_repo = self._github.get_repo(f"{repo_owner}/{repo_name}")
