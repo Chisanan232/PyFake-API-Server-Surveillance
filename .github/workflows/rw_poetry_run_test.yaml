@@ -94,6 +94,8 @@ jobs:
       - name: Run tests with pytest
         run: poetry run pytest ${{ matrix.test-path }}
         continue-on-error: ${{ inputs.keep_run_if_test_fail }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Rename the code coverage result file
         run: |
