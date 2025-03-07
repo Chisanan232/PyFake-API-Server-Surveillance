@@ -48,7 +48,7 @@ class GitHubOperation:
             raise RuntimeError("Please connect to target GitHub repository first before get all labels.")
         return self._github_repo.get_labels()
 
-    def create_pull_request(self, title: str, body: str, base_branch: str, head_branch: str, draft: bool = False) -> Optional[PullRequest]:
+    def create_pull_request(self, title: str, body: str, base_branch: str, head_branch: str, draft: bool = False, labels: List[str] = []) -> Optional[PullRequest]:
         if not self._github_repo:
             raise RuntimeError("Please connect to target GitHub repository first before create pull request.")
         try:
@@ -59,6 +59,10 @@ class GitHubOperation:
                 head=head_branch,
                 draft=draft,
             )
+            for l in labels:
+                label = list(filter(lambda _l: _l.name == l, self._repo_all_labels))
+                if label:
+                    pr.add_to_labels(label)
 
             print(f"Pull request created: {pr.html_url}")
             return pr

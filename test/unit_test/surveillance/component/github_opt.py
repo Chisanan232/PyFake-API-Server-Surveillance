@@ -1,6 +1,8 @@
 import pytest
 from unittest.mock import patch, Mock, MagicMock, call
 
+from github.Label import Label
+
 from fake_api_server_plugin.ci.surveillance.component.github_opt import GitHubOperation, RepoInitParam
 from github import Github, Repository, PullRequest, GithubException
 
@@ -65,18 +67,28 @@ class TestGitHubOperationClass:
         mock_repo = Mock()
         mock_pr = Mock()
         mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+        mock_pr.add_to_labels = Mock()
         github_operation._github = mock_github
         mock_github.get_repo.return_value = mock_repo
+
+        mock_label = MagicMock(spec=Label)  # Use spec to limit attributes available in mock object
+        mock_label.name = "label1"
+        mock_label.color = "blue"
+        mock_label.id = 123
+
+        mock_labels = [mock_label]
+        mock_repo.get_labels.return_value = mock_labels
         mock_repo.create_pull.return_value = mock_pr
 
         with github_operation(repo_owner="test_owner", repo_name="test_repo"):
             pr = github_operation.create_pull_request(
-                title="Test PR", body="Test body", base_branch="main", head_branch="feature"
+                title="Test PR", body="Test body", base_branch="main", head_branch="feature", labels=["label1", "label2"],
             )
             assert pr is mock_pr
             mock_repo.create_pull.assert_called_once_with(
                 title="Test PR", body="Test body", base="main", head="feature", draft=False
             )
+            mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
 
     def test_create_pull_request_failure_no_repo(self, github_operation: GitHubOperation):
         with pytest.raises(RuntimeError):
