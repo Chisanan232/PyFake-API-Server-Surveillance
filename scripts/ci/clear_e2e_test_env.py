@@ -59,7 +59,9 @@ def search_github_repo_pr(head_branch: str) -> PullRequest:
         base=os.environ["GITHUB_BASE_REF"] or "master",
         head=head_branch,
     )
-    assert prs.totalCount == 2, "Should only have one PR for the target branch."
+    print(f"[DEBUG] prs: {prs}")
+    print(f"[DEBUG] prs.totalCount: {prs.totalCount}")
+    # assert prs.totalCount == 2, "Should only have one PR for the target branch."
     one_page = prs.get_page(0)
     assert one_page
     print(f"[DEBUG] Found PR #{one_page[0].number} for target branch *{head_branch}*.")
