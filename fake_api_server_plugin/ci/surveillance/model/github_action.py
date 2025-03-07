@@ -9,7 +9,7 @@ from ._base import _BaseModel
 @dataclass
 class GitHubActionEnvironmentVariable(_BaseModel):
     # the environment variable in github action
-    github_actions: str = field(default_factory=str)
+    github_actions: bool = False
     repository: str = field(default_factory=str)
     repository_owner_name: str = field(default_factory=str)
     repository_name: str = field(default_factory=str)
@@ -23,6 +23,8 @@ class GitHubActionEnvironmentVariable(_BaseModel):
     def deserialize(data: Mapping) -> "GitHubActionEnvironmentVariable":
         github_repo = str(data["GITHUB_REPOSITORY"])
         github_repo_eles = github_repo.split("/")
+        print(f"[DEBUG] os.environ: {os.environ}")
+        print(f"[DEBUG] os.environ['GITHUB_ACTIONS']: {os.environ['GITHUB_ACTIONS']}")
         return GitHubActionEnvironmentVariable(
             github_actions=ast.literal_eval(str(data.get("GITHUB_ACTIONS", "false")).capitalize()),
             repository=github_repo,
