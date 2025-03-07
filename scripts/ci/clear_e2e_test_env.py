@@ -75,8 +75,12 @@ def run() -> None:
 
     init_github()
     pr = search_github_repo_pr(e2e_test_branch)
-    delete_github_repo_pr(pr)
-    delete_remote_branch(e2e_test_branch)
+    try:
+        delete_github_repo_pr(pr)
+    except Exception as e:
+        raise e
+    finally:
+        delete_remote_branch(e2e_test_branch)
 
 
 if __name__ == "__main__":
