@@ -98,7 +98,7 @@ class FakeApiServerSurveillance:
                     title=pull_request_info.title,
                     body=pull_request_info.body,
                     base_branch=github_action_env.base_branch,
-                    head_branch=github_action_env.head_branch,
+                    head_branch=self.git_operation.fake_api_server_monitor_git_branch,
                     labels=pull_request_info.labels,
                 )
 
