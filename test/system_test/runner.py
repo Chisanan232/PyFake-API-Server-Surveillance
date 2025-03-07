@@ -108,6 +108,7 @@ def test_entire_flow_with_not_exist_config(
         ).to_api_config()
         with patch.dict(os.environ, data, clear=True):
             surveillance.monitor()
+            expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
         # should
         print("[DEBUG] Checkin commit running state")
@@ -130,7 +131,7 @@ def test_entire_flow_with_not_exist_config(
             title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
             body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
             base=ci_env["GITHUB_BASE_REF"],
-            head=ci_env["GITHUB_HEAD_REF"],
+            head=expect_head_branch,
             draft=False,
         )
         mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
