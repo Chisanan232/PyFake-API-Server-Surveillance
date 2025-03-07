@@ -33,10 +33,11 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
     )
     @pytest.mark.parametrize("data", [os.environ])
     def test_deserialize(self, model: Type[GitHubActionEnvironmentVariable], data: Mapping):
-        super().test_deserialize(model, data)
+        model = model.deserialize(data)
+        self._verify_model_props(model, data)
 
     def _verify_model_props(cls, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
-        assert model.github_actions is False
+        assert model.github_actions is True
         assert model.repository == original_data["GITHUB_REPOSITORY"]
         assert model.repository_owner_name
         assert model.repository_name

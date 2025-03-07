@@ -29,7 +29,6 @@ class fake_github_action_values:
         return {
             # GitHub action environment
             "GITHUB_TOKEN": "ghp_1234567890",
-            "GITHUB_ACTIONS": "false",
             "GITHUB_REPOSITORY": repo,
             "GITHUB_BASE_REF": "master",
             "GITHUB_HEAD_REF": "git-branch",
