@@ -3,12 +3,13 @@ import os
 import shutil
 from pathlib import Path
 from typing import Type
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock, call
 
 import pytest
 from fake_api_server.model import deserialize_api_doc_config
 from git import Repo
 from git.remote import PushInfoList
+from github import Label
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.runner import run, FakeApiServerSurveillance
@@ -84,8 +85,17 @@ def test_entire_flow_with_not_exist_config(
         mock_repo = Mock()
         mock_pr = Mock()
         mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+        mock_pr.add_to_labels = Mock()
         surveillance.github_operation._github = mock_github
         mock_github.get_repo.return_value = mock_repo
+
+        mock_label = MagicMock(spec=Label)  # Use spec to limit attributes available in mock object
+        mock_label.name = "label1"
+        mock_label.color = "blue"
+        mock_label.id = 123
+
+        mock_labels = [mock_label]
+        mock_repo.get_labels.return_value = mock_labels
         mock_repo.create_pull.return_value = mock_pr
 
         # when
@@ -124,6 +134,7 @@ def test_entire_flow_with_not_exist_config(
             head=ci_env["GITHUB_HEAD_REF"],
             draft=False,
         )
+        mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
     except Exception as e:
         print(f"[ERROR] {e}")
         raise e

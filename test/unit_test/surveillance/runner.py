@@ -2,13 +2,14 @@ import os
 from typing import Type
 
 import pytest
+from github.Label import Label
 
 try:
     from http import HTTPMethod
 except ImportError:
     from fake_api_server.model.http import HTTPMethod
 
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch, MagicMock, call
 
 from fake_api_server.model import deserialize_api_doc_config
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
@@ -53,8 +54,17 @@ def test_run_with_exist_fake_api_server_config(
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_pr.add_to_labels = Mock()
     surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
+
+    mock_label = MagicMock(spec=Label)  # Use spec to limit attributes available in mock object
+    mock_label.name = "label1"
+    mock_label.color = "blue"
+    mock_label.id = 123
+
+    mock_labels = [mock_label]
+    mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
@@ -73,6 +83,7 @@ def test_run_with_exist_fake_api_server_config(
         head=ci_env["GITHUB_HEAD_REF"],
         draft=False,
     )
+    mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -102,8 +113,17 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_pr.add_to_labels = Mock()
     surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
+
+    mock_label = MagicMock(spec=Label)  # Use spec to limit attributes available in mock object
+    mock_label.name = "label1"
+    mock_label.color = "blue"
+    mock_label.id = 123
+
+    mock_labels = [mock_label]
+    mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
@@ -122,6 +142,8 @@ def test_run_with_not_exist_fake_api_server_config(
         head=ci_env["GITHUB_HEAD_REF"],
         draft=False,
     )
+    mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
+
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -151,8 +173,17 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_repo = Mock()
     mock_pr = Mock()
     mock_pr.html_url = "https://github.com/owner/repo/pull/1"
+    mock_pr.add_to_labels = Mock()
     surveillance.github_operation._github = mock_github
     mock_github.get_repo.return_value = mock_repo
+
+    mock_label = MagicMock(spec=Label)  # Use spec to limit attributes available in mock object
+    mock_label.name = "label1"
+    mock_label.color = "blue"
+    mock_label.id = 123
+
+    mock_labels = [mock_label]
+    mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
     with patch.dict(os.environ, data, clear=True):
@@ -163,3 +194,5 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_not_called()
     mock_repo.create_pull.assert_not_called()
+    mock_pr.add_to_labels.assert_not_called()
+

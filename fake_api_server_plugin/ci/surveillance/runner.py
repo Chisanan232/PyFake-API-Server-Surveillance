@@ -96,6 +96,7 @@ class FakeApiServerSurveillance:
                     body=pull_request_info.body,
                     base_branch=github_action_env.base_branch,
                     head_branch=github_action_env.head_branch,
+                    labels=pull_request_info.labels,
                 )
 
     def _notify(self, action_inputs: ActionInput) -> None:
