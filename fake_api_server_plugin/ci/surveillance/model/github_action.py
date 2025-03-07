@@ -28,7 +28,7 @@ class GitHubActionEnvironmentVariable(_BaseModel):
             repository=github_repo,
             repository_owner_name=github_repo_eles[0],
             repository_name=github_repo_eles[1],
-            base_branch=data.get("GITHUB_BASE_REF", "master"),
+            base_branch=data.get("GITHUB_BASE_REF", "") or "master",
             head_branch=data["GITHUB_HEAD_REF"],
             github_token=data["GITHUB_TOKEN"],
         )
