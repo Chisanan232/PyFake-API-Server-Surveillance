@@ -3,6 +3,8 @@ import re
 from typing import List, Optional
 
 from git import Repo
+from github import Github
+from github.PullRequest import PullRequest
 
 
 class NotFoundTargetGitBranch(RuntimeError):
@@ -15,6 +17,7 @@ class NotFoundTargetGitBranch(RuntimeError):
 
 
 REPO: Optional[Repo] = None
+GITHUB: Optional[Github] = None
 
 
 def init_git() -> None:
@@ -45,12 +48,34 @@ def delete_remote_branch(name: str) -> None:
     REPO.git.push("origin", "--delete", name)  # type: ignore[union-attr]
 
 
+def init_github() -> None:
+    global GITHUB
+    GITHUB = Github(os.environ["GITHUB_TOKEN"])
+
+
+def search_github_repo_pr(head_branch: str) -> PullRequest:
+    prs = GITHUB.get_repo(os.environ["GITHUB_REPOSITORY"]).get_pulls(
+        state="open", sort="created", base=os.environ["GITHUB_BASE_REF"], head=head_branch,
+    )
+    assert prs.totalCount == 1, "Should only have one PR for the target branch."
+    return prs[0]
+
+
+def delete_github_repo_pr(pr: PullRequest) -> None:
+    pr.edit(state="closed")
+    print(f"Pull request #{pr.number} closed successfully.")
+
+
 def run() -> None:
     init_git()
     all_branch = get_all_branch()
     print(f"[DEBUG] All git branch: {all_branch}")
     e2e_test_branch = search_branch(name=expect_branch_name(), all_branch=all_branch)
     print(f"[DEBUG] Target branch: {e2e_test_branch}")
+
+    init_github()
+    pr = search_github_repo_pr(e2e_test_branch)
+    delete_github_repo_pr(pr)
     delete_remote_branch(e2e_test_branch)
 
 
