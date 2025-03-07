@@ -56,12 +56,14 @@ def init_github() -> None:
 def search_github_repo_pr(head_branch: str) -> PullRequest:
     prs = GITHUB.get_repo(os.environ["GITHUB_REPOSITORY"]).get_pulls(
         state="open",
-        sort="created",
         base=os.environ["GITHUB_BASE_REF"] or "master",
         head=head_branch,
     )
-    assert prs.totalCount == 1, "Should only have one PR for the target branch."
-    return prs[0]
+    assert prs.totalCount == 2, "Should only have one PR for the target branch."
+    one_page = prs.get_page(0)
+    assert one_page
+    print(f"[DEBUG] Found PR #{one_page[0].number} for target branch *{head_branch}*.")
+    return one_page[0]
 
 
 def delete_github_repo_pr(pr: PullRequest) -> None:
