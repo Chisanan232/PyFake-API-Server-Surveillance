@@ -1,8 +1,9 @@
 import os
 from collections import namedtuple
-from typing import Optional
+from typing import Optional, List
 
 from github import Github, GithubException, Repository
+from github.Label import Label
 from github.PullRequest import PullRequest
 
 
@@ -16,6 +17,7 @@ class GitHubOperation:
         self._github_repo: Optional[Repository] = None
 
         self._repo_init_params: Optional[RepoInitParam] = None
+        self._repo_all_labels: List[Label] = []
 
     def __call__(self, **kwargs):
         # assert self._check_params(**kwargs)
@@ -39,6 +41,12 @@ class GitHubOperation:
 
     def connect_repo(self, repo_owner: str, repo_name: str) -> None:
         self._github_repo = self._github.get_repo(f"{repo_owner}/{repo_name}")
+        self._repo_all_labels = self._get_all_labels()
+
+    def _get_all_labels(self) -> List[Label]:
+        if not self._github_repo:
+            raise RuntimeError("Please connect to target GitHub repository first before get all labels.")
+        return self._github_repo.get_labels()
 
     def create_pull_request(self, title: str, body: str, base_branch: str, head_branch: str, draft: bool = False) -> Optional[PullRequest]:
         if not self._github_repo:

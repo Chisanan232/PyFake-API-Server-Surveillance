@@ -1,6 +1,5 @@
-import os
 import pytest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock, call
 
 from fake_api_server_plugin.ci.surveillance.component.github_opt import GitHubOperation, RepoInitParam
 from github import Github, Repository, PullRequest, GithubException
@@ -37,6 +36,29 @@ class TestGitHubOperationClass:
         github_operation.connect_repo("test_owner", "test_repo")
         mock_github.get_repo.assert_called_once_with("test_owner/test_repo")
         assert github_operation._github_repo is mock_repo
+
+    def test__get_all_labels_success(self, github_operation: GitHubOperation):
+        # Mock the GitHubRepo object and its get_labels method
+        mock_github = Mock()
+        mock_repo = Mock()
+        github_operation._github = mock_github
+        mock_github.get_repo.return_value = mock_repo
+        mock_labels = [{"name": "label1", "color": "blue"}, {"name": "label2", "color": "green"}]
+        mock_repo.get_labels.return_value = mock_labels
+
+        # when
+        with github_operation(repo_owner="test_owner", repo_name="test_repo"):
+            labels = github_operation._get_all_labels()
+
+        # should
+        assert labels == mock_labels == github_operation._repo_all_labels
+        mock_repo.assert_has_calls(calls=[call.get_labels(), call.get_labels()])
+
+    def test__get_all_labels_without_connect_repo(self, github_operation: GitHubOperation):
+        with pytest.raises(RuntimeError) as excinfo:
+            github_operation._get_all_labels()
+
+        assert "Please connect to target GitHub repository first before get all labels." in str(excinfo.value)
 
     def test_create_pull_request_success(self, github_operation: GitHubOperation):
         mock_github = Mock()
