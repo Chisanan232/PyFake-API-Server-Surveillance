@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Mapping
+from typing import Mapping, List
 
 from . import EnvironmentVariableKey
 from ._base import _BaseModel
@@ -10,7 +10,7 @@ class PullRequestInfo(_BaseModel):
     title: str = field(default_factory=str)
     body: str = field(default_factory=str)
     draft: bool = False
-    labels: list[str] = field(default_factory=list)
+    labels: List[str] = field(default_factory=list)
 
     @staticmethod
     def deserialize(data: Mapping) -> "PullRequestInfo":
