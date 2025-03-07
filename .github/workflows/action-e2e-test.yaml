@@ -43,6 +43,7 @@ on:
 
 permissions:
   contents: write  # Need this to push commits
+  pull-requests: write
 
 jobs:
   with-required-param:
