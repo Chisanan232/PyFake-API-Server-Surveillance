@@ -87,7 +87,9 @@ class FakeApiServerSurveillance:
 
     def _process_versioning(self, action_inputs: ActionInput) -> None:
         has_change = self.git_operation.version_change(action_inputs)
+        print(f"[DEBUG] has_change: {has_change}")
         if has_change:
+            print(f"has something change and will create a pull request: {has_change}")
             github_action_env = get_github_action_env()
             with self.github_operation(repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name):
                 pull_request_info = action_inputs.github_info.pull_request

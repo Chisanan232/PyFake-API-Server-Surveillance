@@ -67,4 +67,5 @@ class GitHubOperation:
             print(f"Pull request created: {pr.html_url}")
             return pr
         except GithubException as e:
+            print(f"[ERROR] e: {e}")
             return None

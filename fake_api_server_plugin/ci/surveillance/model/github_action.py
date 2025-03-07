@@ -23,9 +23,6 @@ class GitHubActionEnvironmentVariable(_BaseModel):
     def deserialize(data: Mapping) -> "GitHubActionEnvironmentVariable":
         github_repo = str(data["GITHUB_REPOSITORY"])
         github_repo_eles = github_repo.split("/")
-        print(f"[DEBUG] os.environ: {os.environ}")
-        print(f"[DEBUG] os.getenv['GITHUB_ACTIONS']: {os.getenv('GITHUB_ACTIONS')}")
-        print(f"[DEBUG] os.environ['GITHUB_ACTIONS']: {os.environ['GITHUB_ACTIONS']}")
         return GitHubActionEnvironmentVariable(
             github_actions=ast.literal_eval(str(data.get("GITHUB_ACTIONS", "false")).capitalize()),
             repository=github_repo,
