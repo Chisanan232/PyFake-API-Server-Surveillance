@@ -147,8 +147,6 @@ runs:
         DIVIDE_HTTP_REQUEST: ${{ inputs.divide-http-request }}
         DIVIDE_HTTP_RESPONSE: ${{ inputs.divide-http-response }}
         DRY_RUN: ${{ inputs.dry-run }}
-        # self CI usage
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set result as output value
       id: monitor-result
