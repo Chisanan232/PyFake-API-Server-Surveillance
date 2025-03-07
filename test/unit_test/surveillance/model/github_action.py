@@ -36,7 +36,7 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
         super().test_deserialize(model, data)
 
     def _verify_model_props(cls, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
-        assert model.github_actions is True
+        assert model.github_actions is False
         assert model.repository == original_data["GITHUB_REPOSITORY"]
         assert model.repository_owner_name
         assert model.repository_name
