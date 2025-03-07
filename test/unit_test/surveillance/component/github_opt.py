@@ -1,10 +1,13 @@
-import pytest
-from unittest.mock import patch, Mock, MagicMock, call
+from unittest.mock import MagicMock, Mock, call
 
+import pytest
+from github import GithubException
 from github.Label import Label
 
-from fake_api_server_plugin.ci.surveillance.component.github_opt import GitHubOperation, RepoInitParam
-from github import Github, Repository, PullRequest, GithubException
+from fake_api_server_plugin.ci.surveillance.component.github_opt import (
+    GitHubOperation,
+    RepoInitParam,
+)
 
 
 class TestGitHubOperationClass:
@@ -82,7 +85,11 @@ class TestGitHubOperationClass:
 
         with github_operation(repo_owner="test_owner", repo_name="test_repo"):
             pr = github_operation.create_pull_request(
-                title="Test PR", body="Test body", base_branch="main", head_branch="feature", labels=["label1", "label2"],
+                title="Test PR",
+                body="Test body",
+                base_branch="main",
+                head_branch="feature",
+                labels=["label1", "label2"],
             )
             assert pr is mock_pr
             mock_repo.create_pull.assert_called_once_with(

@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Mapping, Optional
+from typing import Mapping
 
 import urllib3
 from fake_api_server import FakeAPIConfig
@@ -13,9 +13,9 @@ except ImportError:
 from fake_api_server.model import deserialize_api_doc_config, load_config
 
 from .component.git import GitOperation
+from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
 from .model.action import ActionInput
-from .component.github_opt import GitHubOperation
 from .model.github_action import get_github_action_env
 
 
@@ -91,7 +91,9 @@ class FakeApiServerSurveillance:
         if has_change:
             print(f"has something change and will create a pull request: {has_change}")
             github_action_env = get_github_action_env()
-            with self.github_operation(repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name):
+            with self.github_operation(
+                repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name
+            ):
                 pull_request_info = action_inputs.github_info.pull_request
                 print(f"[DEBUG] pull_request_info: {pull_request_info}")
                 self.github_operation.create_pull_request(

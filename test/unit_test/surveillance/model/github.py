@@ -2,8 +2,11 @@ from typing import Mapping, Type
 
 import pytest
 
-from fake_api_server_plugin.ci.surveillance.model.github import PullRequestInfo, GitHubInfo
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.github import (
+    GitHubInfo,
+    PullRequestInfo,
+)
 
 # isort: off
 from ._base import _BaseModelTestSuite
