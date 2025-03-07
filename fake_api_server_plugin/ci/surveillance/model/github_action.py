@@ -23,13 +23,15 @@ class GitHubActionEnvironmentVariable(_BaseModel):
     def deserialize(data: Mapping) -> "GitHubActionEnvironmentVariable":
         github_repo = str(data["GITHUB_REPOSITORY"])
         github_repo_eles = github_repo.split("/")
+        head_ref = data["GITHUB_HEAD_REF"] if data["GITHUB_EVENT_NAME"] == "pull_request" else data["GITHUB_REF"]
+        print(f"[DEBUG] head_ref: {head_ref}")
         return GitHubActionEnvironmentVariable(
             github_actions=ast.literal_eval(str(data.get("GITHUB_ACTIONS", "false")).capitalize()),
             repository=github_repo,
             repository_owner_name=github_repo_eles[0],
             repository_name=github_repo_eles[1],
-            base_branch=data.get("GITHUB_BASE_REF", "") or "master",
-            head_branch=data["GITHUB_HEAD_REF"],
+            base_branch=data["GITHUB_BASE_REF"] or "master",
+            head_branch=head_ref,
             github_token=data["GITHUB_TOKEN"],
         )
 
