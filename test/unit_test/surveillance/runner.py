@@ -85,7 +85,7 @@ def test_run_with_exist_fake_api_server_config(
         head=expect_head_branch,
         draft=False,
     )
-    mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
+    mock_pr.add_to_labels.assert_has_calls(calls=[call(*(mock_label,))])
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
@@ -145,7 +145,7 @@ def test_run_with_not_exist_fake_api_server_config(
         head=expect_head_branch,
         draft=False,
     )
-    mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
+    mock_pr.add_to_labels.assert_has_calls(calls=[call(*(mock_label,))])
 
 
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])

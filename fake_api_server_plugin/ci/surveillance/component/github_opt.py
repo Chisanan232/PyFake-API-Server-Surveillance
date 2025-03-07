@@ -62,9 +62,9 @@ class GitHubOperation:
                 draft=draft,
             )
             for l in labels:
-                label = list(filter(lambda _l: _l.name == l, self._repo_all_labels))
+                label = tuple(filter(lambda _l: _l.name == l, self._repo_all_labels))
                 if label:
-                    pr.add_to_labels(label)
+                    pr.add_to_labels(*label)
 
             print(f"Pull request created: {pr.html_url}")
             return pr

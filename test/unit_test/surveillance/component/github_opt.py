@@ -95,7 +95,7 @@ class TestGitHubOperationClass:
             mock_repo.create_pull.assert_called_once_with(
                 title="Test PR", body="Test body", base="main", head="feature", draft=False
             )
-            mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
+            mock_pr.add_to_labels.assert_has_calls(calls=[call(*(mock_label,))])
 
     def test_create_pull_request_failure_no_repo(self, github_operation: GitHubOperation):
         with pytest.raises(RuntimeError):

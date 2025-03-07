@@ -134,7 +134,7 @@ def test_entire_flow_with_not_exist_config(
             head=expect_head_branch,
             draft=False,
         )
-        mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
+        mock_pr.add_to_labels.assert_has_calls(calls=[call(*(mock_label,))])
     except Exception as e:
         print(f"[ERROR] {e}")
         raise e
