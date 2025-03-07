@@ -73,6 +73,8 @@ jobs:
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -119,6 +121,8 @@ jobs:
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
