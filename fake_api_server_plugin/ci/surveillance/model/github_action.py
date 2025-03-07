@@ -26,6 +26,9 @@ class GitHubActionEnvironmentVariable(_BaseModel):
         print(f"[DEBUG] os.environ: {os.environ}")
         print(f"[DEBUG] os.getenv['GITHUB_ACTIONS']: {os.getenv('GITHUB_ACTIONS')}")
         print(f"[DEBUG] os.environ['GITHUB_ACTIONS']: {os.environ['GITHUB_ACTIONS']}")
+        token_ = data["GITHUB_TOKEN"]
+        if not token_:
+            raise ValueError("Cannot get the GitHub token ...")
         return GitHubActionEnvironmentVariable(
             github_actions=ast.literal_eval(str(data.get("GITHUB_ACTIONS", "false")).capitalize()),
             repository=github_repo,
@@ -33,7 +36,7 @@ class GitHubActionEnvironmentVariable(_BaseModel):
             repository_name=github_repo_eles[1],
             base_branch=data.get("GITHUB_BASE_REF", "master"),
             head_branch=data["GITHUB_HEAD_REF"],
-            github_token=data["GITHUB_TOKEN"],
+            github_token=token_,
         )
 
 
