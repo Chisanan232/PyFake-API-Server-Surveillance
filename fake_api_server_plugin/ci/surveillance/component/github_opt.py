@@ -52,6 +52,7 @@ class GitHubOperation:
         if not self._github_repo:
             raise RuntimeError("Please connect to target GitHub repository first before create pull request.")
         try:
+            print(f"[DEBUG] base_branch: {base_branch}")
             pr = self._github_repo.create_pull(
                 title=title,
                 body=body,

@@ -93,6 +93,7 @@ class FakeApiServerSurveillance:
             github_action_env = get_github_action_env()
             with self.github_operation(repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name):
                 pull_request_info = action_inputs.github_info.pull_request
+                print(f"[DEBUG] pull_request_info: {pull_request_info}")
                 self.github_operation.create_pull_request(
                     title=pull_request_info.title,
                     body=pull_request_info.body,
