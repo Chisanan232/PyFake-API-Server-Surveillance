@@ -57,7 +57,7 @@ def search_github_repo_pr(head_branch: str) -> PullRequest:
     prs = GITHUB.get_repo(os.environ["GITHUB_REPOSITORY"]).get_pulls(
         state="open",
         sort="created",
-        base=os.environ["GITHUB_BASE_REF"],
+        base=os.environ["GITHUB_BASE_REF"] or "master",
         head=head_branch,
     )
     assert prs.totalCount == 1, "Should only have one PR for the target branch."
