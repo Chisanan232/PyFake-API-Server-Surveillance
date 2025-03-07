@@ -3,7 +3,7 @@ import os
 import shutil
 from pathlib import Path
 from typing import Type
-from unittest.mock import Mock, patch, MagicMock, call
+from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
 from fake_api_server.model import deserialize_api_doc_config
@@ -12,14 +12,13 @@ from git.remote import PushInfoList
 from github import Label
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.runner import run, FakeApiServerSurveillance
+from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveillance
 
 # isort: off
 from test._values._test_data import fake_data, fake_git_data, fake_github_action_values
 from test._values.dummy_objects import (
     DummyHTTPResponse,
     DummyOpenAPIDocConfigResponse,
-    DummySwaggerAPIDocConfigResponse,
 )
 
 # isort: on

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Mapping, List
+from typing import List, Mapping
 
 from . import EnvironmentVariableKey
 from ._base import _BaseModel

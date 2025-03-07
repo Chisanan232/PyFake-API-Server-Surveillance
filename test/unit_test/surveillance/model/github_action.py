@@ -1,12 +1,15 @@
 import ast
 import os
+from test._values._test_data import fake_github_action_values
 from typing import Mapping, Type
 from unittest.mock import patch
 
 import pytest
 
-from fake_api_server_plugin.ci.surveillance.model.github_action import get_github_action_env, GitHubActionEnvironmentVariable
-from test._values._test_data import fake_github_action_values
+from fake_api_server_plugin.ci.surveillance.model.github_action import (
+    GitHubActionEnvironmentVariable,
+    get_github_action_env,
+)
 
 # isort: off
 from ._base import _BaseModelTestSuite

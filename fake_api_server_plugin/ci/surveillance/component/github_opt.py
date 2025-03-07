@@ -1,11 +1,10 @@
 import os
 from collections import namedtuple
-from typing import Optional, List
+from typing import List, Optional
 
 from github import Github, GithubException, Repository
 from github.Label import Label
 from github.PullRequest import PullRequest
-
 
 RepoInitParam = namedtuple("RepoInitParam", ("owner", "name"))
 
@@ -48,7 +47,9 @@ class GitHubOperation:
             raise RuntimeError("Please connect to target GitHub repository first before get all labels.")
         return self._github_repo.get_labels()
 
-    def create_pull_request(self, title: str, body: str, base_branch: str, head_branch: str, draft: bool = False, labels: List[str] = []) -> Optional[PullRequest]:
+    def create_pull_request(
+        self, title: str, body: str, base_branch: str, head_branch: str, draft: bool = False, labels: List[str] = []
+    ) -> Optional[PullRequest]:
         if not self._github_repo:
             raise RuntimeError("Please connect to target GitHub repository first before create pull request.")
         try:

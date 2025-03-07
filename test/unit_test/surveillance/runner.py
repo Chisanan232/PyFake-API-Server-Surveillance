@@ -9,12 +9,13 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod
 
-from unittest.mock import Mock, patch, MagicMock, call
+from unittest.mock import MagicMock, Mock, call, patch
 
 from fake_api_server.model import deserialize_api_doc_config
+
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.runner import run, FakeApiServerSurveillance
+from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveillance
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values
@@ -145,7 +146,6 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_pr.add_to_labels.assert_has_calls(calls=[call([mock_label])])
 
 
-
 @pytest.mark.parametrize("api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch.object(GitOperation, "version_change")
@@ -195,4 +195,3 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_version_change_process.assert_not_called()
     mock_repo.create_pull.assert_not_called()
     mock_pr.add_to_labels.assert_not_called()
-
