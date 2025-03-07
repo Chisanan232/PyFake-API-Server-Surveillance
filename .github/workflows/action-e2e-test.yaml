@@ -101,6 +101,11 @@ jobs:
           git-author-name: "Chisanan232"
           git-author-email: "bulls23mj1991@gmail.com"
           git-commit-msg: " 🧪 test commit message."
+          # github info for pull request
+          pr-title: "🤖 Test the PR feature by end-to-end test"
+          pr-body: "🚧 test content ..."
+          pr-labels: "🤖 test by e2e"
+          pr-is-draft: "true"
           # options about how to pull API server doc config
           config-path: "./test/_values/_only_for_ci/rest-server/api.yaml"
           include-template-config: "true"
