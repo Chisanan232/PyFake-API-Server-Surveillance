@@ -11,10 +11,6 @@ from ._base import _BaseModelTestSuite
 # isort: on
 
 
-@pytest.mark.skipif(
-    os.getenv("GITHUB_ACTIONS", "false") != "true",
-    reason="It should test the really environment to guarantee that it could correctly initial this data model.",
-)
 def test_get_github_action_env():
     model = get_github_action_env()
     assert model is not None
@@ -27,16 +23,11 @@ class TestGitHubActionEnvironmentVariable(_BaseModelTestSuite):
     def model(self) -> Type[GitHubActionEnvironmentVariable]:
         return GitHubActionEnvironmentVariable
 
-    @pytest.mark.skipif(
-        os.getenv("GITHUB_ACTIONS", "false") != "true",
-        reason="It should test the really environment to guarantee that it could correctly initial this data model.",
-    )
     @pytest.mark.parametrize("data", [os.environ])
     def test_deserialize(self, model: Type[GitHubActionEnvironmentVariable], data: Mapping):
-        model = model.deserialize(data)
-        self._verify_model_props(model, data)
+        super().test_deserialize(model, data)
 
-    def _verify_model_props(cls, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
+    def _verify_model_props(self, model: GitHubActionEnvironmentVariable, original_data: Mapping) -> None:
         assert model.github_actions is True
         assert model.repository == original_data["GITHUB_REPOSITORY"]
         assert model.repository_owner_name
