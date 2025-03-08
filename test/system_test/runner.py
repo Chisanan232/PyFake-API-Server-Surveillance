@@ -18,7 +18,8 @@ from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveilla
 from test._values._test_data import fake_data, fake_git_data, fake_github_action_values
 from test._values.dummy_objects import (
     DummyHTTPResponse,
-    DummyOpenAPIDocConfigResponse, DummySwaggerAPIDocConfigResponse,
+    DummyOpenAPIDocConfigResponse,
+    DummySwaggerAPIDocConfigResponse,
 )
 
 # isort: on
