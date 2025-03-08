@@ -12,6 +12,12 @@ class EnvironmentVariableKey(Enum):
     GIT_AUTHOR_EMAIL = "GIT_AUTHOR_EMAIL"
     GIT_COMMIT_MSG = "GIT_COMMIT_MSG"
 
+    # github info
+    PR_TITLE = "PR_TITLE"
+    PR_BODY = "PR_BODY"
+    PR_IS_DRAFT = "PR_IS_DRAFT"
+    PR_LABELS = "PR_LABELS"
+
     # for subcommand line *pull* options
     CONFIG_PATH = "CONFIG_PATH"
     INCLUDE_TEMPLATE_CONFIG = "INCLUDE_TEMPLATE_CONFIG"

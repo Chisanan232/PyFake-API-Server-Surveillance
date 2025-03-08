@@ -9,6 +9,10 @@ from fake_api_server_plugin.ci.surveillance.model.git import (
     GitCommit,
     GitInfo,
 )
+from fake_api_server_plugin.ci.surveillance.model.github import (
+    GitHubInfo,
+    PullRequestInfo,
+)
 from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import (
     PullApiDocConfigArgs,
 )
@@ -28,7 +32,9 @@ class fake_github_action_values:
         return {
             # GitHub action environment
             "GITHUB_TOKEN": "ghp_1234567890",
+            "GITHUB_ACTIONS": "false",
             "GITHUB_REPOSITORY": repo,
+            "GITHUB_BASE_REF": "master",
             "GITHUB_HEAD_REF": "git-branch",
             "GITHUB_JOB": fake_github_action_values.action_job_id(),
             "GITHUB_EVENT_NAME": cls.event_name(),
@@ -58,6 +64,7 @@ class fake_data:
         action_inputs = {}
         action_inputs.update(cls.backend_project_info())
         action_inputs.update(cls.git_operation_info())
+        action_inputs.update(cls.github_pr_info())
         action_inputs.update(cls.subcmd_pull_args(file_path=file_path, base_test_dir=base_test_dir))
         action_inputs.update(cls.action_operation(accept_config_not_exist=accept_config_not_exist))
         action_inputs.update(fake_github_action_values.ci_env(cls.repo()))
@@ -76,6 +83,14 @@ class fake_data:
                         email="test-bot@localhost.com",
                     ),
                     message=" 🧪 test commit message",
+                ),
+            ),
+            github_info=GitHubInfo(
+                pull_request=PullRequestInfo(
+                    title="✏️ Update the API configuration because API change.",
+                    body="Monitor the project and found changes. Update the configuration.",
+                    draft=True,
+                    labels=["label1", "label2"],
                 ),
             ),
             subcmd_pull_args=PullApiDocConfigArgs(
@@ -108,6 +123,16 @@ class fake_data:
             EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test-user[bot]",
             EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test-bot@localhost.com",
             EnvironmentVariableKey.GIT_COMMIT_MSG.value: " 🧪 test commit message",
+        }
+
+    @classmethod
+    def github_pr_info(cls) -> Dict[str, str]:
+        return {
+            # git info
+            EnvironmentVariableKey.PR_TITLE.value: "✏️ Update the API configuration because API change.",
+            EnvironmentVariableKey.PR_BODY.value: "Monitor the project and found changes. Update the configuration.",
+            EnvironmentVariableKey.PR_IS_DRAFT.value: "true",
+            EnvironmentVariableKey.PR_LABELS.value: "label1, label2",
         }
 
     @classmethod
