@@ -39,6 +39,11 @@ class TestActionInput(_BaseModelTestSuite):
         assert model.git_info.commit.author.email == original_data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
         assert model.git_info.commit.message == original_data[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 
+        # github info
+        assert model.github_info.pull_request.title == original_data[EnvironmentVariableKey.PR_TITLE.value]
+        assert model.github_info.pull_request.body == original_data[EnvironmentVariableKey.PR_BODY.value]
+        assert model.github_info.pull_request.draft == original_data[EnvironmentVariableKey.PR_IS_DRAFT.value]
+
         # for subcommand line *pull* options
         assert model.subcmd_pull_args.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
         assert model.subcmd_pull_args.include_template_config == ast.literal_eval(
