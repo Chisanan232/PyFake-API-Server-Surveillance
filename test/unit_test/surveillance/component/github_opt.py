@@ -27,7 +27,6 @@ class TestGitHubOperationClass:
 
     def test_call_method(self, github_operation: GitHubOperation):
         """Test the __call__ method sets repo initialization parameters"""
-        # gh_op = GitHubOperation()
         result = github_operation(repo_owner="test_owner", repo_name="test_repo")
 
         assert result._repo_init_params == RepoInitParam(owner="test_owner", name="test_repo")
@@ -126,30 +125,3 @@ class TestGitHubOperationClass:
             assert repo is mock_repo
             mock_github.get_repo.assert_called_once_with("test_owner/test_repo")
         mock_github.close.assert_called_once()
-
-    # Integration-like tests
-    # @patch.dict(os.environ, {"GITHUB_TOKEN": "dummy_token"})
-    # @patch("fake_api_server_plugin.ci.surveillance.component.github_opt.Github")
-    # def test_integration_like_flow(self, mock_instantiate_github: Mock, github_operation: GitHubOperation):
-    #     mock_github_instance = Mock()
-    #     mock_github_get_repo_fun = Mock
-    #     mock_repo_instance = Mock()
-    #     mock_github_get_repo_fun.return_value = mock_repo_instance
-    #     mock_pr_instance = Mock()
-    #
-    #     mock_instantiate_github.return_value = mock_github_instance
-    #     mock_github_instance.get_repo.return_value = mock_repo_instance
-    #     mock_repo_instance.create_pull.return_value = mock_pr_instance
-    #     mock_pr_instance.html_url = "https://github.com/test_owner/test_repo/pull/123"
-    #
-    #     with github_operation(repo_owner="test_owner", repo_name="test_repo") as repo:
-    #         pr = github_operation.create_pull_request(
-    #             title="Integration Test PR",
-    #             body="Integration Test Body",
-    #             base_branch="main",
-    #             head_branch="feature_branch",
-    #         )
-    #         assert pr.html_url == "https://github.com/test_owner/test_repo/pull/123"
-    #         mock_github_instance.get_repo.assert_called_once_with("test_owner/test_repo")
-    #         mock_repo_instance.create_pull.assert_called_once()
-    #     mock_github_instance.close.assert_called_once()
