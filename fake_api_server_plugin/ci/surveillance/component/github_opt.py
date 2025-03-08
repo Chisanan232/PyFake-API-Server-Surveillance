@@ -19,7 +19,6 @@ class GitHubOperation:
         self._repo_all_labels: List[Label] = []
 
     def __call__(self, **kwargs):
-        # assert self._check_params(**kwargs)
         self._repo_init_params = RepoInitParam(
             owner=kwargs["repo_owner"],
             name=kwargs["repo_name"],
