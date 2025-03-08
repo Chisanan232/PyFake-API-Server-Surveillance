@@ -18,14 +18,13 @@ from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveilla
 from test._values._test_data import fake_data, fake_git_data, fake_github_action_values
 from test._values.dummy_objects import (
     DummyHTTPResponse,
-    DummyOpenAPIDocConfigResponse,
+    DummyOpenAPIDocConfigResponse, DummySwaggerAPIDocConfigResponse,
 )
 
 # isort: on
 
 
-# @pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
-@pytest.mark.parametrize("dummy_api_doc_config_resp", [DummyOpenAPIDocConfigResponse])
+@pytest.mark.parametrize("dummy_api_doc_config_resp", [DummySwaggerAPIDocConfigResponse, DummyOpenAPIDocConfigResponse])
 @patch("urllib3.request")
 @patch("fake_api_server_plugin.ci.surveillance.runner.load_config")
 @patch("git.remote.Remote.push")
