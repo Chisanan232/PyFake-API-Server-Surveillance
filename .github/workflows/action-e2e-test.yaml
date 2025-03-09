@@ -15,7 +15,8 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
@@ -34,7 +35,8 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
