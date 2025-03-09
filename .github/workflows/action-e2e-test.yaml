@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
@@ -26,7 +25,6 @@ on:
   pull_request:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
