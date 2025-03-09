@@ -69,7 +69,7 @@ def search_github_repo_pr(head_branch: str) -> PullRequest:
     target_pr = list(filter(lambda p: p.head.ref == head_branch, one_page))
     print(f"[DEBUG] target_pr {target_pr}.")
     assert target_pr
-    return one_page[0]
+    return target_pr[0]
 
 
 def delete_github_repo_pr(pr: PullRequest) -> None:
