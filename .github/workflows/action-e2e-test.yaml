@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
@@ -16,7 +15,8 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
@@ -26,7 +26,6 @@ on:
   pull_request:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
@@ -36,7 +35,8 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "fake_api_server_plugin/ci/**"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
