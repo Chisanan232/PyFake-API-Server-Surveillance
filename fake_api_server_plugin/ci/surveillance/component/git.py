@@ -5,7 +5,7 @@ from typing import Optional, Set, Union
 
 from git import Commit, Remote, Repo
 
-from ..model.config.action import SurveillanceConfig
+from ..model.config import SurveillanceConfig
 
 
 class GitOperation:

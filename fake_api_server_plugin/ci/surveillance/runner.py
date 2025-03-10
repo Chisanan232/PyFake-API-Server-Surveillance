@@ -15,7 +15,7 @@ from fake_api_server.model import deserialize_api_doc_config, load_config
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
-from .model.config.action import SurveillanceConfig
+from .model.config import SurveillanceConfig
 from .model.config.github_action import get_github_action_env
 
 

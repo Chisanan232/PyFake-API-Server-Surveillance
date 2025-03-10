@@ -3,7 +3,7 @@ from typing import Dict, Union
 from unittest.mock import Mock
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.config.action import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.config.git import (
     GitAuthor,
     GitCommit,

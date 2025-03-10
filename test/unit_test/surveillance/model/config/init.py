@@ -4,7 +4,7 @@ from typing import Mapping, Type
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.config.action import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 
 # isort: off
 from ._base import _BaseModelTestSuite
