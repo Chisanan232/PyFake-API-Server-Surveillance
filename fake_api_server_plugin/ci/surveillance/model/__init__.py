@@ -2,6 +2,8 @@ from enum import Enum
 
 
 class EnvironmentVariableKey(Enum):
+    CONFIG_PATH = "CONFIG_PATH"
+
     # API documentation info
     API_DOC_URL = "API_DOC_URL"
     SERVER_TYPE = "SERVER_TYPE"

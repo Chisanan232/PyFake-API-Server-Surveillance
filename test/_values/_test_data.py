@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Dict, Union
 from unittest.mock import Mock
 
+from ci.surveillance.model.action import ActionInput
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.config.git import (
@@ -106,6 +107,18 @@ class fake_data:
             ),
             accept_config_not_exist=False,
         )
+
+    @classmethod
+    def action_input_model(cls) -> ActionInput:
+        return ActionInput(
+            config_path="./pytest-surveillance.yaml",
+        )
+
+    @classmethod
+    def action_input(cls) -> Dict[str, str]:
+        return {
+            EnvironmentVariableKey.CONFIG_PATH.value: "./pytest-surveillance.yaml",
+        }
 
     @classmethod
     def backend_project_info(cls) -> Dict[str, str]:
