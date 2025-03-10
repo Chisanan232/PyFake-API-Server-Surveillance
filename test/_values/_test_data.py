@@ -58,20 +58,20 @@ class fake_data:
         return "Chisanan232/Sample-Python-BackEnd"
 
     @classmethod
-    def action_input(
+    def surveillance_config(
         cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: str = "false"
     ) -> Dict[str, str]:
-        action_inputs = {}
-        action_inputs.update(cls.backend_project_info())
-        action_inputs.update(cls.git_operation_info())
-        action_inputs.update(cls.github_pr_info())
-        action_inputs.update(cls.subcmd_pull_args(file_path=file_path, base_test_dir=base_test_dir))
-        action_inputs.update(cls.action_operation(accept_config_not_exist=accept_config_not_exist))
-        action_inputs.update(fake_github_action_values.ci_env(cls.repo()))
-        return action_inputs
+        surveillance = {}
+        surveillance.update(cls.backend_project_info())
+        surveillance.update(cls.git_operation_info())
+        surveillance.update(cls.github_pr_info())
+        surveillance.update(cls.subcmd_pull_args(file_path=file_path, base_test_dir=base_test_dir))
+        surveillance.update(cls.action_operation(accept_config_not_exist=accept_config_not_exist))
+        surveillance.update(fake_github_action_values.ci_env(cls.repo()))
+        return surveillance
 
     @classmethod
-    def action_input_model(cls, file_path: Union[str, Path]) -> SurveillanceConfig:
+    def surveillance_config_model(cls, file_path: Union[str, Path]) -> SurveillanceConfig:
         return SurveillanceConfig(
             server_type=Mock(),
             api_doc_url=Mock(),

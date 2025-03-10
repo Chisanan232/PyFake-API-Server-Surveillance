@@ -22,7 +22,7 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            fake_data.action_input(file_path="./api.yaml", base_test_dir="../"),
+            fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="../"),
         ],
     )
     def test_deserialize(self, model: Type[SurveillanceConfig], data: Mapping):

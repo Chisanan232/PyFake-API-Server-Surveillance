@@ -24,7 +24,7 @@ class TestGitOperation:
 
     @property
     def _given_action_inputs(self) -> SurveillanceConfig:
-        return fake_data.action_input_model(file_path="./api.yaml")
+        return fake_data.surveillance_config_model(file_path="./api.yaml")
 
     @pytest.mark.parametrize("branch_already_exist", [False, True])
     def test_switch_git_branch(self, git_operation: GitOperation, branch_already_exist: bool):
@@ -100,7 +100,7 @@ class TestGitOperation:
             filepath.touch()
         assert filepath.exists(), "File doesn't be created. Please check it."
 
-        action_inputs = fake_data.action_input_model(file_path=filepath)
+        action_inputs = fake_data.surveillance_config_model(file_path=filepath)
 
         real_repo = Repo("./")
         print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")

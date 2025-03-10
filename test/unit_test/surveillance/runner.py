@@ -42,7 +42,7 @@ def test_run_with_exist_fake_api_server_config(
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -102,7 +102,7 @@ def test_run_with_not_exist_fake_api_server_config(
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -162,7 +162,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.action_input(file_path="./api.yaml", base_test_dir="./")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./")
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
