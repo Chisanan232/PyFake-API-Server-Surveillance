@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from fake_api_server_plugin.ci.surveillance.model.github_action import (
+from fake_api_server_plugin.ci.surveillance.model.config.github_action import (
     GitHubActionEnvironmentVariable,
     get_github_action_env,
 )

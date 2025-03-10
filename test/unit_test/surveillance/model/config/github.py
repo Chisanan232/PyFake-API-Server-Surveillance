@@ -3,7 +3,7 @@ from typing import Mapping, Type
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.github import (
+from fake_api_server_plugin.ci.surveillance.model.config.github import (
     GitHubInfo,
     PullRequestInfo,
 )

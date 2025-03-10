@@ -2,7 +2,7 @@ import ast
 from dataclasses import dataclass
 from typing import Mapping
 
-from . import EnvironmentVariableKey
+from .. import EnvironmentVariableKey
 from ._base import _BaseModel
 from .git import GitInfo
 from .github import GitHubInfo

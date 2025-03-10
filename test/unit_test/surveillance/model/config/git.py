@@ -4,7 +4,7 @@ import pytest
 from git import Actor
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.git import (
+from fake_api_server_plugin.ci.surveillance.model.config.git import (
     GitAuthor,
     GitCommit,
     GitInfo,

@@ -4,7 +4,7 @@ from typing import Mapping, Type
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.subcmd_pull import (
+from fake_api_server_plugin.ci.surveillance.model.config.subcmd_pull import (
     PullApiDocConfigArgs,
 )
 
@@ -24,7 +24,7 @@ class TestActionInput(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            fake_data.subcmd_pull_args(file_path="./api.yaml", base_test_dir="./"),
+            fake_data.subcmd_pull_args(file_path="./api.yaml", base_test_dir="../"),
         ],
     )
     def test_deserialize(self, model: Type[PullApiDocConfigArgs], data: Mapping):

@@ -3,7 +3,7 @@ from typing import Mapping
 
 from git import Actor
 
-from . import EnvironmentVariableKey
+from .. import EnvironmentVariableKey
 from ._base import _BaseModel
 
 

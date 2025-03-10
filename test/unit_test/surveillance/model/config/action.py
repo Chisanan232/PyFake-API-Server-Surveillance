@@ -4,7 +4,7 @@ from typing import Mapping, Type
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.action import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config.action import SurveillanceConfig
 
 # isort: off
 from ._base import _BaseModelTestSuite
@@ -22,7 +22,7 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            fake_data.action_input(file_path="./api.yaml", base_test_dir="./"),
+            fake_data.action_input(file_path="./api.yaml", base_test_dir="../"),
         ],
     )
     def test_deserialize(self, model: Type[SurveillanceConfig], data: Mapping):

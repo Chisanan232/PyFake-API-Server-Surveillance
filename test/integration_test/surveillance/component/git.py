@@ -9,7 +9,7 @@ from git import Repo
 from git.remote import PushInfoList
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
-from fake_api_server_plugin.ci.surveillance.model.action import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config.action import SurveillanceConfig
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data
