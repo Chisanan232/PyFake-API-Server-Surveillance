@@ -4,7 +4,7 @@ from typing import Mapping, Type
 import pytest
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.action import SurveillanceConfig
 
 # isort: off
 from ._base import _BaseModelTestSuite
@@ -13,11 +13,11 @@ from test._values._test_data import fake_data
 # isort: on
 
 
-class TestActionInput(_BaseModelTestSuite):
+class TestSurveillanceConfig(_BaseModelTestSuite):
 
     @pytest.fixture(scope="function")
-    def model(self) -> Type[ActionInput]:
-        return ActionInput
+    def model(self) -> Type[SurveillanceConfig]:
+        return SurveillanceConfig
 
     @pytest.mark.parametrize(
         "data",
@@ -25,10 +25,10 @@ class TestActionInput(_BaseModelTestSuite):
             fake_data.action_input(file_path="./api.yaml", base_test_dir="./"),
         ],
     )
-    def test_deserialize(self, model: Type[ActionInput], data: Mapping):
+    def test_deserialize(self, model: Type[SurveillanceConfig], data: Mapping):
         super().test_deserialize(model, data)
 
-    def _verify_model_props(self, model: ActionInput, original_data: Mapping) -> None:
+    def _verify_model_props(self, model: SurveillanceConfig, original_data: Mapping) -> None:
         # API documentation info
         assert model.api_doc_url == original_data[EnvironmentVariableKey.API_DOC_URL.value]
         assert model.server_type == original_data[EnvironmentVariableKey.SERVER_TYPE.value]

@@ -5,7 +5,7 @@ from typing import Optional, Set, Union
 
 from git import Commit, Remote, Repo
 
-from ..model.action import ActionInput
+from ..model.action import SurveillanceConfig
 
 
 class GitOperation:
@@ -63,7 +63,7 @@ class GitOperation:
     def _reset_all_staged_files(self) -> None:
         self._all_staged_files.clear()
 
-    def version_change(self, action_inputs: ActionInput) -> bool:
+    def version_change(self, action_inputs: SurveillanceConfig) -> bool:
         # Initial a git project
         self.repository: Repo = self._init_git(action_inputs)
 
@@ -106,13 +106,13 @@ class GitOperation:
             print("Don't have any files be added. Won't commit the change.")
             return False
 
-    def _init_git(self, action_inputs: ActionInput) -> Repo:
+    def _init_git(self, action_inputs: SurveillanceConfig) -> Repo:
         assert os.path.exists(
             action_inputs.subcmd_pull_args.config_path
         ), "PyFake-API-Server configuration is required. Please check it."
         return Repo("./")
 
-    def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
+    def _init_git_remote(self, action_inputs: SurveillanceConfig, remote_name: str) -> Remote:
         if remote_name not in self.repository.remotes:
             print("[DEBUG] Target git remote setting doesn't exist, create one.")
             github_access_token = os.environ["GITHUB_TOKEN"]
@@ -141,7 +141,7 @@ class GitOperation:
             else:
                 self.repository.git.checkout("-b", git_ref)
 
-    def _get_all_fake_api_server_configs(self, action_inputs: ActionInput) -> Set[Path]:
+    def _get_all_fake_api_server_configs(self, action_inputs: SurveillanceConfig) -> Set[Path]:
         all_files: Set[Path] = set()
         for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
             if file_path.is_file():
@@ -165,7 +165,7 @@ class GitOperation:
                 for one_file in Path(file).rglob("*.yaml"):
                     _add_file(one_file)
 
-    def _commit_changes(self, action_inputs: ActionInput) -> Commit:
+    def _commit_changes(self, action_inputs: SurveillanceConfig) -> Commit:
         commit = self.repository.index.commit(
             author=action_inputs.git_info.commit.author.serialize_for_git(),
             message=action_inputs.git_info.commit.message,

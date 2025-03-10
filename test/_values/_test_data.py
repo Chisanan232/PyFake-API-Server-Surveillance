@@ -3,7 +3,7 @@ from typing import Dict, Union
 from unittest.mock import Mock
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.action import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.git import (
     GitAuthor,
     GitCommit,
@@ -71,8 +71,8 @@ class fake_data:
         return action_inputs
 
     @classmethod
-    def action_input_model(cls, file_path: Union[str, Path]) -> ActionInput:
-        return ActionInput(
+    def action_input_model(cls, file_path: Union[str, Path]) -> SurveillanceConfig:
+        return SurveillanceConfig(
             server_type=Mock(),
             api_doc_url=Mock(),
             git_info=GitInfo(

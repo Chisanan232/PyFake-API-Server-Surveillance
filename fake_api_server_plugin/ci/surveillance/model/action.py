@@ -10,7 +10,7 @@ from .subcmd_pull import PullApiDocConfigArgs
 
 
 @dataclass
-class ActionInput(_BaseModel):
+class SurveillanceConfig(_BaseModel):
     api_doc_url: str
     server_type: str
     git_info: GitInfo
@@ -19,8 +19,8 @@ class ActionInput(_BaseModel):
     accept_config_not_exist: bool
 
     @staticmethod
-    def deserialize(data: Mapping) -> "ActionInput":
-        return ActionInput(
+    def deserialize(data: Mapping) -> "SurveillanceConfig":
+        return SurveillanceConfig(
             api_doc_url=data[EnvironmentVariableKey.API_DOC_URL.value],
             # TODO: Still doesn't support this feature at action
             server_type=data.get(EnvironmentVariableKey.SERVER_TYPE.value, None),

@@ -15,7 +15,7 @@ from fake_api_server.model import deserialize_api_doc_config, load_config
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
-from .model.action import ActionInput
+from .model.action import SurveillanceConfig
 from .model.github_action import get_github_action_env
 
 
@@ -39,15 +39,15 @@ class FakeApiServerSurveillance:
     def _get_action_inputs(self) -> Mapping:
         return os.environ
 
-    def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
-        return ActionInput.deserialize(action_inputs)
+    def _deserialize_action_inputs(self, action_inputs: Mapping) -> SurveillanceConfig:
+        return SurveillanceConfig.deserialize(action_inputs)
 
-    def _get_latest_api_doc_config(self, action_inputs: ActionInput) -> FakeAPIConfig:
+    def _get_latest_api_doc_config(self, action_inputs: SurveillanceConfig) -> FakeAPIConfig:
         response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
         current_api_doc_config = deserialize_api_doc_config(response.json())
         return current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
 
-    def _compare_with_current_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> bool:
+    def _compare_with_current_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> bool:
         has_api_change = False
         fake_api_server_config = action_inputs.subcmd_pull_args.config_path
         if Path(fake_api_server_config).exists():
@@ -80,12 +80,12 @@ class FakeApiServerSurveillance:
         self._process_versioning(action_inputs)
         self._notify(action_inputs)
 
-    def _update_api_doc_config(self, action_inputs: ActionInput, new_api_doc_config: FakeAPIConfig) -> None:
+    def _update_api_doc_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> None:
         self.subcmd_pull_component.serialize_and_save(
             cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config
         )
 
-    def _process_versioning(self, action_inputs: ActionInput) -> None:
+    def _process_versioning(self, action_inputs: SurveillanceConfig) -> None:
         has_change = self.git_operation.version_change(action_inputs)
         print(f"[DEBUG] has_change: {has_change}")
         if has_change:
@@ -104,11 +104,11 @@ class FakeApiServerSurveillance:
                     labels=pull_request_info.labels,
                 )
 
-    def _notify(self, action_inputs: ActionInput) -> None:
+    def _notify(self, action_inputs: SurveillanceConfig) -> None:
         # TODO: this is backlog task
         pass
 
-    def _process_no_api_change(self, action_inputs: ActionInput) -> None:
+    def _process_no_api_change(self, action_inputs: SurveillanceConfig) -> None:
         pass
 
 

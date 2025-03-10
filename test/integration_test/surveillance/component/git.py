@@ -9,7 +9,7 @@ from git import Repo
 from git.remote import PushInfoList
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.action import SurveillanceConfig
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data
@@ -23,7 +23,7 @@ class TestGitOperation:
         return GitOperation()
 
     @property
-    def _given_action_inputs(self) -> ActionInput:
+    def _given_action_inputs(self) -> SurveillanceConfig:
         return fake_data.action_input_model(file_path="./api.yaml")
 
     @pytest.mark.parametrize("branch_already_exist", [False, True])
