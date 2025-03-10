@@ -28,4 +28,4 @@ class TestActionInput(_BaseModelTestSuite):
         super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: ActionInput, original_data: Mapping) -> None:
-        assert model.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
+        assert model.config_path == original_data[EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value]

@@ -117,7 +117,7 @@ class fake_data:
     @classmethod
     def action_input(cls) -> Dict[str, str]:
         return {
-            EnvironmentVariableKey.CONFIG_PATH.value: "./pytest-surveillance.yaml",
+            EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value: "./pytest-surveillance.yaml",
         }
 
     @classmethod
