@@ -14,7 +14,7 @@ from fake_api_server_plugin.ci.surveillance.model.config.github import (
     GitHubInfo,
     PullRequestInfo,
 )
-from fake_api_server_plugin.ci.surveillance.model.config.subcmd_pull import (
+from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
     PullApiDocConfigArgs,
 )
 

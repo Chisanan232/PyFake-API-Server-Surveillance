@@ -6,7 +6,7 @@ from .. import EnvironmentVariableKey
 from .._base import _BaseModel
 from .git import GitInfo
 from .github import GitHubInfo
-from .subcmd_pull import PullApiDocConfigArgs
+from .api_config import PullApiDocConfigArgs
 
 
 @dataclass

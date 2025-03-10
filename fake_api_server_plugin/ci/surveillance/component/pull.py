@@ -6,7 +6,7 @@ from fake_api_server._utils import YAML
 from fake_api_server.model.api_config import FakeAPIConfig
 from fake_api_server.model.api_config.template._divide import DivideStrategy
 
-from ..model.config.subcmd_pull import (
+from ..model.config.api_config import (
     PullApiDocConfigArgs,
 )
 
