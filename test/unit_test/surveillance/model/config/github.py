@@ -9,7 +9,7 @@ from fake_api_server_plugin.ci.surveillance.model.config.github import (
 )
 
 # isort: off
-from ._base import _BaseModelTestSuite
+from .._base import _BaseModelTestSuite
 from test._values._test_data import fake_data
 
 # isort: on

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Mapping
 
 from .. import EnvironmentVariableKey
-from ._base import _BaseModel
+from .._base import _BaseModel
 
 
 @dataclass

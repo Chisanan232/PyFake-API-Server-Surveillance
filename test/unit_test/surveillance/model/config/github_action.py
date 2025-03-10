@@ -12,7 +12,7 @@ from fake_api_server_plugin.ci.surveillance.model.config.github_action import (
 )
 
 # isort: off
-from ._base import _BaseModelTestSuite
+from .._base import _BaseModelTestSuite
 
 # isort: on
 
