@@ -1,7 +1,5 @@
-import os
 from abc import ABCMeta, abstractmethod
 from typing import Mapping, Type
-from unittest.mock import patch
 
 import pytest
 

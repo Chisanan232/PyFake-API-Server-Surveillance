@@ -1,4 +1,4 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass, field
 from typing import Mapping
 
 from fake_api_server._utils.file.operation import YAML
@@ -15,7 +15,9 @@ class ActionInput(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "ActionInput":
         return ActionInput(
-            config_path=data.get(EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"),
+            config_path=data.get(
+                EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"
+            ),
         )
 
     def get_config(self) -> SurveillanceConfig:

@@ -1,13 +1,16 @@
 from pathlib import Path
-from typing import Dict, Union, Any
+from typing import Any, Dict, Union
 from unittest.mock import Mock
-
-from fake_api_server.command.subcommand import SubCommandLine
 
 from ci.surveillance.model.action import ActionInput
 from ci.surveillance.model.config import FakeAPIConfigSetting
+from fake_api_server.command.subcommand import SubCommandLine
+
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
+    SubCmdConfig,
+)
 from fake_api_server_plugin.ci.surveillance.model.config.git import (
     GitAuthor,
     GitCommit,
@@ -16,9 +19,6 @@ from fake_api_server_plugin.ci.surveillance.model.config.git import (
 from fake_api_server_plugin.ci.surveillance.model.config.github import (
     GitHubInfo,
     PullRequestInfo,
-)
-from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
-    PullApiDocConfigArgs, SubCmdConfig,
 )
 
 

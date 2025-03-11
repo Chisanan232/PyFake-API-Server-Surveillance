@@ -11,8 +11,8 @@ except ImportError:
 
 from unittest.mock import MagicMock, Mock, call, patch
 
-from fake_api_server.model import deserialize_api_doc_config
 from fake_api_server._utils.file.operation import YAML
+from fake_api_server.model import deserialize_api_doc_config
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey

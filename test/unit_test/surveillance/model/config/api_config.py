@@ -6,7 +6,9 @@ from fake_api_server.command.subcommand import SubCommandLine
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
-    PullApiDocConfigArgs, SubCmdConfig, FakeAPIConfigSetting,
+    FakeAPIConfigSetting,
+    PullApiDocConfigArgs,
+    SubCmdConfig,
 )
 
 # isort: off

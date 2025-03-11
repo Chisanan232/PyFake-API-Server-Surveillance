@@ -1,6 +1,6 @@
 import ast
 from dataclasses import dataclass, field
-from typing import Mapping, Dict, List, Type
+from typing import Dict, List, Mapping, Type
 
 from fake_api_server.model.subcmd_common import SubCommandLine
 

@@ -6,8 +6,8 @@ from typing import Type
 from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
-from fake_api_server.model import deserialize_api_doc_config
 from fake_api_server._utils.file.operation import YAML
+from fake_api_server.model import deserialize_api_doc_config
 from git import Repo
 from git.remote import PushInfoList
 from github import Label
@@ -115,9 +115,22 @@ def test_entire_flow_with_not_exist_config(
         # should
         print("[DEBUG] Checkin commit running state")
         git_info = fake_data.git_operation_info()
-        assert repo.head.commit.author.name == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
-        assert repo.head.commit.author.email == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
-        assert repo.head.commit.message == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_COMMIT_MSG.value]
+        assert (
+            repo.head.commit.author.name
+            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][
+                EnvironmentVariableKey.GIT_AUTHOR_NAME.value
+            ]
+        )
+        assert (
+            repo.head.commit.author.email
+            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][
+                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value
+            ]
+        )
+        assert (
+            repo.head.commit.message
+            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_COMMIT_MSG.value]
+        )
         commit_files = repo.head.commit.stats.files.keys()
         assert len(commit_files) > 0
         assert str(filepath) in commit_files

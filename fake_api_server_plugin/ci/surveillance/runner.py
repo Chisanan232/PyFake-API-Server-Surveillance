@@ -13,13 +13,13 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
-from fake_api_server.model import deserialize_api_doc_config, load_config
 from fake_api_server._utils.file.operation import YAML
+from fake_api_server.model import deserialize_api_doc_config, load_config
 
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
-from .model.config import SurveillanceConfig, PullApiDocConfigArgs
+from .model.config import PullApiDocConfigArgs, SurveillanceConfig
 from .model.config.github_action import get_github_action_env
 
 
@@ -67,7 +67,9 @@ class FakeApiServerSurveillance:
         current_api_doc_config = deserialize_api_doc_config(response.json())
         return current_api_doc_config.to_api_config(base_url=self._subcmd_pull_args.base_url)
 
-    def _compare_with_current_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> bool:
+    def _compare_with_current_config(
+        self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig
+    ) -> bool:
         has_api_change = False
         fake_api_server_config = self._subcmd_pull_args.config_path
         if Path(fake_api_server_config).exists():
@@ -101,9 +103,7 @@ class FakeApiServerSurveillance:
         self._notify(action_inputs)
 
     def _update_api_doc_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> None:
-        self.subcmd_pull_component.serialize_and_save(
-            cmd_args=self._subcmd_pull_args, api_config=new_api_doc_config
-        )
+        self.subcmd_pull_component.serialize_and_save(cmd_args=self._subcmd_pull_args, api_config=new_api_doc_config)
 
     def _process_versioning(self, action_inputs: SurveillanceConfig) -> None:
         has_change = self.git_operation.version_change(action_inputs)

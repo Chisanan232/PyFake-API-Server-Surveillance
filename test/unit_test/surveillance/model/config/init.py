@@ -4,9 +4,9 @@ from typing import Mapping, Type
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
 
-from fake_api_server_plugin.ci.surveillance.model.config.api_config import SubCmdConfig
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
+from fake_api_server_plugin.ci.surveillance.model.config.api_config import SubCmdConfig
 
 # isort: off
 from .._base import _BaseModelTestSuite
@@ -36,9 +36,14 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
 
         # fake-api-server setting
         original_fake_api_server_config = original_data[EnvironmentVariableKey.FAKE_API_SERVER.value]
-        assert model.fake_api_server.server_type == original_fake_api_server_config[EnvironmentVariableKey.SERVER_TYPE.value]
+        assert (
+            model.fake_api_server.server_type
+            == original_fake_api_server_config[EnvironmentVariableKey.SERVER_TYPE.value]
+        )
         # for subcommand line *pull* options
-        original_subcmd_pull = original_fake_api_server_config[EnvironmentVariableKey.SUBCMD.value][SubCommandLine.Pull.value][EnvironmentVariableKey.ARGS.value]
+        original_subcmd_pull = original_fake_api_server_config[EnvironmentVariableKey.SUBCMD.value][
+            SubCommandLine.Pull.value
+        ][EnvironmentVariableKey.ARGS.value]
         subcmd_pull_args: SubCmdConfig = model.fake_api_server.subcmd[SubCommandLine.Pull].args
         assert subcmd_pull_args == original_subcmd_pull
 
@@ -47,16 +52,31 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
         assert model.git_info.repository == original_git_info_data[EnvironmentVariableKey.GIT_REPOSITORY.value]
         original_git_commit_data = original_git_info_data[EnvironmentVariableKey.GIT_COMMIT.value]
         original_git_author_data = original_git_commit_data[EnvironmentVariableKey.GIT_AUTHOR.value]
-        assert model.git_info.commit.author.name == original_git_author_data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
-        assert model.git_info.commit.author.email == original_git_author_data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
+        assert (
+            model.git_info.commit.author.name == original_git_author_data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
+        )
+        assert (
+            model.git_info.commit.author.email
+            == original_git_author_data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
+        )
         assert model.git_info.commit.message == original_git_commit_data[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
 
         # github info
-        original_github_pr_info_data = original_data[EnvironmentVariableKey.GITHUB_INFO.value][EnvironmentVariableKey.GITHUB_PULL_REQUEST.value]
-        assert model.github_info.pull_request.title == original_github_pr_info_data[EnvironmentVariableKey.PR_TITLE.value]
+        original_github_pr_info_data = original_data[EnvironmentVariableKey.GITHUB_INFO.value][
+            EnvironmentVariableKey.GITHUB_PULL_REQUEST.value
+        ]
+        assert (
+            model.github_info.pull_request.title == original_github_pr_info_data[EnvironmentVariableKey.PR_TITLE.value]
+        )
         assert model.github_info.pull_request.body == original_github_pr_info_data[EnvironmentVariableKey.PR_BODY.value]
-        assert model.github_info.pull_request.draft == original_github_pr_info_data[EnvironmentVariableKey.PR_IS_DRAFT.value]
-        assert model.github_info.pull_request.labels == original_github_pr_info_data[EnvironmentVariableKey.PR_LABELS.value]
+        assert (
+            model.github_info.pull_request.draft
+            == original_github_pr_info_data[EnvironmentVariableKey.PR_IS_DRAFT.value]
+        )
+        assert (
+            model.github_info.pull_request.labels
+            == original_github_pr_info_data[EnvironmentVariableKey.PR_LABELS.value]
+        )
 
         # operation of action in CI
         assert model.accept_config_not_exist == ast.literal_eval(
