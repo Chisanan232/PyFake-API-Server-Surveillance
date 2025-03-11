@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, Union, Any
 from unittest.mock import Mock
 
 from ci.surveillance.model.action import ActionInput
@@ -146,6 +146,43 @@ class fake_data:
             EnvironmentVariableKey.PR_BODY.value: "Monitor the project and found changes. Update the configuration.",
             EnvironmentVariableKey.PR_IS_DRAFT.value: "true",
             EnvironmentVariableKey.PR_LABELS.value: "label1, label2",
+        }
+
+    @classmethod
+    def fake_api_server_config(cls) -> Dict[str, Any]:
+        return {
+            "server-type": "rest-server",
+            "subcmd": {
+                "pull": {
+                    "args": [
+                        "--config-path=./pytest-api.yaml",
+                        "--include-template-config",
+                        "--base-file-path=./",
+                        "--base-url=/test/v1",
+                        "--dry-run",
+                        "--divide-api",
+                        "--divide-http",
+                        "--divide-http-request",
+                        "--divide-http-response",
+                    ],
+                },
+            },
+        }
+
+    @classmethod
+    def fake_api_server_subcmd_pull_args(cls) -> Dict[str, Any]:
+        return {
+            "args": [
+                "--config-path=./pytest-api.yaml",
+                "--include-template-config",
+                "--base-file-path=./",
+                "--base-url=/test/v1",
+                "--dry-run",
+                "--divide-api",
+                "--divide-http",
+                "--divide-http-request",
+                "--divide-http-response",
+            ],
         }
 
     @classmethod
