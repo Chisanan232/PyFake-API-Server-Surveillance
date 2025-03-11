@@ -1,6 +1,6 @@
 import ast
 from dataclasses import dataclass, field
-from typing import Mapping, Dict, List
+from typing import Mapping, Dict, List, Type
 
 from fake_api_server.model.subcmd_common import SubCommandLine
 
@@ -48,32 +48,34 @@ class SubCmdConfig(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "SubCmdConfig":
         return SubCmdConfig(
-            args=data.get("args", []),
+            args=data.get(EnvironmentVariableKey.ARGS.value, []),
         )
 
-    def to_subcmd_args(self, subcmd_arg_model: _BaseModel) -> _BaseModel:
+    def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
+        param_with_key: Dict[str, str] = {}
         for arg in self.args:
             arg_eles = arg.split("=")
             assert len(arg_eles) <= 2, f"Invalid subcmd arg: {arg}"
-            arg_eles = arg_eles if len(arg_eles) == 2 else arg_eles.append(True)
+            arg_eles = arg_eles if len(arg_eles) == 2 else [arg_eles[0], True]
             assert len(arg_eles) == 2
             arg_key, arg_value = arg_eles
             arg_key = arg_key.replace("--", "").replace("-", "_")
-            setattr(subcmd_arg_model, arg_key, arg_value)
-        return subcmd_arg_model
+            param_with_key[arg_key] = arg_value
+        return subcmd_arg_model(**param_with_key)
 
 
 @dataclass
 class FakeAPIConfigSetting(_BaseModel):
+    # TODO: Still doesn't support this feature at action
     server_type: str = field(default_factory=str)
     subcmd: Dict[SubCommandLine, SubCmdConfig] = field(default_factory=dict)
 
     @staticmethod
     def deserialize(data: Mapping) -> "FakeAPIConfigSetting":
         subcmd_configs = {}
-        for subcmd_k, subcmd_v in data.get("subcmd", {}).items():
+        for subcmd_k, subcmd_v in data.get(EnvironmentVariableKey.SUBCMD.value, {}).items():
             subcmd_configs[SubCommandLine.to_enum(subcmd_k)] = SubCmdConfig.deserialize(subcmd_v)
         return FakeAPIConfigSetting(
-            server_type=data["server-type"],
+            server_type=data[EnvironmentVariableKey.SERVER_TYPE.value],
             subcmd=subcmd_configs,
         )

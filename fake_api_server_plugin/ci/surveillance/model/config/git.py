@@ -34,7 +34,7 @@ class GitCommit(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitCommit":
         return GitCommit(
-            author=GitAuthor.deserialize(data),
+            author=GitAuthor.deserialize(data.get(EnvironmentVariableKey.GIT_AUTHOR.value, {})),
             message=data[EnvironmentVariableKey.GIT_COMMIT_MSG.value],
         )
 
@@ -48,5 +48,5 @@ class GitInfo(_BaseModel):
     def deserialize(data: Mapping) -> "GitInfo":
         return GitInfo(
             repository=data[EnvironmentVariableKey.GIT_REPOSITORY.value],
-            commit=GitCommit.deserialize(data),
+            commit=GitCommit.deserialize(data.get(EnvironmentVariableKey.GIT_COMMIT.value, {})),
         )

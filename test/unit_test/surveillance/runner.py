@@ -12,6 +12,7 @@ except ImportError:
 from unittest.mock import MagicMock, Mock, call, patch
 
 from fake_api_server.model import deserialize_api_doc_config
+from fake_api_server._utils.file.operation import YAML
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
@@ -42,7 +43,7 @@ def test_run_with_exist_fake_api_server_config(
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=True)
     mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -68,16 +69,18 @@ def test_run_with_exist_fake_api_server_config(
     mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
-    with patch.dict(os.environ, data, clear=True):
-        surveillance.monitor()
-        expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
+    with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
+        with patch.object(YAML, "read", return_value=data):
+            surveillance.monitor()
+            expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
     mock_load_config.assert_called_once()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
 
+    git_info = fake_data.git_operation_info()
     github_pr_info = fake_data.github_pr_info()
-    ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.value])
+    ci_env = fake_github_action_values.ci_env(git_info[EnvironmentVariableKey.GIT_REPOSITORY.value])
     mock_repo.create_pull.assert_called_with(
         title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
         body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
@@ -102,7 +105,7 @@ def test_run_with_not_exist_fake_api_server_config(
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist="true")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=True)
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -128,16 +131,18 @@ def test_run_with_not_exist_fake_api_server_config(
     mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
-    with patch.dict(os.environ, data, clear=True):
-        surveillance.monitor()
-        expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
+    with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
+        with patch.object(YAML, "read", return_value=data):
+            surveillance.monitor()
+            expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
     mock_load_config.assert_not_called()
     mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
 
+    git_info = fake_data.git_operation_info()
     github_pr_info = fake_data.github_pr_info()
-    ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.value])
+    ci_env = fake_github_action_values.ci_env(git_info[EnvironmentVariableKey.GIT_REPOSITORY.value])
     mock_repo.create_pull.assert_called_with(
         title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
         body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
@@ -162,7 +167,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
 ):
     surveillance = FakeApiServerSurveillance()
 
-    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./")
+    data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=False)
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
         request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
@@ -188,12 +193,13 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     mock_repo.get_labels.return_value = mock_labels
     mock_repo.create_pull.return_value = mock_pr
 
-    with patch.dict(os.environ, data, clear=True):
-        with pytest.raises(FileNotFoundError):
-            surveillance.monitor()
+    with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
+        with patch.object(YAML, "read", return_value=data):
+            with pytest.raises(FileNotFoundError):
+                surveillance.monitor()
 
     mock_load_config.assert_not_called()
-    mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
+    mock_request.assert_called_once_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
     mock_version_change_process.assert_not_called()
     mock_repo.create_pull.assert_not_called()
     mock_pr.add_to_labels.assert_not_called()

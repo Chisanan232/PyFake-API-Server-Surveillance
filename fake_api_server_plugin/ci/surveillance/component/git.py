@@ -3,9 +3,10 @@ import os
 from pathlib import Path
 from typing import Optional, Set, Union
 
+from fake_api_server.command.subcommand import SubCommandLine
 from git import Commit, Remote, Repo
 
-from ..model.config import SurveillanceConfig
+from ..model.config import SurveillanceConfig, PullApiDocConfigArgs
 
 
 class GitOperation:
@@ -107,8 +108,9 @@ class GitOperation:
             return False
 
     def _init_git(self, action_inputs: SurveillanceConfig) -> Repo:
+        subcmd_args: PullApiDocConfigArgs = action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs)
         assert os.path.exists(
-            action_inputs.subcmd_pull_args.config_path
+            subcmd_args.config_path
         ), "PyFake-API-Server configuration is required. Please check it."
         return Repo("./")
 
@@ -142,8 +144,9 @@ class GitOperation:
                 self.repository.git.checkout("-b", git_ref)
 
     def _get_all_fake_api_server_configs(self, action_inputs: SurveillanceConfig) -> Set[Path]:
+        subcmd_args: PullApiDocConfigArgs = action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs)
         all_files: Set[Path] = set()
-        for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
+        for file_path in Path(subcmd_args.base_file_path).rglob("*.yaml"):
             if file_path.is_file():
                 all_files.add(file_path)
         return all_files

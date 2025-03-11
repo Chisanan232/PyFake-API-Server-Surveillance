@@ -72,6 +72,11 @@ class TestSubCmdConfig(_BaseModelTestSuite):
     def _verify_model_props(self, model: SubCmdConfig, original_data: Mapping) -> None:
         assert model.args == original_data["args"]
 
+    def test_to_subcmd_args(self):
+        fake_api_server_subcmd_pull_args = fake_data.fake_api_server_subcmd_pull_args()
+        subcmd_config = SubCmdConfig.deserialize(fake_api_server_subcmd_pull_args)
+        # assert subcmd_config.to_subcmd_args(PullApiDocConfigArgs) == fake_api_server_subcmd_pull_args["args"]
+
 
 class TestFakeAPIConfigSetting(_BaseModelTestSuite):
 
@@ -82,7 +87,7 @@ class TestFakeAPIConfigSetting(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            fake_data.fake_api_server_config(),
+            fake_data.fake_api_server_config(file_path="./api.yaml", base_test_dir="./"),
         ],
     )
     def test_deserialize(self, model: Type[FakeAPIConfigSetting], data: Mapping):

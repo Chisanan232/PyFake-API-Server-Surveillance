@@ -18,7 +18,7 @@ class PullRequestInfo(_BaseModel):
             title=data[EnvironmentVariableKey.PR_TITLE.value],
             body=data[EnvironmentVariableKey.PR_BODY.value],
             draft=data[EnvironmentVariableKey.PR_IS_DRAFT.value],
-            labels=str(data[EnvironmentVariableKey.PR_LABELS.value]).split(","),
+            labels=data[EnvironmentVariableKey.PR_LABELS.value],
         )
 
 
@@ -29,5 +29,5 @@ class GitHubInfo(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitHubInfo":
         return GitHubInfo(
-            pull_request=PullRequestInfo.deserialize(data),
+            pull_request=PullRequestInfo.deserialize(data.get(EnvironmentVariableKey.GITHUB_PULL_REQUEST.value, {})),
         )

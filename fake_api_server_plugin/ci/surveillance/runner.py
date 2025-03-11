@@ -1,9 +1,12 @@
 import os
 from pathlib import Path
-from typing import Mapping
+from typing import Mapping, Optional
 
 import urllib3
 from fake_api_server import FakeAPIConfig
+from fake_api_server.command.subcommand import SubCommandLine
+
+from .model.action import ActionInput
 
 try:
     from http import HTTPMethod
@@ -11,11 +14,12 @@ except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from fake_api_server.model import deserialize_api_doc_config, load_config
+from fake_api_server._utils.file.operation import YAML
 
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
-from .model.config import SurveillanceConfig
+from .model.config import SurveillanceConfig, PullApiDocConfigArgs
 from .model.config.github_action import get_github_action_env
 
 
@@ -24,32 +28,48 @@ class FakeApiServerSurveillance:
         self.subcmd_pull_component = SavingConfigComponent()
         self.git_operation = GitOperation()
         self.github_operation: GitHubOperation = GitHubOperation()
+        self._config: Optional[SurveillanceConfig] = None
+        self._subcmd_pull_args: Optional[PullApiDocConfigArgs] = None
 
     def monitor(self) -> None:
         print("monitor the github repro ...")
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
 
+        print("try to get the latest api doc config ...")
         new_api_doc_config = self._get_latest_api_doc_config(action_inputs)
+        print("compare the latest api doc config with current config ...")
         has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
         if has_api_change:
+            print("has something change and will create a pull request")
             self._process_api_change(action_inputs, new_api_doc_config)
         else:
+            print("nothing change and won't do anything..")
             self._process_no_api_change(action_inputs)
 
     def _get_action_inputs(self) -> Mapping:
         return os.environ
 
     def _deserialize_action_inputs(self, action_inputs: Mapping) -> SurveillanceConfig:
-        return SurveillanceConfig.deserialize(action_inputs)
+        print(f"[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
+        action_input = ActionInput.deserialize(action_inputs)
+        print(f"[DEBUG in _deserialize_action_inputs] read surveillance config ...")
+        surveillance_config = YAML().read(action_input.config_path)
+        print(f"[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
+        self._config = SurveillanceConfig.deserialize(surveillance_config)
+        print(f"[DEBUG in _deserialize_action_inputs] get the subcmd pull config ...")
+        subcmd_args = self._config.fake_api_server.subcmd[SubCommandLine.Pull]
+        self._subcmd_pull_args = subcmd_args.to_subcmd_args(PullApiDocConfigArgs)
+        return self._config
 
     def _get_latest_api_doc_config(self, action_inputs: SurveillanceConfig) -> FakeAPIConfig:
+        print(f"[DEBUG in _get_latest_api_doc_config] action_inputs.api_doc_url: {action_inputs.api_doc_url}")
         response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
         current_api_doc_config = deserialize_api_doc_config(response.json())
-        return current_api_doc_config.to_api_config(base_url=action_inputs.subcmd_pull_args.base_url)
+        return current_api_doc_config.to_api_config(base_url=self._subcmd_pull_args.base_url)
 
     def _compare_with_current_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> bool:
         has_api_change = False
-        fake_api_server_config = action_inputs.subcmd_pull_args.config_path
+        fake_api_server_config = self._subcmd_pull_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
 
@@ -82,7 +102,7 @@ class FakeApiServerSurveillance:
 
     def _update_api_doc_config(self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> None:
         self.subcmd_pull_component.serialize_and_save(
-            cmd_args=action_inputs.subcmd_pull_args, api_config=new_api_doc_config
+            cmd_args=self._subcmd_pull_args, api_config=new_api_doc_config
         )
 
     def _process_versioning(self, action_inputs: SurveillanceConfig) -> None:
