@@ -126,7 +126,7 @@ def test_entire_flow_with_not_exist_config(
         )
 
         github_pr_info = fake_data.github_pr_info()
-        ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.name])
+        ci_env = fake_github_action_values.ci_env(data[EnvironmentVariableKey.GIT_REPOSITORY.value])
         mock_repo.create_pull.assert_called_with(
             title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
             body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
