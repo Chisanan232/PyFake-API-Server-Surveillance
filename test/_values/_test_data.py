@@ -151,10 +151,10 @@ class fake_data:
     @classmethod
     def fake_api_server_config(cls) -> Dict[str, Any]:
         return {
-            "server-type": "rest-server",
-            "subcmd": {
+            EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
+            EnvironmentVariableKey.SUBCMD.value: {
                 "pull": {
-                    "args": [
+                    EnvironmentVariableKey.ARGS.value: [
                         "--config-path=./pytest-api.yaml",
                         "--include-template-config",
                         "--base-file-path=./",
@@ -172,7 +172,7 @@ class fake_data:
     @classmethod
     def fake_api_server_subcmd_pull_args(cls) -> Dict[str, Any]:
         return {
-            "args": [
+            EnvironmentVariableKey.ARGS.value: [
                 "--config-path=./pytest-api.yaml",
                 "--include-template-config",
                 "--base-file-path=./",
