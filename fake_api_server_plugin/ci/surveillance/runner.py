@@ -51,7 +51,7 @@ class FakeApiServerSurveillance:
         print("[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
         return ActionInput.deserialize(action_inputs)
 
-    def _deserialize_surveillance_config(self, action_input: ActionInput):
+    def _deserialize_surveillance_config(self, action_input: ActionInput) -> SurveillanceConfig:
         print("[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
         return action_input.get_config()
 
