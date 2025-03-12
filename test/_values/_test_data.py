@@ -6,7 +6,7 @@ from ci.surveillance.model.action import ActionInput
 from ci.surveillance.model.config import FakeAPIConfigSetting
 from fake_api_server.command.subcommand import SubCommandLine
 
-from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey, EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
     SubCmdConfig,
@@ -126,7 +126,7 @@ class fake_data:
     @classmethod
     def action_input(cls) -> Dict[str, str]:
         return {
-            ConfigurationKey.SURVEILLANCE_CONFIG_PATH.value: "./pytest-surveillance.yaml",
+            EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value: "./pytest-surveillance.yaml",
         }
 
     @classmethod

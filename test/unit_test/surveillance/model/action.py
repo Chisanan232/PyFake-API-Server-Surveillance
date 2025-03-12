@@ -14,7 +14,7 @@ except ImportError:
 import pytest
 from fake_api_server._utils.file.operation import YAML
 
-from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey, EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off
@@ -40,7 +40,7 @@ class TestActionInput(_BaseModelTestSuite):
         super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: ActionInput, original_data: Mapping) -> None:
-        assert model.config_path == original_data[ConfigurationKey.SURVEILLANCE_CONFIG_PATH.value]
+        assert model.config_path == original_data[EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value]
 
     @pytest.mark.parametrize("config_path", glob.glob("./test/config/e2e_test/**.yaml"))
     def test_get_config(self, config_path: str):
