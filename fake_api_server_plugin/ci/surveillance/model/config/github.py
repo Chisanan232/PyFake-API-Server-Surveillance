@@ -15,7 +15,10 @@ class PullRequestInfo(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "PullRequestInfo":
         return PullRequestInfo(
-            title=data.get(EnvironmentVariableKey.PR_TITLE.value, "🤖✏️ Update Fake-API-Server configuration because of API changes."),
+            title=data.get(
+                EnvironmentVariableKey.PR_TITLE.value,
+                "🤖✏️ Update Fake-API-Server configuration because of API changes.",
+            ),
             body=data.get(EnvironmentVariableKey.PR_BODY.value, "Update Fake-API-Server configuration."),
             draft=data.get(EnvironmentVariableKey.PR_IS_DRAFT.value, False),
             labels=data.get(EnvironmentVariableKey.PR_LABELS.value, []),
