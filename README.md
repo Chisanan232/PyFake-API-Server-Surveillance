@@ -1,6 +1,6 @@
 # PyFake-API-Server-Surveillance
 
-[![PyPI](https://img.shields.io/pypi/v/PyFake-API-Server-Surveillance?color=%23099cec&amp;label=PyPI&amp;logo=pypi&amp;logoColor=white)](https://pypi.org/project/PyFake-API-Server-Surveillance)
+[![PyPI](https://img.shields.io/pypi/v/fake-api-server-surveillance?color=%23099cec&amp;label=PyPI&amp;logo=pypi&amp;logoColor=white)](https://pypi.org/project/fake-api-server-surveillance)
 [![Release](https://img.shields.io/github/release/Chisanan232/PyFake-API-Server-Surveillance.svg?label=Release&logo=github)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/releases)
 [![CI](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci.yaml/badge.svg)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/Chisanan232/PyFake-API-Server-Surveillance/graph/badge.svg?token=GJYBfInkzX)](https://codecov.io/gh/Chisanan232/PyFake-API-Server-Surveillance)
