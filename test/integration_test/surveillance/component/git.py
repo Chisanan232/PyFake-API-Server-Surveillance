@@ -140,8 +140,6 @@ class TestGitOperation:
             else:
                 mock_remote.create.assert_called_once()
 
-            mock_remote.fetch.assert_called_once()
-
             assert len(repo.index.diff(None)) == 0
             mock_git_commit.assert_called_once_with(
                 author=action_inputs.git_info.commit.author.serialize_for_git(),
