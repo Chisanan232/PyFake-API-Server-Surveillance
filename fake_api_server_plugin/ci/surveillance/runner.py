@@ -13,7 +13,6 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
-from fake_api_server._utils.file.operation import YAML
 from fake_api_server.model import deserialize_api_doc_config, load_config
 
 from .component.git import GitOperation
@@ -53,10 +52,8 @@ class FakeApiServerSurveillance:
         return ActionInput.deserialize(action_inputs)
 
     def _deserialize_surveillance_config(self, action_input: ActionInput):
-        print(f"[DEBUG in _deserialize_action_inputs] read surveillance config ...")
-        surveillance_config = YAML().read(action_input.config_path)
         print(f"[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
-        return SurveillanceConfig.deserialize(surveillance_config)
+        return action_input.get_config()
 
     def _get_latest_api_doc_config(self, surveillance_config: SurveillanceConfig) -> FakeAPIConfig:
         print(f"[DEBUG in _get_latest_api_doc_config] action_inputs.api_doc_url: {surveillance_config.api_doc_url}")
