@@ -9,7 +9,7 @@ from git import Repo
 from git.remote import PushInfoList
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data
@@ -23,8 +23,8 @@ class TestGitOperation:
         return GitOperation()
 
     @property
-    def _given_action_inputs(self) -> ActionInput:
-        return fake_data.action_input_model(file_path="./api.yaml")
+    def _given_action_inputs(self) -> SurveillanceConfig:
+        return fake_data.surveillance_config_model(file_path="./api.yaml")
 
     @pytest.mark.parametrize("branch_already_exist", [False, True])
     def test_switch_git_branch(self, git_operation: GitOperation, branch_already_exist: bool):
@@ -68,7 +68,7 @@ class TestGitOperation:
             # when
             dummy_ci_env = fake_github_action_values.ci_env(fake_data.repo())
             with patch.dict(os.environ, dummy_ci_env, clear=True):
-                git_operation._init_git_remote(action_inputs=action_inputs, remote_name=test_remote_name)
+                git_operation._init_git_remote(surveillance_config=action_inputs, remote_name=test_remote_name)
 
             # should
             assert test_remote_name in git_operation.repository.remotes
@@ -100,7 +100,7 @@ class TestGitOperation:
             filepath.touch()
         assert filepath.exists(), "File doesn't be created. Please check it."
 
-        action_inputs = fake_data.action_input_model(file_path=filepath)
+        action_inputs = fake_data.surveillance_config_model(file_path=filepath)
 
         real_repo = Repo("./")
         print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")

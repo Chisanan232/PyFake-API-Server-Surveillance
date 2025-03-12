@@ -63,10 +63,7 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-#          repo: Chisanan232/Sample-Python-BackEnd
-          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
-          api-doc-url: "http://127.0.0.1:1111/api-doc"
-          accept-not-exist-config: true
+          config-path: ./test/config/e2e_test/with_required_params.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
@@ -93,27 +90,7 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-          # API server info
-#          repo: Chisanan232/Sample-Python-BackEnd
-          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
-          api-doc-url: "http://127.0.0.1:1111/api-doc"
-          # operation of action in CI
-          accept-not-exist-config: true
-          # git info
-          git-author-name: "Chisanan232"
-          git-author-email: "bulls23mj1991@gmail.com"
-          git-commit-msg: " 🧪 test commit message."
-          # github info for pull request
-          pr-title: "🤖 Test the PR feature by end-to-end test"
-          pr-body: "🚧 test content ..."
-          pr-labels: "🤖 test by e2e"
-          pr-is-draft: "true"
-          # options about how to pull API server doc config
-          config-path: "./test/_values/_only_for_ci/rest-server/api.yaml"
-          include-template-config: "true"
-          base-file-path: "./test/_values/_only_for_ci/rest-server/"
-          base-url: "/test/v1"
-          divide-api: "true"
+          config-path: ./test/config/e2e_test/with_optional_params.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
@@ -133,9 +110,7 @@ jobs:
         id: e2e-test-invalid-case
         uses: ./
         with:
-          repo: Chisanan232/Sample-Python-BackEnd
-          api-doc-url: "http://127.0.0.1:1111"
-          dry-run: "true"
+          config-path: ./test/config/e2e_test/with_invalid_os.yaml
         continue-on-error: true
 
       - name: Check on failures
