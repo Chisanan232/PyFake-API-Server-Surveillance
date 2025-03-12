@@ -1,10 +1,14 @@
+import logging
 import os
+import traceback
 from collections import namedtuple
 from typing import List, Optional
 
 from github import Github, GithubException, Repository
 from github.Label import Label
 from github.PullRequest import PullRequest
+
+logger = logging.getLogger(__name__)
 
 RepoInitParam = namedtuple("RepoInitParam", ("owner", "name"))
 
@@ -49,7 +53,6 @@ class GitHubOperation:
         if not self._github_repo:
             raise RuntimeError("Please connect to target GitHub repository first before create pull request.")
         try:
-            print(f"[DEBUG] base_branch: {base_branch}")
             pr = self._github_repo.create_pull(
                 title=title,
                 body=body,
@@ -62,8 +65,9 @@ class GitHubOperation:
                 if label:
                     pr.add_to_labels(*label)
 
-            print(f"Pull request created: {pr.html_url}")
+            logger.info(f"Pull request created: {pr.html_url}")
             return pr
-        except GithubException as e:
-            print(f"[ERROR] e: {e}")
+        except GithubException:
+            logger.error("Fail to do something in GitHub. Please check it. Error message:")
+            traceback.print_exc()
             return None
