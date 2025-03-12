@@ -56,9 +56,9 @@ class SubCmdConfig(_BaseModel):
         for arg in self.args:
             arg_eles = arg.split("=")
             assert len(arg_eles) <= 2, f"Invalid subcmd arg: {arg}"
-            arg_eles = arg_eles if len(arg_eles) == 2 else [arg_eles[0], True]
-            assert len(arg_eles) == 2
-            arg_key, arg_value = arg_eles
+            arg_with_value = arg_eles if len(arg_eles) == 2 else [arg_eles[0], True]  # type: ignore[list-item]
+            assert len(arg_with_value) == 2
+            arg_key, arg_value = arg_with_value
             arg_key = arg_key.replace("--", "").replace("-", "_")
             param_with_key[arg_key] = arg_value
         return subcmd_arg_model(**param_with_key)

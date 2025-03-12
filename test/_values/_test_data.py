@@ -64,14 +64,7 @@ class fake_data:
     @classmethod
     def surveillance_config(
         cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: bool = False
-    ) -> Dict[str, str]:
-        surveillance = {}
-        # surveillance.update(cls.backend_project_info())
-        # surveillance.update(cls.git_operation_info())
-        # surveillance.update(cls.github_pr_info())
-        # surveillance.update(cls.subcmd_pull_args(file_path=file_path, base_test_dir=base_test_dir))
-        # surveillance.update(cls.action_operation(accept_config_not_exist=accept_config_not_exist))
-        # surveillance.update(fake_github_action_values.ci_env(cls.repo()))
+    ) -> Dict[str, Any]:
         return {
             EnvironmentVariableKey.API_DOC_URL.value: "http://127.0.0.1:8080",
             EnvironmentVariableKey.FAKE_API_SERVER.value: cls.fake_api_server_config(file_path, base_test_dir),
@@ -121,17 +114,6 @@ class fake_data:
                     labels=["label1", "label2"],
                 ),
             ),
-            # subcmd_pull_args=PullApiDocConfigArgs(
-            #     config_path=str(file_path),
-            #     include_template_config=True,
-            #     base_file_path=str(file_path.parent) if isinstance(file_path, Path) else str(Path(file_path).parent),
-            #     base_url="./",
-            #     divide_api=True,
-            #     divide_http=False,
-            #     divide_http_request=False,
-            #     divide_http_response=False,
-            #     dry_run=True,
-            # ),
             accept_config_not_exist=True,
         )
 
@@ -156,7 +138,7 @@ class fake_data:
         }
 
     @classmethod
-    def git_operation_info(cls) -> Dict[str, str]:
+    def git_operation_info(cls) -> Dict[str, Any]:
         return {
             # git info
             EnvironmentVariableKey.GIT_REPOSITORY.value: cls.repo(),
@@ -164,7 +146,7 @@ class fake_data:
         }
 
     @classmethod
-    def git_commit_info(cls) -> Dict[str, str]:
+    def git_commit_info(cls) -> Dict[str, Any]:
         return {
             EnvironmentVariableKey.GIT_AUTHOR.value: cls.git_commit_author_info(),
             EnvironmentVariableKey.GIT_COMMIT_MSG.value: " 🧪 test commit message",
