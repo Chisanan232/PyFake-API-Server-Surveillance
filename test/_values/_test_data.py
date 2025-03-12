@@ -6,7 +6,7 @@ from ci.surveillance.model.action import ActionInput
 from ci.surveillance.model.config import FakeAPIConfigSetting
 from fake_api_server.command.subcommand import SubCommandLine
 
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
     SubCmdConfig,
@@ -66,11 +66,11 @@ class fake_data:
         cls, file_path: Union[str, Path], base_test_dir: Union[str, Path], accept_config_not_exist: bool = False
     ) -> Dict[str, Any]:
         return {
-            EnvironmentVariableKey.API_DOC_URL.value: "http://127.0.0.1:8080",
-            EnvironmentVariableKey.FAKE_API_SERVER.value: cls.fake_api_server_config(file_path, base_test_dir),
-            EnvironmentVariableKey.GIT_INFO.value: cls.git_operation_info(),
-            EnvironmentVariableKey.GITHUB_INFO.value: cls.github_info(),
-            EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: accept_config_not_exist,
+            ConfigurationKey.API_DOC_URL.value: "http://127.0.0.1:8080",
+            ConfigurationKey.FAKE_API_SERVER.value: cls.fake_api_server_config(file_path, base_test_dir),
+            ConfigurationKey.GIT_INFO.value: cls.git_operation_info(),
+            ConfigurationKey.GITHUB_INFO.value: cls.github_info(),
+            ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value: accept_config_not_exist,
         }
 
     @classmethod
@@ -126,14 +126,14 @@ class fake_data:
     @classmethod
     def action_input(cls) -> Dict[str, str]:
         return {
-            EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value: "./pytest-surveillance.yaml",
+            ConfigurationKey.SURVEILLANCE_CONFIG_PATH.value: "./pytest-surveillance.yaml",
         }
 
     @classmethod
     def backend_project_info(cls) -> Dict[str, str]:
         return {
             # API documentation info
-            EnvironmentVariableKey.API_DOC_URL.value: "http://127.0.0.1:8080",
+            ConfigurationKey.API_DOC_URL.value: "http://127.0.0.1:8080",
             # EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
         }
 
@@ -141,47 +141,47 @@ class fake_data:
     def git_operation_info(cls) -> Dict[str, Any]:
         return {
             # git info
-            EnvironmentVariableKey.GIT_REPOSITORY.value: cls.repo(),
-            EnvironmentVariableKey.GIT_COMMIT.value: cls.git_commit_info(),
+            ConfigurationKey.GIT_REPOSITORY.value: cls.repo(),
+            ConfigurationKey.GIT_COMMIT.value: cls.git_commit_info(),
         }
 
     @classmethod
     def git_commit_info(cls) -> Dict[str, Any]:
         return {
-            EnvironmentVariableKey.GIT_AUTHOR.value: cls.git_commit_author_info(),
-            EnvironmentVariableKey.GIT_COMMIT_MSG.value: " 🧪 test commit message",
+            ConfigurationKey.GIT_AUTHOR.value: cls.git_commit_author_info(),
+            ConfigurationKey.GIT_COMMIT_MSG.value: " 🧪 test commit message",
         }
 
     @classmethod
     def git_commit_author_info(cls) -> Dict[str, str]:
         return {
-            EnvironmentVariableKey.GIT_AUTHOR_NAME.value: "test-user[bot]",
-            EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value: "test-bot@localhost.com",
+            ConfigurationKey.GIT_AUTHOR_NAME.value: "test-user[bot]",
+            ConfigurationKey.GIT_AUTHOR_EMAIL.value: "test-bot@localhost.com",
         }
 
     @classmethod
     def github_info(cls) -> Dict[str, Any]:
         return {
             # github info
-            EnvironmentVariableKey.GITHUB_PULL_REQUEST.value: cls.github_pr_info(),
+            ConfigurationKey.GITHUB_PULL_REQUEST.value: cls.github_pr_info(),
         }
 
     @classmethod
     def github_pr_info(cls) -> Dict[str, Any]:
         return {
-            EnvironmentVariableKey.PR_TITLE.value: "✏️ Update the API configuration because API change.",
-            EnvironmentVariableKey.PR_BODY.value: "Monitor the project and found changes. Update the configuration.",
-            EnvironmentVariableKey.PR_IS_DRAFT.value: True,
-            EnvironmentVariableKey.PR_LABELS.value: ["label1", "label2"],
+            ConfigurationKey.PR_TITLE.value: "✏️ Update the API configuration because API change.",
+            ConfigurationKey.PR_BODY.value: "Monitor the project and found changes. Update the configuration.",
+            ConfigurationKey.PR_IS_DRAFT.value: True,
+            ConfigurationKey.PR_LABELS.value: ["label1", "label2"],
         }
 
     @classmethod
     def fake_api_server_config(cls, file_path: Union[str, Path], base_test_dir: Union[str, Path]) -> Dict[str, Any]:
         return {
-            EnvironmentVariableKey.SERVER_TYPE.value: "rest-server",
-            EnvironmentVariableKey.SUBCMD.value: {
+            ConfigurationKey.SERVER_TYPE.value: "rest-server",
+            ConfigurationKey.SUBCMD.value: {
                 SubCommandLine.Pull.value: {
-                    EnvironmentVariableKey.ARGS.value: [
+                    ConfigurationKey.ARGS.value: [
                         f"--config-path={file_path}",
                         "--include-template-config",
                         f"--base-file-path={base_test_dir}",
@@ -199,7 +199,7 @@ class fake_data:
     @classmethod
     def fake_api_server_subcmd_pull_args(cls) -> Dict[str, Any]:
         return {
-            EnvironmentVariableKey.ARGS.value: [
+            ConfigurationKey.ARGS.value: [
                 "--config-path=./pytest-api.yaml",
                 "--include-template-config",
                 "--base-file-path=./",
@@ -216,20 +216,20 @@ class fake_data:
     def subcmd_pull_args(cls, file_path: Union[str, Path], base_test_dir: Union[str, Path]) -> Dict[str, str]:
         return {
             # for subcommand line *pull* options
-            EnvironmentVariableKey.CONFIG_PATH.value: str(file_path),
-            EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
-            EnvironmentVariableKey.BASE_FILE_PATH.value: str(base_test_dir),
-            EnvironmentVariableKey.BASE_URL.value: "/test/v1",
-            EnvironmentVariableKey.DIVIDE_API.value: "true",
-            EnvironmentVariableKey.DIVIDE_HTTP.value: "false",
-            EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value: "false",
-            EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value: "false",
-            EnvironmentVariableKey.DRY_RUN.value: "true",
+            ConfigurationKey.CONFIG_PATH.value: str(file_path),
+            ConfigurationKey.INCLUDE_TEMPLATE_CONFIG.value: "True",
+            ConfigurationKey.BASE_FILE_PATH.value: str(base_test_dir),
+            ConfigurationKey.BASE_URL.value: "/test/v1",
+            ConfigurationKey.DIVIDE_API.value: "true",
+            ConfigurationKey.DIVIDE_HTTP.value: "false",
+            ConfigurationKey.DIVIDE_HTTP_REQUEST.value: "false",
+            ConfigurationKey.DIVIDE_HTTP_RESPONSE.value: "false",
+            ConfigurationKey.DRY_RUN.value: "true",
         }
 
     @classmethod
     def action_operation(cls, accept_config_not_exist: str = "false") -> Dict[str, str]:
         return {
             # operation with action in CI
-            EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value: accept_config_not_exist,
+            ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value: accept_config_not_exist,
         }

@@ -3,7 +3,7 @@ from typing import Mapping
 
 from fake_api_server._utils.file.operation import YAML
 
-from . import EnvironmentVariableKey
+from . import ConfigurationKey
 from ._base import _BaseModel
 from .config import SurveillanceConfig
 
@@ -16,7 +16,7 @@ class ActionInput(_BaseModel):
     def deserialize(data: Mapping) -> "ActionInput":
         return ActionInput(
             config_path=data.get(
-                EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"
+                ConfigurationKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"
             ),
         )
 

@@ -12,7 +12,7 @@ from git import Repo
 from git.remote import PushInfoList
 from github import Label
 
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
 from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveillance
 
 # isort: off
@@ -102,7 +102,7 @@ def test_entire_flow_with_not_exist_config(
         print("[DEBUG] Run target function")
         data = fake_data.surveillance_config(file_path=filepath, base_test_dir=base_test_dir)
         mock_request.return_value = dummy_api_doc_config_resp.generate(
-            request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
+            request_url=data[ConfigurationKey.API_DOC_URL.value],
         )
         mock_load_config.return_value = deserialize_api_doc_config(
             dummy_api_doc_config_resp.mock_data()
@@ -117,19 +117,19 @@ def test_entire_flow_with_not_exist_config(
         git_info = fake_data.git_operation_info()
         assert (
             repo.head.commit.author.name
-            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][
-                EnvironmentVariableKey.GIT_AUTHOR_NAME.value
+            == git_info[ConfigurationKey.GIT_COMMIT.value][ConfigurationKey.GIT_AUTHOR.value][
+                ConfigurationKey.GIT_AUTHOR_NAME.value
             ]
         )
         assert (
             repo.head.commit.author.email
-            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_AUTHOR.value][
-                EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value
+            == git_info[ConfigurationKey.GIT_COMMIT.value][ConfigurationKey.GIT_AUTHOR.value][
+                ConfigurationKey.GIT_AUTHOR_EMAIL.value
             ]
         )
         assert (
             repo.head.commit.message
-            == git_info[EnvironmentVariableKey.GIT_COMMIT.value][EnvironmentVariableKey.GIT_COMMIT_MSG.value]
+            == git_info[ConfigurationKey.GIT_COMMIT.value][ConfigurationKey.GIT_COMMIT_MSG.value]
         )
         commit_files = repo.head.commit.stats.files.keys()
         assert len(commit_files) > 0
@@ -142,10 +142,10 @@ def test_entire_flow_with_not_exist_config(
         )
 
         github_pr_info = fake_data.github_pr_info()
-        ci_env = fake_github_action_values.ci_env(git_info[EnvironmentVariableKey.GIT_REPOSITORY.value])
+        ci_env = fake_github_action_values.ci_env(git_info[ConfigurationKey.GIT_REPOSITORY.value])
         mock_repo.create_pull.assert_called_with(
-            title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
-            body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
+            title=github_pr_info[ConfigurationKey.PR_TITLE.value],
+            body=github_pr_info[ConfigurationKey.PR_BODY.value],
             base=ci_env["GITHUB_BASE_REF"],
             head=expect_head_branch,
             draft=False,

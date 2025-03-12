@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class EnvironmentVariableKey(Enum):
+class ConfigurationKey(Enum):
     SURVEILLANCE_CONFIG_PATH = "CONFIG_PATH"
 
     # API documentation info
