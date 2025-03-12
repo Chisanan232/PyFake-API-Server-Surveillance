@@ -68,7 +68,7 @@ class TestGitOperation:
             # when
             dummy_ci_env = fake_github_action_values.ci_env(fake_data.repo())
             with patch.dict(os.environ, dummy_ci_env, clear=True):
-                git_operation._init_git_remote(action_inputs=action_inputs, remote_name=test_remote_name)
+                git_operation._init_git_remote(surveillance_config=action_inputs, remote_name=test_remote_name)
 
             # should
             assert test_remote_name in git_operation.repository.remotes
