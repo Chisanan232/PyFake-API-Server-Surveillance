@@ -2,8 +2,8 @@ from typing import Mapping, Type
 
 import pytest
 
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off
 from test.unit_test.surveillance.model._base import _BaseModelTestSuite

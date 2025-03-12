@@ -120,7 +120,9 @@ class GitOperation:
             print("[DEBUG] Target git remote setting doesn't exist, create one.")
             github_access_token = os.environ["GITHUB_TOKEN"]
             assert github_access_token, "Miss GitHub token"
-            remote_url = f"https://x-access-token:{github_access_token}@github.com/{surveillance_config.git_info.repository}"
+            remote_url = (
+                f"https://x-access-token:{github_access_token}@github.com/{surveillance_config.git_info.repository}"
+            )
             git_remote = self.repository.create_remote(name=remote_name, url=remote_url)
         else:
             git_remote = self.repository.remote(name=remote_name)
