@@ -18,7 +18,6 @@ class _BaseModelTestSuite(metaclass=ABCMeta):
         if not data:
             assert False, "Please implement the parameter values for testing."
 
-        # with patch.dict(os.environ, data, clear=True):
         model = model.deserialize(data)
         self._verify_model_props(model, data)
 

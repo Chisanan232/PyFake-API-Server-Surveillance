@@ -15,7 +15,7 @@ from fake_api_server._utils.file.operation import YAML
 from fake_api_server.model import deserialize_api_doc_config
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
 from fake_api_server_plugin.ci.surveillance.runner import FakeApiServerSurveillance
 
 # isort: off
@@ -46,7 +46,7 @@ def test_run_with_exist_fake_api_server_config(
     data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=True)
     mock_path_exits.return_value = True
     mock_request.return_value = api_doc_config_resp.generate(
-        request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
+        request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
@@ -75,15 +75,15 @@ def test_run_with_exist_fake_api_server_config(
             expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
     mock_load_config.assert_called_once()
-    mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
+    mock_request.assert_called_with(method=HTTPMethod.GET, url=data[ConfigurationKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
 
     git_info = fake_data.git_operation_info()
     github_pr_info = fake_data.github_pr_info()
-    ci_env = fake_github_action_values.ci_env(git_info[EnvironmentVariableKey.GIT_REPOSITORY.value])
+    ci_env = fake_github_action_values.ci_env(git_info[ConfigurationKey.GIT_REPOSITORY.value])
     mock_repo.create_pull.assert_called_with(
-        title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
-        body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
+        title=github_pr_info[ConfigurationKey.PR_TITLE.value],
+        body=github_pr_info[ConfigurationKey.PR_BODY.value],
         base=ci_env["GITHUB_BASE_REF"],
         head=expect_head_branch,
         draft=False,
@@ -108,7 +108,7 @@ def test_run_with_not_exist_fake_api_server_config(
     data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=True)
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
-        request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
+        request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
@@ -137,15 +137,15 @@ def test_run_with_not_exist_fake_api_server_config(
             expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
     mock_load_config.assert_not_called()
-    mock_request.assert_called_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
+    mock_request.assert_called_with(method=HTTPMethod.GET, url=data[ConfigurationKey.API_DOC_URL.value])
     mock_version_change_process.assert_called_once()
 
     git_info = fake_data.git_operation_info()
     github_pr_info = fake_data.github_pr_info()
-    ci_env = fake_github_action_values.ci_env(git_info[EnvironmentVariableKey.GIT_REPOSITORY.value])
+    ci_env = fake_github_action_values.ci_env(git_info[ConfigurationKey.GIT_REPOSITORY.value])
     mock_repo.create_pull.assert_called_with(
-        title=github_pr_info[EnvironmentVariableKey.PR_TITLE.value],
-        body=github_pr_info[EnvironmentVariableKey.PR_BODY.value],
+        title=github_pr_info[ConfigurationKey.PR_TITLE.value],
+        body=github_pr_info[ConfigurationKey.PR_BODY.value],
         base=ci_env["GITHUB_BASE_REF"],
         head=expect_head_branch,
         draft=False,
@@ -170,7 +170,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
     data = fake_data.surveillance_config(file_path="./api.yaml", base_test_dir="./", accept_config_not_exist=False)
     mock_path_exits.return_value = False
     mock_request.return_value = api_doc_config_resp.generate(
-        request_url=data[EnvironmentVariableKey.API_DOC_URL.value],
+        request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
     mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
@@ -199,7 +199,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
                 surveillance.monitor()
 
     mock_load_config.assert_not_called()
-    mock_request.assert_called_once_with(method=HTTPMethod.GET, url=data[EnvironmentVariableKey.API_DOC_URL.value])
+    mock_request.assert_called_once_with(method=HTTPMethod.GET, url=data[ConfigurationKey.API_DOC_URL.value])
     mock_version_change_process.assert_not_called()
     mock_repo.create_pull.assert_not_called()
     mock_pr.add_to_labels.assert_not_called()

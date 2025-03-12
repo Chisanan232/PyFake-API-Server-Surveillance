@@ -4,7 +4,7 @@ from typing import Dict, List, Mapping, Type
 
 from fake_api_server.model.subcmd_common import SubCommandLine
 
-from .. import EnvironmentVariableKey
+from .. import ConfigurationKey
 from .._base import _BaseModel
 
 
@@ -23,21 +23,17 @@ class PullApiDocConfigArgs(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "PullApiDocConfigArgs":
         return PullApiDocConfigArgs(
-            config_path=data[EnvironmentVariableKey.CONFIG_PATH.value],
+            config_path=data[ConfigurationKey.CONFIG_PATH.value],
             include_template_config=ast.literal_eval(
-                str(data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
+                str(data[ConfigurationKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
             ),
-            base_file_path=data[EnvironmentVariableKey.BASE_FILE_PATH.value],
-            base_url=data[EnvironmentVariableKey.BASE_URL.value],
-            divide_api=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()),
-            divide_http=ast.literal_eval(str(data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()),
-            divide_http_request=ast.literal_eval(
-                str(data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
-            ),
-            divide_http_response=ast.literal_eval(
-                str(data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
-            ),
-            dry_run=ast.literal_eval(str(data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()),
+            base_file_path=data[ConfigurationKey.BASE_FILE_PATH.value],
+            base_url=data[ConfigurationKey.BASE_URL.value],
+            divide_api=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_API.value]).capitalize()),
+            divide_http=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP.value]).capitalize()),
+            divide_http_request=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_REQUEST.value]).capitalize()),
+            divide_http_response=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()),
+            dry_run=ast.literal_eval(str(data[ConfigurationKey.DRY_RUN.value]).capitalize()),
         )
 
 
@@ -48,7 +44,7 @@ class SubCmdConfig(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "SubCmdConfig":
         return SubCmdConfig(
-            args=data.get(EnvironmentVariableKey.ARGS.value, []),
+            args=data.get(ConfigurationKey.ARGS.value, []),
         )
 
     def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
@@ -73,9 +69,9 @@ class FakeAPIConfigSetting(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "FakeAPIConfigSetting":
         subcmd_configs = {}
-        for subcmd_k, subcmd_v in data.get(EnvironmentVariableKey.SUBCMD.value, {}).items():
+        for subcmd_k, subcmd_v in data.get(ConfigurationKey.SUBCMD.value, {}).items():
             subcmd_configs[SubCommandLine.to_enum(subcmd_k)] = SubCmdConfig.deserialize(subcmd_v)
         return FakeAPIConfigSetting(
-            server_type=data[EnvironmentVariableKey.SERVER_TYPE.value],
+            server_type=data[ConfigurationKey.SERVER_TYPE.value],
             subcmd=subcmd_configs,
         )

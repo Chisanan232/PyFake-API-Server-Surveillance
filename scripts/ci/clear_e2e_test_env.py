@@ -31,9 +31,7 @@ def get_all_branch() -> List[str]:
 
 def expect_branch_name() -> str:
     github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
-    print(f"[DEBUG] GitHub event name: {github_action_event_name}")
     github_action_job_id = os.environ["GITHUB_JOB"]
-    print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
     return f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
 
 
@@ -60,9 +58,6 @@ def search_github_repo_pr(head_branch: str) -> PullRequest:
         base=os.environ["GITHUB_BASE_REF"] or "master",
         head=head_branch,
     )
-    # print(f"[DEBUG] prs: {prs}")
-    # print(f"[DEBUG] prs.totalCount: {prs.totalCount}")
-    # assert prs.totalCount == 2, "Should only have one PR for the target branch."
     one_page = prs.get_page(0)
     assert one_page
     print(f"[DEBUG] one_page {one_page}.")
@@ -80,7 +75,6 @@ def delete_github_repo_pr(pr: PullRequest) -> None:
 def run() -> None:
     init_git()
     all_branch = get_all_branch()
-    print(f"[DEBUG] All git branch: {all_branch}")
     e2e_test_branch = search_branch(name=expect_branch_name(), all_branch=all_branch)
     print(f"[DEBUG] Target branch: {e2e_test_branch}")
 
