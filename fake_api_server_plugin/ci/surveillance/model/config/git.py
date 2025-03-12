@@ -3,7 +3,7 @@ from typing import Mapping
 
 from git import Actor
 
-from .. import EnvironmentVariableKey
+from .. import ConfigurationKey
 from .._base import _BaseModel
 
 
@@ -15,8 +15,8 @@ class GitAuthor(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitAuthor":
         return GitAuthor(
-            name=data.get(EnvironmentVariableKey.GIT_AUTHOR_NAME.value, "Fake-API-Server [bot]"),
-            email=data.get(EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value, ""),
+            name=data.get(ConfigurationKey.GIT_AUTHOR_NAME.value, "Fake-API-Server [bot]"),
+            email=data.get(ConfigurationKey.GIT_AUTHOR_EMAIL.value, ""),
         )
 
     def serialize_for_git(self) -> Actor:
@@ -34,8 +34,8 @@ class GitCommit(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitCommit":
         return GitCommit(
-            author=GitAuthor.deserialize(data.get(EnvironmentVariableKey.GIT_AUTHOR.value, {})),
-            message=data.get(EnvironmentVariableKey.GIT_COMMIT_MSG.value, "✏️ Update the API interface settings."),
+            author=GitAuthor.deserialize(data.get(ConfigurationKey.GIT_AUTHOR.value, {})),
+            message=data.get(ConfigurationKey.GIT_COMMIT_MSG.value, "✏️ Update the API interface settings."),
         )
 
 
@@ -47,6 +47,6 @@ class GitInfo(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitInfo":
         return GitInfo(
-            repository=data[EnvironmentVariableKey.GIT_REPOSITORY.value],
-            commit=GitCommit.deserialize(data.get(EnvironmentVariableKey.GIT_COMMIT.value, {})),
+            repository=data[ConfigurationKey.GIT_REPOSITORY.value],
+            commit=GitCommit.deserialize(data.get(ConfigurationKey.GIT_COMMIT.value, {})),
         )

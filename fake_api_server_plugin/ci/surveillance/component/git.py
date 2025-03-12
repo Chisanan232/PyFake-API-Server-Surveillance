@@ -1,4 +1,5 @@
 import ast
+import logging
 import os
 from pathlib import Path
 from typing import Optional, Set, Union, cast
@@ -7,6 +8,8 @@ from fake_api_server.command.subcommand import SubCommandLine
 from git import Commit, Remote, Repo
 
 from ..model.config import PullApiDocConfigArgs, SurveillanceConfig
+
+logger = logging.getLogger(__name__)
 
 
 class GitOperation:
@@ -36,9 +39,7 @@ class GitOperation:
     def fake_api_server_monitor_git_branch(self) -> str:
         if self.is_ci_test_mode:
             github_action_event_name = os.environ["GITHUB_EVENT_NAME"]
-            print(f"[DEBUG] GitHub event name: {github_action_event_name}")
             github_action_job_id = os.environ["GITHUB_JOB"]
-            print(f"[DEBUG] GitHub run ID: {github_action_job_id}")
             git_ref: str = f"fake-api-server-monitor-update-config_{github_action_event_name}_{github_action_job_id}"
         else:
             git_ref: str = "fake-api-server-monitor-update-config"  # type: ignore[no-redef]
@@ -54,7 +55,7 @@ class GitOperation:
             current_git_branch = self.repository.active_branch.name
         except TypeError as e:
             # NOTE: Only for CI runtime environment
-            print("[DEBUG] Occur something wrong when trying to get git branch")
+            logger.error("Occur something wrong when trying to get git branch.")
             if "HEAD" in str(e) and "detached" in str(e) and self.is_in_ci_env:
                 current_git_branch = os.getenv("GITHUB_REF", "")
             else:
@@ -72,23 +73,23 @@ class GitOperation:
         git_remote = self._init_git_remote(surveillance_config, self.default_remote_name)
 
         # Sync up the code version from git
-        print("Fetch to update the git ...")
+        logger.info("Fetch to update the git ...")
         git_remote.fetch()
         # Switch to target git branch which only for Fake-API-Server
-        print("Switch to target branch ...")
+        logger.info("Switch to target branch ...")
         self._switch_git_branch(self.fake_api_server_monitor_git_branch)
 
         # Get all files in the folder
         all_files = self._get_all_fake_api_server_configs(surveillance_config)
-        print(f"Found files: {all_files}")
+        logger.info(f"Found files: {all_files}")
 
         # Check untracked files
-        print("Check untracked file ...")
+        logger.info("Check untracked file ...")
         untracked = set(self.repository.untracked_files)
         self._add_files(all_files=all_files, target_files=untracked)
 
         # Check modified but unstaged files
-        print("Check modified file ...")
+        logger.info("Check modified file ...")
         diff_index = self.repository.index.diff(None)
         modified = {item.a_path for item in diff_index}
         self._add_files(all_files=all_files, target_files=modified)
@@ -99,12 +100,12 @@ class GitOperation:
 
             # Push the change to git server
             self._push_to_remote(git_remote)
-            print(
+            logger.info(
                 f"Successfully pushed commit {commit.hexsha[:8]} to {self.default_remote_name}/{self.fake_api_server_monitor_git_branch}"
             )
             return True
         else:
-            print("Don't have any files be added. Won't commit the change.")
+            logger.info("Don't have any files be added. Won't commit the change.")
             return False
 
     def _init_git(self, surveillance_config: SurveillanceConfig) -> Repo:
@@ -117,7 +118,7 @@ class GitOperation:
 
     def _init_git_remote(self, surveillance_config: SurveillanceConfig, remote_name: str) -> Remote:
         if remote_name not in self.repository.remotes:
-            print("[DEBUG] Target git remote setting doesn't exist, create one.")
+            logger.info("Target git remote setting doesn't exist, create one.")
             github_access_token = os.environ["GITHUB_TOKEN"]
             assert github_access_token, "Miss GitHub token"
             remote_url = (
@@ -126,17 +127,14 @@ class GitOperation:
             git_remote = self.repository.create_remote(name=remote_name, url=remote_url)
         else:
             git_remote = self.repository.remote(name=remote_name)
-            print(f"[DEBUG] git_remote.url: {git_remote.url}")
             if surveillance_config.git_info.repository not in git_remote.url:
-                print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
+                logger.info("Target git remote URL is not as expect, modify the URL.")
                 github_access_token = os.environ["GITHUB_TOKEN"]
                 assert github_access_token, "Miss GitHub token"
                 remote_url = (
                     f"https://x-access-token:{github_access_token}@github.com/{surveillance_config.git_info.repository}"
                 )
                 git_remote.set_url(new_url=remote_url)
-            else:
-                print("[DEBUG] Remote info all is correct.")
         return git_remote
 
     def _switch_git_branch(self, git_ref: str) -> None:
@@ -163,10 +161,10 @@ class GitOperation:
             if _file in all_files:
                 self._all_staged_files.add(str(_file))
                 self.repository.index.add(str(_file))
-                print(f"Add file: {_file}")
+                logger.info(f"Add file: {_file}")
 
         for file in target_files:
-            print(f"Found some file: {file}")
+            logger.info(f"Found some file: {file}")
             file_path_obj = Path(file)
             if file_path_obj.is_file():
                 _add_file(file_path_obj)
@@ -179,7 +177,7 @@ class GitOperation:
             author=surveillance_config.git_info.commit.author.serialize_for_git(),
             message=surveillance_config.git_info.commit.message,
         )
-        print("Commit the change.")
+        logger.info("Commit the change.")
         self._reset_all_staged_files()
         return commit
 

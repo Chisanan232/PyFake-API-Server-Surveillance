@@ -14,7 +14,7 @@ except ImportError:
 import pytest
 from fake_api_server._utils.file.operation import YAML
 
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey, EnvironmentVariableKey
 from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off
@@ -54,15 +54,15 @@ class TestActionInput(_BaseModelTestSuite):
 
             surveillance_config = model.get_config()
             assert surveillance_config
-            assert surveillance_config.api_doc_url == config_data[EnvironmentVariableKey.API_DOC_URL.value]
-            if config_data[EnvironmentVariableKey.FAKE_API_SERVER.value] is not None:
+            assert surveillance_config.api_doc_url == config_data[ConfigurationKey.API_DOC_URL.value]
+            if config_data[ConfigurationKey.FAKE_API_SERVER.value] is not None:
                 assert surveillance_config.fake_api_server
-            if EnvironmentVariableKey.GIT_INFO.value in config_data.keys() is not None:
+            if ConfigurationKey.GIT_INFO.value in config_data.keys() is not None:
                 assert surveillance_config.fake_api_server
-            if EnvironmentVariableKey.GITHUB_INFO.value in config_data.keys() is not None:
+            if ConfigurationKey.GITHUB_INFO.value in config_data.keys() is not None:
                 assert surveillance_config.fake_api_server
-            if EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value in config_data.keys() is not None:
+            if ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value in config_data.keys() is not None:
                 assert (
                     surveillance_config.accept_config_not_exist
-                    == config_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]
+                    == config_data[ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value]
                 )

@@ -4,7 +4,7 @@ from typing import Mapping, Type
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
 
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
     FakeAPIConfigSetting,
     PullApiDocConfigArgs,
@@ -34,25 +34,25 @@ class TestPullApiDocConfigArgs(_BaseModelTestSuite):
         super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: PullApiDocConfigArgs, original_data: Mapping) -> None:
-        assert model.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
+        assert model.config_path == original_data[ConfigurationKey.CONFIG_PATH.value]
         assert model.include_template_config == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
+            str(original_data[ConfigurationKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
         )
-        assert model.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
-        assert model.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
+        assert model.base_file_path == original_data[ConfigurationKey.BASE_FILE_PATH.value]
+        assert model.base_url == original_data[ConfigurationKey.BASE_URL.value]
         assert model.divide_api == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()
+            str(original_data[ConfigurationKey.DIVIDE_API.value]).capitalize()
         )
         assert model.divide_http == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()
+            str(original_data[ConfigurationKey.DIVIDE_HTTP.value]).capitalize()
         )
         assert model.divide_http_request == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
+            str(original_data[ConfigurationKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
         )
         assert model.divide_http_response == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
+            str(original_data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
         )
-        assert model.dry_run == ast.literal_eval(str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize())
+        assert model.dry_run == ast.literal_eval(str(original_data[ConfigurationKey.DRY_RUN.value]).capitalize())
 
 
 class TestSubCmdConfig(_BaseModelTestSuite):
