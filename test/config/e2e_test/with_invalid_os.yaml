@@ -1,0 +1,9 @@
+api-doc-url: 'http://127.0.0.1:1111'
+fake-api-server:
+  server-type: rest-server
+  subcmd:
+    pull:
+      args:
+        - --dry-run
+git-info:
+  repo: 'Chisanan232/Sample-Python-BackEnd'

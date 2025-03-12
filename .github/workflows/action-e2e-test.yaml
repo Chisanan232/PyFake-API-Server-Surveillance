@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
@@ -16,7 +15,8 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "ci/**.py"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
@@ -26,7 +26,6 @@ on:
   pull_request:
     branches:
       - "master"
-      - "develop/**"
     paths:
       # About customized action: delete remote git branch which for end-to-end test only
       - ".github/actions/clear_remote_branch/**.yaml"
@@ -36,13 +35,15 @@ on:
       # End-to-End test
       - ".github/workflows/action-e2e-test.yaml"
       # Source code and config
-      - "ci/**.py"
+      - "fake_api_server_plugin/ci/**/*.py"
+      - "!**/__pkg_info__.py"
       - "action.yaml"
       - "pyproject.toml"
       - "poetry.lock"
 
 permissions:
   contents: write  # Need this to push commits
+  pull-requests: write
 
 jobs:
   with-required-param:
@@ -62,17 +63,15 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-#          repo: Chisanan232/Sample-Python-BackEnd
-          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
-          api-doc-url: "http://127.0.0.1:1111/api-doc"
-          accept-not-exist-config: true
+          config-path: ./test/config/e2e_test/with_required_params.yaml
         env:
-          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-optional-param:
     runs-on: ubuntu-latest
@@ -91,29 +90,15 @@ jobs:
       - name: Run Fake-API-Server-Surveillance
         uses: ./
         with:
-          # API server info
-#          repo: Chisanan232/Sample-Python-BackEnd
-          repo: ${{ github.GITHUB_ACTION_REPOSITORY }}
-          api-doc-url: "http://127.0.0.1:1111/api-doc"
-          # operation of action in CI
-          accept-not-exist-config: true
-          # git info
-          git-author-name: "Chisanan232"
-          git-author-email: "bulls23mj1991@gmail.com"
-          git-commit-msg: " 🧪 test commit message."
-          # options about how to pull API server doc config
-          config-path: "./test/_values/_only_for_ci/rest-server/api.yaml"
-          include-template-config: "true"
-          base-file-path: "./test/_values/_only_for_ci/rest-server/"
-          base-url: "/test/v1"
-          divide-api: "true"
+          config-path: ./test/config/e2e_test/with_optional_params.yaml
         env:
-          FAKE_API_SERVER_BOT_GITHUB_TOKEN: ${{ secrets.E2E_TEST_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_TEST_MODE: true
 
       - name: Remove the git branch which for end-to-end test only
         uses: ./.github/actions/clear_remote_branch/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   with-invalid-os:
     runs-on: windows-latest
@@ -125,9 +110,7 @@ jobs:
         id: e2e-test-invalid-case
         uses: ./
         with:
-          repo: Chisanan232/Sample-Python-BackEnd
-          api-doc-url: "http://127.0.0.1:1111"
-          dry-run: "true"
+          config-path: ./test/config/e2e_test/with_invalid_os.yaml
         continue-on-error: true
 
       - name: Check on failures

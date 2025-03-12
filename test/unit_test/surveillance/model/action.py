@@ -1,13 +1,27 @@
-import ast
+import glob
+from pathlib import Path
 from typing import Mapping, Type
+from unittest.mock import patch
+
+from yaml import load
+
+try:
+    from yaml import CDumper as Dumper
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Dumper, Loader  # type: ignore
 
 import pytest
+from fake_api_server._utils.file.operation import YAML
 
-from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import (
+    ConfigurationKey,
+    EnvironmentVariableKey,
+)
 from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off
-from ._base import _BaseModelTestSuite
+from test.unit_test.surveillance.model._base import _BaseModelTestSuite
 from test._values._test_data import fake_data
 
 # isort: on
@@ -22,47 +36,36 @@ class TestActionInput(_BaseModelTestSuite):
     @pytest.mark.parametrize(
         "data",
         [
-            fake_data.action_input(file_path="./api.yaml", base_test_dir="./"),
+            fake_data.action_input(),
         ],
     )
     def test_deserialize(self, model: Type[ActionInput], data: Mapping):
         super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: ActionInput, original_data: Mapping) -> None:
-        # API documentation info
-        assert model.api_doc_url == original_data[EnvironmentVariableKey.API_DOC_URL.value]
-        assert model.server_type == original_data[EnvironmentVariableKey.SERVER_TYPE.value]
+        assert model.config_path == original_data[EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value]
 
-        # git info
-        assert model.git_info.repository == original_data[EnvironmentVariableKey.GIT_REPOSITORY.value]
-        assert model.git_info.commit.author.name == original_data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value]
-        assert model.git_info.commit.author.email == original_data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value]
-        assert model.git_info.commit.message == original_data[EnvironmentVariableKey.GIT_COMMIT_MSG.value]
+    @pytest.mark.parametrize("config_path", glob.glob("./test/config/e2e_test/**.yaml"))
+    def test_get_config(self, config_path: str):
+        fake_api_server_config = Path(config_path)
+        assert fake_api_server_config.exists()
+        with open(config_path, "r", encoding="utf-8") as file_stream:
+            config_data: dict = load(stream=file_stream, Loader=Loader)
 
-        # for subcommand line *pull* options
-        assert model.subcmd_pull_args.config_path == original_data[EnvironmentVariableKey.CONFIG_PATH.value]
-        assert model.subcmd_pull_args.include_template_config == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.INCLUDE_TEMPLATE_CONFIG.value]).capitalize()
-        )
-        assert model.subcmd_pull_args.base_file_path == original_data[EnvironmentVariableKey.BASE_FILE_PATH.value]
-        assert model.subcmd_pull_args.base_url == original_data[EnvironmentVariableKey.BASE_URL.value]
-        assert model.subcmd_pull_args.divide_api == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_API.value]).capitalize()
-        )
-        assert model.subcmd_pull_args.divide_http == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP.value]).capitalize()
-        )
-        assert model.subcmd_pull_args.divide_http_request == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
-        )
-        assert model.subcmd_pull_args.divide_http_response == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
-        )
-        assert model.subcmd_pull_args.dry_run == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.DRY_RUN.value]).capitalize()
-        )
+        with patch.object(YAML, "read", return_value=config_data):
+            model = ActionInput(config_path=config_path).deserialize(config_data)
 
-        # operation of action in CI
-        assert model.accept_config_not_exist == ast.literal_eval(
-            str(original_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
-        )
+            surveillance_config = model.get_config()
+            assert surveillance_config
+            assert surveillance_config.api_doc_url == config_data[ConfigurationKey.API_DOC_URL.value]
+            if config_data[ConfigurationKey.FAKE_API_SERVER.value] is not None:
+                assert surveillance_config.fake_api_server
+            if ConfigurationKey.GIT_INFO.value in config_data.keys() is not None:
+                assert surveillance_config.fake_api_server
+            if ConfigurationKey.GITHUB_INFO.value in config_data.keys() is not None:
+                assert surveillance_config.fake_api_server
+            if ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value in config_data.keys() is not None:
+                assert (
+                    surveillance_config.accept_config_not_exist
+                    == config_data[ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value]
+                )

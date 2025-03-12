@@ -9,7 +9,7 @@ from git import Repo
 from git.remote import PushInfoList
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
-from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
+from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 
 # isort: off
 from test._values._test_data import fake_data, fake_github_action_values, fake_git_data
@@ -23,8 +23,8 @@ class TestGitOperation:
         return GitOperation()
 
     @property
-    def _given_action_inputs(self) -> ActionInput:
-        return fake_data.action_input_model(file_path="./api.yaml")
+    def _given_action_inputs(self) -> SurveillanceConfig:
+        return fake_data.surveillance_config_model(file_path="./api.yaml")
 
     @pytest.mark.parametrize("branch_already_exist", [False, True])
     def test_switch_git_branch(self, git_operation: GitOperation, branch_already_exist: bool):
@@ -68,7 +68,7 @@ class TestGitOperation:
             # when
             dummy_ci_env = fake_github_action_values.ci_env(fake_data.repo())
             with patch.dict(os.environ, dummy_ci_env, clear=True):
-                git_operation._init_git_remote(action_inputs=action_inputs, remote_name=test_remote_name)
+                git_operation._init_git_remote(surveillance_config=action_inputs, remote_name=test_remote_name)
 
             # should
             assert test_remote_name in git_operation.repository.remotes
@@ -100,17 +100,14 @@ class TestGitOperation:
             filepath.touch()
         assert filepath.exists(), "File doesn't be created. Please check it."
 
-        action_inputs = fake_data.action_input_model(file_path=filepath)
+        action_inputs = fake_data.surveillance_config_model(file_path=filepath)
 
         real_repo = Repo("./")
-        print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
         original_branch = real_repo.active_branch.name
         if self._is_in_ci_env and original_branch not in [b.name for b in real_repo.branches]:
-            print(f"[DEBUG] create and switch git branch {original_branch}")
             real_repo.git.checkout("-b", original_branch)
 
         try:
-            print("[DEBUG] Initial git repository")
             repo = Repo.init(base_test_dir)
             # TODO: change the repo to sample project.
 
@@ -120,7 +117,6 @@ class TestGitOperation:
             push_info.ERROR = 1024
             push_info_list.append(push_info)
 
-            print("[DEBUG] Mock git remote")
             mock_remote = Mock()
             mock_remote.exists = Mock(return_value=True)
             mock_remote.create = Mock()
@@ -132,29 +128,18 @@ class TestGitOperation:
             mock_init_remote_fun.return_value = mock_remote
 
             # when
-            print("[DEBUG] Run target function")
             dummy_ci_env = fake_github_action_values.ci_env(fake_data.repo())
             with patch.dict(os.environ, dummy_ci_env, clear=True):
                 result = GitOperation().version_change(action_inputs)
 
             # should
-            print("[DEBUG] Start checking running state")
             assert result is True
 
-            print("[DEBUG] Checking remote callable state")
-            # mock_init_remote_fun.assert_called_once_with(
-            #     name=fake_git_data.default_remote_name(),
-            #     url=f"https://x-access-token:{dummy_ci_env['GITHUB_TOKEN']}@github.com/{action_inputs.git_info.repository}",
-            # )
             if mock_remote.exists() is True:
                 mock_remote.create.assert_not_called()
             else:
                 mock_remote.create.assert_called_once()
 
-            print("[DEBUG] Checkin sync state and branch operation state")
-            # mock_remote.fetch.assert_called_once()
-
-            print("[DEBUG] Checkin commit running state")
             assert len(repo.index.diff(None)) == 0
             mock_git_commit.assert_called_once_with(
                 author=action_inputs.git_info.commit.author.serialize_for_git(),
@@ -164,8 +149,6 @@ class TestGitOperation:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
             assert str(filepath) in committed_files
 
-            print("[DEBUG] Checkin git push running state")
-            # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
             mock_remote_push.assert_called_once()
         finally:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))

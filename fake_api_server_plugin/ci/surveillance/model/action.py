@@ -1,30 +1,24 @@
-import ast
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Mapping
+
+from fake_api_server._utils.file.operation import YAML
 
 from . import EnvironmentVariableKey
 from ._base import _BaseModel
-from .git import GitInfo
-from .subcmd_pull import PullApiDocConfigArgs
+from .config import SurveillanceConfig
 
 
 @dataclass
 class ActionInput(_BaseModel):
-    api_doc_url: str
-    server_type: str
-    git_info: GitInfo
-    subcmd_pull_args: PullApiDocConfigArgs
-    accept_config_not_exist: bool
+    config_path: str = field(default_factory=str)
 
     @staticmethod
     def deserialize(data: Mapping) -> "ActionInput":
         return ActionInput(
-            api_doc_url=data[EnvironmentVariableKey.API_DOC_URL.value],
-            # TODO: Still doesn't support this feature at action
-            server_type=data.get(EnvironmentVariableKey.SERVER_TYPE.value, None),
-            git_info=GitInfo.deserialize(data),
-            subcmd_pull_args=PullApiDocConfigArgs.deserialize(data),
-            accept_config_not_exist=ast.literal_eval(
-                str(data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
+            config_path=data.get(
+                EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"
             ),
         )
+
+    def get_config(self) -> SurveillanceConfig:
+        return SurveillanceConfig.deserialize(YAML().read(self.config_path))

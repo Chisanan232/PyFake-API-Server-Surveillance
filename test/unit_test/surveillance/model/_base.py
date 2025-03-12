@@ -1,7 +1,5 @@
-import os
 from abc import ABCMeta, abstractmethod
 from typing import Mapping, Type
-from unittest.mock import patch
 
 import pytest
 
@@ -20,9 +18,8 @@ class _BaseModelTestSuite(metaclass=ABCMeta):
         if not data:
             assert False, "Please implement the parameter values for testing."
 
-        with patch.dict(os.environ, data, clear=True):
-            model = model.deserialize(data)
-            self._verify_model_props(model, data)
+        model = model.deserialize(data)
+        self._verify_model_props(model, data)
 
     @abstractmethod
     def _verify_model_props(self, model: _BaseModel, original_data: Mapping) -> None:
