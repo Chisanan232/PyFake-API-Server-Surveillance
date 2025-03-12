@@ -125,7 +125,6 @@ def test_entire_flow_with_not_exist_config(
         assert len(commit_files) > 0
         assert str(filepath) in commit_files
 
-        # mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
         mock_remote_push.assert_called_once_with(
             refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True
         )

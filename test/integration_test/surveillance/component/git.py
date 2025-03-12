@@ -155,7 +155,6 @@ class TestGitOperation:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
             assert str(filepath) in committed_files
 
-            # mock_remote.push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
             mock_remote_push.assert_called_once()
         finally:
             committed_files = list(map(lambda i: i.a_path, real_repo.index.diff(real_repo.head.commit)))
