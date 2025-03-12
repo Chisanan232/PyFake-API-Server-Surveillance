@@ -14,7 +14,10 @@ except ImportError:
 import pytest
 from fake_api_server._utils.file.operation import YAML
 
-from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey, EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import (
+    ConfigurationKey,
+    EnvironmentVariableKey,
+)
 from fake_api_server_plugin.ci.surveillance.model.action import ActionInput
 
 # isort: off

@@ -6,7 +6,10 @@ from ci.surveillance.model.action import ActionInput
 from ci.surveillance.model.config import FakeAPIConfigSetting
 from fake_api_server.command.subcommand import SubCommandLine
 
-from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey, EnvironmentVariableKey
+from fake_api_server_plugin.ci.surveillance.model import (
+    ConfigurationKey,
+    EnvironmentVariableKey,
+)
 from fake_api_server_plugin.ci.surveillance.model.config import SurveillanceConfig
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
     SubCmdConfig,

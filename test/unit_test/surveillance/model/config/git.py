@@ -91,7 +91,5 @@ class TestGitInfo(_BaseModelTestSuite):
         original_git_commit_data = original_data[ConfigurationKey.GIT_COMMIT.value]
         original_git_commit_author_data = original_git_commit_data[ConfigurationKey.GIT_AUTHOR.value]
         assert model.commit.author.name == original_git_commit_author_data[ConfigurationKey.GIT_AUTHOR_NAME.value]
-        assert (
-            model.commit.author.email == original_git_commit_author_data[ConfigurationKey.GIT_AUTHOR_EMAIL.value]
-        )
+        assert model.commit.author.email == original_git_commit_author_data[ConfigurationKey.GIT_AUTHOR_EMAIL.value]
         assert model.commit.message == original_git_commit_data[ConfigurationKey.GIT_COMMIT_MSG.value]

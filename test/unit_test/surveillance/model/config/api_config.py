@@ -40,9 +40,7 @@ class TestPullApiDocConfigArgs(_BaseModelTestSuite):
         )
         assert model.base_file_path == original_data[ConfigurationKey.BASE_FILE_PATH.value]
         assert model.base_url == original_data[ConfigurationKey.BASE_URL.value]
-        assert model.divide_api == ast.literal_eval(
-            str(original_data[ConfigurationKey.DIVIDE_API.value]).capitalize()
-        )
+        assert model.divide_api == ast.literal_eval(str(original_data[ConfigurationKey.DIVIDE_API.value]).capitalize())
         assert model.divide_http == ast.literal_eval(
             str(original_data[ConfigurationKey.DIVIDE_HTTP.value]).capitalize()
         )

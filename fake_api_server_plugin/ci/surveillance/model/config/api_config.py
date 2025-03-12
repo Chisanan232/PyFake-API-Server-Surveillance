@@ -31,12 +31,8 @@ class PullApiDocConfigArgs(_BaseModel):
             base_url=data[ConfigurationKey.BASE_URL.value],
             divide_api=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_API.value]).capitalize()),
             divide_http=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP.value]).capitalize()),
-            divide_http_request=ast.literal_eval(
-                str(data[ConfigurationKey.DIVIDE_HTTP_REQUEST.value]).capitalize()
-            ),
-            divide_http_response=ast.literal_eval(
-                str(data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
-            ),
+            divide_http_request=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_REQUEST.value]).capitalize()),
+            divide_http_response=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()),
             dry_run=ast.literal_eval(str(data[ConfigurationKey.DRY_RUN.value]).capitalize()),
         )
 

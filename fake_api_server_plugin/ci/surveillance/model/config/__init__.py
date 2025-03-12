@@ -21,9 +21,7 @@ class SurveillanceConfig(_BaseModel):
     def deserialize(data: Mapping) -> "SurveillanceConfig":
         return SurveillanceConfig(
             api_doc_url=data[ConfigurationKey.API_DOC_URL.value],
-            fake_api_server=FakeAPIConfigSetting.deserialize(
-                data.get(ConfigurationKey.FAKE_API_SERVER.value, {})
-            ),
+            fake_api_server=FakeAPIConfigSetting.deserialize(data.get(ConfigurationKey.FAKE_API_SERVER.value, {})),
             git_info=GitInfo.deserialize(data.get(ConfigurationKey.GIT_INFO.value, {})),
             github_info=GitHubInfo.deserialize(data.get(ConfigurationKey.GITHUB_INFO.value, {})),
             accept_config_not_exist=data.get(ConfigurationKey.ACCEPT_CONFIG_NOT_EXIST.value, False),

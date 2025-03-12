@@ -36,10 +36,7 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
 
         # fake-api-server setting
         original_fake_api_server_config = original_data[ConfigurationKey.FAKE_API_SERVER.value]
-        assert (
-            model.fake_api_server.server_type
-            == original_fake_api_server_config[ConfigurationKey.SERVER_TYPE.value]
-        )
+        assert model.fake_api_server.server_type == original_fake_api_server_config[ConfigurationKey.SERVER_TYPE.value]
         # for subcommand line *pull* options
         original_subcmd_pull = original_fake_api_server_config[ConfigurationKey.SUBCMD.value][
             SubCommandLine.Pull.value
@@ -52,31 +49,18 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
         assert model.git_info.repository == original_git_info_data[ConfigurationKey.GIT_REPOSITORY.value]
         original_git_commit_data = original_git_info_data[ConfigurationKey.GIT_COMMIT.value]
         original_git_author_data = original_git_commit_data[ConfigurationKey.GIT_AUTHOR.value]
-        assert (
-            model.git_info.commit.author.name == original_git_author_data[ConfigurationKey.GIT_AUTHOR_NAME.value]
-        )
-        assert (
-            model.git_info.commit.author.email
-            == original_git_author_data[ConfigurationKey.GIT_AUTHOR_EMAIL.value]
-        )
+        assert model.git_info.commit.author.name == original_git_author_data[ConfigurationKey.GIT_AUTHOR_NAME.value]
+        assert model.git_info.commit.author.email == original_git_author_data[ConfigurationKey.GIT_AUTHOR_EMAIL.value]
         assert model.git_info.commit.message == original_git_commit_data[ConfigurationKey.GIT_COMMIT_MSG.value]
 
         # github info
         original_github_pr_info_data = original_data[ConfigurationKey.GITHUB_INFO.value][
             ConfigurationKey.GITHUB_PULL_REQUEST.value
         ]
-        assert (
-            model.github_info.pull_request.title == original_github_pr_info_data[ConfigurationKey.PR_TITLE.value]
-        )
+        assert model.github_info.pull_request.title == original_github_pr_info_data[ConfigurationKey.PR_TITLE.value]
         assert model.github_info.pull_request.body == original_github_pr_info_data[ConfigurationKey.PR_BODY.value]
-        assert (
-            model.github_info.pull_request.draft
-            == original_github_pr_info_data[ConfigurationKey.PR_IS_DRAFT.value]
-        )
-        assert (
-            model.github_info.pull_request.labels
-            == original_github_pr_info_data[ConfigurationKey.PR_LABELS.value]
-        )
+        assert model.github_info.pull_request.draft == original_github_pr_info_data[ConfigurationKey.PR_IS_DRAFT.value]
+        assert model.github_info.pull_request.labels == original_github_pr_info_data[ConfigurationKey.PR_LABELS.value]
 
         # operation of action in CI
         assert model.accept_config_not_exist == ast.literal_eval(

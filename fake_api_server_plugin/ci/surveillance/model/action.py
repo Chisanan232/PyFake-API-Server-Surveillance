@@ -3,7 +3,7 @@ from typing import Mapping
 
 from fake_api_server._utils.file.operation import YAML
 
-from . import ConfigurationKey, EnvironmentVariableKey
+from . import EnvironmentVariableKey
 from ._base import _BaseModel
 from .config import SurveillanceConfig
 
