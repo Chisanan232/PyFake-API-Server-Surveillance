@@ -51,27 +51,19 @@ def test_entire_flow_with_not_exist_config(
         filepath.touch()
     assert filepath.exists(), "File doesn't be created. Please check it."
 
-    print("[DEBUG] Initial git repository")
     repo = Repo("./")
     now_in_ci_runtime_env = ast.literal_eval(str(os.getenv("GITHUB_ACTIONS")).capitalize())
-    print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
-    print(f"[DEBUG] now_in_ci_runtime_env: {now_in_ci_runtime_env}")
     original_branch = repo.active_branch.name
-    print(f"[DEBUG] os.getenv('GITHUB_ACTIONS'): {os.getenv('GITHUB_ACTIONS')}")
-    print(f"[DEBUG] current all git branches: {[b.name for b in repo.branches]}")
     if now_in_ci_runtime_env and original_branch not in [b.name for b in repo.branches]:
-        print(f"[DEBUG] create and switch git branch {original_branch}")
         repo.git.checkout("-b", original_branch)
 
     try:
-        print("[DEBUG] Initial git remote")
         # TODO: change the repo to sample project.
         if fake_git_data.default_remote_name() not in repo.remotes:
             repo.create_remote(
                 name=fake_git_data.default_remote_name(), url=f"https://github.com/{fake_data.repo()}.git"
             )
 
-        print("[DEBUG] Mock git remote")
         push_info_list = PushInfoList()
         push_info = Mock()
         push_info.flags = 0
@@ -99,7 +91,6 @@ def test_entire_flow_with_not_exist_config(
         mock_repo.create_pull.return_value = mock_pr
 
         # when
-        print("[DEBUG] Run target function")
         data = fake_data.surveillance_config(file_path=filepath, base_test_dir=base_test_dir)
         mock_request.return_value = dummy_api_doc_config_resp.generate(
             request_url=data[ConfigurationKey.API_DOC_URL.value],
@@ -113,7 +104,6 @@ def test_entire_flow_with_not_exist_config(
                 expect_head_branch = surveillance.git_operation.fake_api_server_monitor_git_branch
 
         # should
-        print("[DEBUG] Checkin commit running state")
         git_info = fake_data.git_operation_info()
         assert (
             repo.head.commit.author.name
@@ -135,7 +125,6 @@ def test_entire_flow_with_not_exist_config(
         assert len(commit_files) > 0
         assert str(filepath) in commit_files
 
-        print("[DEBUG] Checkin git push running state")
         # mock_remote_push.assert_called_once_with(f"{default_remote}:{git_branch_name}")
         mock_remote_push.assert_called_once_with(
             refspec=f"HEAD:refs/heads/{fake_git_data.fake_api_server_monitor_branch_name()}", force=True
@@ -151,9 +140,6 @@ def test_entire_flow_with_not_exist_config(
             draft=False,
         )
         mock_pr.add_to_labels.assert_has_calls(calls=[call(*(mock_label,))])
-    except Exception as e:
-        print(f"[ERROR] {e}")
-        raise e
     finally:
         committed_files = list(map(lambda i: i.a_path, repo.index.diff(repo.head.commit)))
         if not now_in_ci_runtime_env and str(filepath) in committed_files:
