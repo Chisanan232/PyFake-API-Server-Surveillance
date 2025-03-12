@@ -16,17 +16,19 @@ A CI tool for having surveillance at the specific API end points and updating.
 
 ## Overview
 
-Do you ever have experience about missing the change of Back-End side and cause break some feature in Font-End side? This
-tool will help you keep the API change under surveillance. And reach to update the API information is always the latest
-version which is the same with Back-End side.
+Do you ever have experience about Back-End side does something change on the sly, but they don't sync the change with
+Font-End side and cause it be broken? Even you may have tool which could fake an API server, but you still need to update
+it manually (if you know the change). This tool Fake-API-Server-Surveillance targets to resolve this issue by everyone
+could automate the process about monitoring and updating the fake server which be built by [**Fake-API-Server**].
 
+[**Fake-API-Server**]: https://github.com/Chisanan232/PyFake-API-Server
 
 ## Python versions support
 
-The code base of **_PyFake-API-Server-Surveillance_** depends on another library [**_PyMock-Server_**](https://github.com/Chisanan232/PyMock-Server).
+The code base of **_PyFake-API-Server-Surveillance_** depends on another library [**Fake-API-Server**].
 So it also only supports Python 3.8 version up.
 
-[![Supported Versions](https://img.shields.io/pypi/pyversions/PyFake-API-Server-Surveillance.svg?logo=python&logoColor=FBE072)](https://pypi.org/project/PyFake-API-Server-Surveillance)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/fake-api-server-surveillance.svg?logo=python&logoColor=FBE072)](https://pypi.org/project/fake-api-server-surveillance)
 
 
 ## Quickly Start
