@@ -10,15 +10,15 @@ from .._base import _BaseModel
 
 @dataclass
 class PullApiDocConfigArgs(_BaseModel):
-    config_path: str
-    include_template_config: bool
-    base_file_path: str
-    base_url: str
-    dry_run: bool
-    divide_api: bool
-    divide_http: bool
-    divide_http_request: bool
-    divide_http_response: bool
+    config_path: str = "./api.yaml"
+    include_template_config: bool = False
+    base_file_path: str = "./"
+    base_url: str = ""
+    dry_run: bool = False
+    divide_api: bool = False
+    divide_http: bool = False
+    divide_http_request: bool = False
+    divide_http_response: bool = False
 
     @staticmethod
     def deserialize(data: Mapping) -> "PullApiDocConfigArgs":
