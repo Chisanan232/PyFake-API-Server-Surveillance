@@ -1,11 +1,12 @@
 import ast
 import os
 from pathlib import Path
-from typing import Optional, Set, Union
+from typing import Optional, Set, Union, cast
 
+from fake_api_server.command.subcommand import SubCommandLine
 from git import Commit, Remote, Repo
 
-from ..model.action import ActionInput
+from ..model.config import PullApiDocConfigArgs, SurveillanceConfig
 
 
 class GitOperation:
@@ -63,12 +64,12 @@ class GitOperation:
     def _reset_all_staged_files(self) -> None:
         self._all_staged_files.clear()
 
-    def version_change(self, action_inputs: ActionInput) -> bool:
+    def version_change(self, surveillance_config: SurveillanceConfig) -> bool:
         # Initial a git project
-        self.repository: Repo = self._init_git(action_inputs)
+        self.repository: Repo = self._init_git(surveillance_config)
 
         # Initial git remote setting
-        git_remote = self._init_git_remote(action_inputs, self.default_remote_name)
+        git_remote = self._init_git_remote(surveillance_config, self.default_remote_name)
 
         # Sync up the code version from git
         print("Fetch to update the git ...")
@@ -78,7 +79,7 @@ class GitOperation:
         self._switch_git_branch(self.fake_api_server_monitor_git_branch)
 
         # Get all files in the folder
-        all_files = self._get_all_fake_api_server_configs(action_inputs)
+        all_files = self._get_all_fake_api_server_configs(surveillance_config)
         print(f"Found files: {all_files}")
 
         # Check untracked files
@@ -94,7 +95,7 @@ class GitOperation:
 
         if len(self._all_staged_files) > 0:
             # Commit the update change
-            commit = self._commit_changes(action_inputs)
+            commit = self._commit_changes(surveillance_config)
 
             # Push the change to git server
             self._push_to_remote(git_remote)
@@ -106,28 +107,32 @@ class GitOperation:
             print("Don't have any files be added. Won't commit the change.")
             return False
 
-    def _init_git(self, action_inputs: ActionInput) -> Repo:
-        assert os.path.exists(
-            action_inputs.subcmd_pull_args.config_path
-        ), "PyFake-API-Server configuration is required. Please check it."
+    def _init_git(self, surveillance_config: SurveillanceConfig) -> Repo:
+        subcmd_args: PullApiDocConfigArgs = cast(
+            PullApiDocConfigArgs,
+            surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
+        )
+        assert os.path.exists(subcmd_args.config_path), "PyFake-API-Server configuration is required. Please check it."
         return Repo("./")
 
-    def _init_git_remote(self, action_inputs: ActionInput, remote_name: str) -> Remote:
+    def _init_git_remote(self, surveillance_config: SurveillanceConfig, remote_name: str) -> Remote:
         if remote_name not in self.repository.remotes:
             print("[DEBUG] Target git remote setting doesn't exist, create one.")
             github_access_token = os.environ["GITHUB_TOKEN"]
             assert github_access_token, "Miss GitHub token"
-            remote_url = f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+            remote_url = (
+                f"https://x-access-token:{github_access_token}@github.com/{surveillance_config.git_info.repository}"
+            )
             git_remote = self.repository.create_remote(name=remote_name, url=remote_url)
         else:
             git_remote = self.repository.remote(name=remote_name)
             print(f"[DEBUG] git_remote.url: {git_remote.url}")
-            if action_inputs.git_info.repository not in git_remote.url:
+            if surveillance_config.git_info.repository not in git_remote.url:
                 print("[DEBUG] Target git remote URL is not as expect, modify the URL.")
                 github_access_token = os.environ["GITHUB_TOKEN"]
                 assert github_access_token, "Miss GitHub token"
                 remote_url = (
-                    f"https://x-access-token:{github_access_token}@github.com/{action_inputs.git_info.repository}"
+                    f"https://x-access-token:{github_access_token}@github.com/{surveillance_config.git_info.repository}"
                 )
                 git_remote.set_url(new_url=remote_url)
             else:
@@ -141,9 +146,13 @@ class GitOperation:
             else:
                 self.repository.git.checkout("-b", git_ref)
 
-    def _get_all_fake_api_server_configs(self, action_inputs: ActionInput) -> Set[Path]:
+    def _get_all_fake_api_server_configs(self, surveillance_config: SurveillanceConfig) -> Set[Path]:
+        subcmd_args: PullApiDocConfigArgs = cast(
+            PullApiDocConfigArgs,
+            surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
+        )
         all_files: Set[Path] = set()
-        for file_path in Path(action_inputs.subcmd_pull_args.base_file_path).rglob("*.yaml"):
+        for file_path in Path(subcmd_args.base_file_path).rglob("*.yaml"):
             if file_path.is_file():
                 all_files.add(file_path)
         return all_files
@@ -165,10 +174,10 @@ class GitOperation:
                 for one_file in Path(file).rglob("*.yaml"):
                     _add_file(one_file)
 
-    def _commit_changes(self, action_inputs: ActionInput) -> Commit:
+    def _commit_changes(self, surveillance_config: SurveillanceConfig) -> Commit:
         commit = self.repository.index.commit(
-            author=action_inputs.git_info.commit.author.serialize_for_git(),
-            message=action_inputs.git_info.commit.message,
+            author=surveillance_config.git_info.commit.author.serialize_for_git(),
+            message=surveillance_config.git_info.commit.message,
         )
         print("Commit the change.")
         self._reset_all_staged_files()

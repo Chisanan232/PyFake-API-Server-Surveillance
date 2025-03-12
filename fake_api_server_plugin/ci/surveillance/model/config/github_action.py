@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass, field
 from typing import Mapping, Optional
 
-from ._base import _BaseModel
+from .._base import _BaseModel
 
 
 @dataclass
