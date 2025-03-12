@@ -1,0 +1,26 @@
+api-doc-url: 'http://127.0.0.1:1111/api-doc'
+fake-api-server:
+  server-type: rest-server
+  subcmd:
+    pull:
+      args:
+        - --config-path=./test/_values/_only_for_ci/rest-server/api.yaml
+        - --include-template-config
+        - --base-file-path=./test/_values/_only_for_ci/rest-server/
+        - --base-url=/test/v1
+        - --divide-api
+git-info:
+  repo: 'Chisanan232/PyFake-API-Server-Surveillance'
+  commit:
+    author:
+      name: 'Chisanan232'
+      email: 'bulls23mj1991@gmail.com+e2e_test'
+    message: ' 🧪 test commit message.'
+github-info:
+  pull-request:
+    title: '🤖 Test the PR feature by end-to-end test'
+    body: '🚧 test content ...'
+    draft: true
+    labels:
+      - '🤖 test by e2e'
+accept_config_not_exist: true
