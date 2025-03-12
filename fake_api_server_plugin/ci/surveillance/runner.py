@@ -32,24 +32,27 @@ class FakeApiServerSurveillance:
     def monitor(self) -> None:
         print("monitor the github repro ...")
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
+        surveillance_config = self._deserialize_surveillance_config(action_inputs)
 
         print("try to get the latest api doc config ...")
-        new_api_doc_config = self._get_latest_api_doc_config(action_inputs)
+        new_api_doc_config = self._get_latest_api_doc_config(surveillance_config)
         print("compare the latest api doc config with current config ...")
-        has_api_change = self._compare_with_current_config(action_inputs, new_api_doc_config)
+        has_api_change = self._compare_with_current_config(surveillance_config, new_api_doc_config)
         if has_api_change:
             print("has something change and will create a pull request")
-            self._process_api_change(action_inputs, new_api_doc_config)
+            self._process_api_change(surveillance_config, new_api_doc_config)
         else:
             print("nothing change and won't do anything..")
-            self._process_no_api_change(action_inputs)
+            self._process_no_api_change(surveillance_config)
 
     def _get_action_inputs(self) -> Mapping:
         return os.environ
 
-    def _deserialize_action_inputs(self, action_inputs: Mapping) -> SurveillanceConfig:
+    def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
         print(f"[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
-        action_input = ActionInput.deserialize(action_inputs)
+        return ActionInput.deserialize(action_inputs)
+
+    def _deserialize_surveillance_config(self, action_input: ActionInput):
         print(f"[DEBUG in _deserialize_action_inputs] read surveillance config ...")
         surveillance_config = YAML().read(action_input.config_path)
         print(f"[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
