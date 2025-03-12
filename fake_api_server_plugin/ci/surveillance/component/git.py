@@ -1,7 +1,7 @@
 import ast
 import os
 from pathlib import Path
-from typing import Optional, Set, Union
+from typing import Optional, Set, Union, cast
 
 from fake_api_server.command.subcommand import SubCommandLine
 from git import Commit, Remote, Repo
@@ -108,8 +108,9 @@ class GitOperation:
             return False
 
     def _init_git(self, action_inputs: SurveillanceConfig) -> Repo:
-        subcmd_args: PullApiDocConfigArgs = action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(
-            PullApiDocConfigArgs
+        subcmd_args: PullApiDocConfigArgs = cast(
+            PullApiDocConfigArgs,
+            action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
         )
         assert os.path.exists(subcmd_args.config_path), "PyFake-API-Server configuration is required. Please check it."
         return Repo("./")

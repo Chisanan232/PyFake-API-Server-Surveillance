@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Mapping, Optional, cast
+from typing import Mapping, cast
 
 import urllib3
 from fake_api_server import FakeAPIConfig
@@ -59,14 +59,20 @@ class FakeApiServerSurveillance:
         print(f"[DEBUG in _get_latest_api_doc_config] action_inputs.api_doc_url: {action_inputs.api_doc_url}")
         response = urllib3.request(method=HTTPMethod.GET, url=action_inputs.api_doc_url)
         current_api_doc_config = deserialize_api_doc_config(response.json())
-        subcmd_args = cast(PullApiDocConfigArgs, action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs))
+        subcmd_args = cast(
+            PullApiDocConfigArgs,
+            action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
+        )
         return current_api_doc_config.to_api_config(base_url=subcmd_args.base_url)
 
     def _compare_with_current_config(
         self, action_inputs: SurveillanceConfig, new_api_doc_config: FakeAPIConfig
     ) -> bool:
         has_api_change = False
-        subcmd_args = cast(PullApiDocConfigArgs, action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs))
+        subcmd_args = cast(
+            PullApiDocConfigArgs,
+            action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
+        )
         fake_api_server_config = subcmd_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
@@ -93,7 +99,10 @@ class FakeApiServerSurveillance:
         return has_api_change
 
     def _process_api_change(self, action_inputs, new_api_doc_config) -> None:
-        subcmd_args = cast(PullApiDocConfigArgs, action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs))
+        subcmd_args = cast(
+            PullApiDocConfigArgs,
+            action_inputs.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
+        )
         self._update_api_doc_config(subcmd_args, new_api_doc_config)
         print("commit the different and push to remote repository")
         self._process_versioning(action_inputs)
