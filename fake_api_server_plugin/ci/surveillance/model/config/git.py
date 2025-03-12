@@ -15,8 +15,8 @@ class GitAuthor(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitAuthor":
         return GitAuthor(
-            name=data[EnvironmentVariableKey.GIT_AUTHOR_NAME.value],
-            email=data[EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value],
+            name=data.get(EnvironmentVariableKey.GIT_AUTHOR_NAME.value, "Fake-API-Server [bot]"),
+            email=data.get(EnvironmentVariableKey.GIT_AUTHOR_EMAIL.value, ""),
         )
 
     def serialize_for_git(self) -> Actor:
@@ -35,7 +35,7 @@ class GitCommit(_BaseModel):
     def deserialize(data: Mapping) -> "GitCommit":
         return GitCommit(
             author=GitAuthor.deserialize(data.get(EnvironmentVariableKey.GIT_AUTHOR.value, {})),
-            message=data[EnvironmentVariableKey.GIT_COMMIT_MSG.value],
+            message=data.get(EnvironmentVariableKey.GIT_COMMIT_MSG.value, "✏️ Update the API interface settings."),
         )
 
 
