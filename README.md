@@ -33,21 +33,91 @@ So it also only supports Python 3.8 version up.
 
 ## Quickly Start
 
-Here section would lead you quickly start to set up your first one application by **_PyFake-API-Server-Surveillance_** for
-keep target API under surveillance easily.
+Here section would lead you quickly start to set up your first automation with **_PyFake-API-Server-Surveillance_** for
+keep monitoring Back-End side and keep the fake server always be the latest version under surveillance easily.
 
-In basically, it has 3 steps: install the package, configure settings about the APIs for mocking and run command.
+In basically, it has 3 steps: prepare your fake server, configure **_PyFake-API-Server-Surveillance_** and set action for
+GitHub Action.
 
-* [Configure](#configure-github-action-ci-setting)
-* [Wait and run](#wait-and-run)
+* [Prepare Fake-API-Server](#prepare-fake-api-server)
+* [Configure](#configure-fake-api-server-surveillance)
+* [Set action](#configure-github-action-ci-setting)
+
+### Prepare **Fake-API-Server**
+
+First of all, this tool only for [**Fake-API-Server**]. So you must have a GitHub project which records the details
+configuration of [**Fake-API-Server**].
+
+### Configure **Fake-API-Server-Surveillance**
+
+The detail settings of **Fake-API-Server-Surveillance** would be configured by YAML file. Here provide a sample
+configuration:
+
+```yaml
+api-doc-url: 'http://127.0.0.1:1111/swagger-api'
+fake-api-server:
+  server-type: rest-server
+  subcmd:
+    pull:
+      args:
+        - --config-path=./api.yaml
+        - --include-template-config
+        - --base-file-path=./
+        - --base-url=/test/v1
+        - --divide-api
+git-info:
+  repo: 'TestUser/Back-End-Project'
+  commit:
+    author:
+      name: 'TestUser'
+      email: 'test@gmail.com'
+    message: ' 🧪 test commit message.'
+github-info:
+  pull-request:
+    title: '🤖 Update API configuration'
+    body: '🚧 test content ...'
+    draft: true
+    labels:
+      - '🤖 update by bot'
+```
 
 ### Configure GitHub Action CI setting
 
-🚧 coming soon.
+Add a single CI workflow which only for monitoring Back-End side change as a scheduler:
 
-### Wait and Run
+```yaml
+name: Monitor Back-End API interface
 
-🚧 coming soon.
+on:
+  # In generally, it's reasonable that using schedule feature of GitHub Action to monitor the Back-End side API change..
+  schedule:
+    - cron: "15 4,5 * * *"   # <=== Change this value
+
+permissions:
+  contents: write  # Need this to push commits
+  pull-requests: write  # Need this to open pull request
+
+jobs:
+  monitor-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      # Clone the fake-api-server config
+      - name: Clone project
+        uses: actions/checkout@v4
+
+      # Monitor and update the config if it needs by opening pull request
+      - name: Run Fake-API-Server-Surveillance
+        uses: ./
+        with:
+          config-path: <your fake-api-server-surveillance config>
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Congratulation! Now, you could just have a coffee and do anything you want to do without being worry about the fake
+server be expired. The CI workflow would be the trustworthy partner to help you keep monitoring and updating the fake
+server if it needs without missing any change.
+
 
 ## Documentation
 
