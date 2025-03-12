@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class EnvironmentVariableKey(Enum):
-    SURVEILLANCE_CONFIG_PATH = "SURVEILLANCE_CONFIG_PATH"
+    SURVEILLANCE_CONFIG_PATH = "CONFIG_PATH"
 
     # API documentation info
     API_DOC_URL = "api-doc-url"
