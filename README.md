@@ -67,8 +67,8 @@ Currently, it won't have documentation. But it would have soon.
 
 **_PyFake-API-Server-Surveillance_** still a young open source which keep growing. Here's its download state:
 
-[![Downloads](https://pepy.tech/badge/PyFake-API-Server-Surveillance)](https://pepy.tech/project/PyFake-API-Server-Surveillance)
-[![Downloads](https://pepy.tech/badge/PyFake-API-Server-Surveillance/month)](https://pepy.tech/project/PyFake-API-Server-Surveillance)
+[![Downloads](https://pepy.tech/badge/fake-api-server-surveillance)](https://pepy.tech/project/fake-api-server-surveillance)
+[![Downloads](https://pepy.tech/badge/fake-api-server-surveillance/month)](https://pepy.tech/project/fake-api-server-surveillance)
 
 
 ## License
