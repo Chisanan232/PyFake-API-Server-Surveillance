@@ -26,7 +26,5 @@ class SurveillanceConfig(_BaseModel):
             ),
             git_info=GitInfo.deserialize(data.get(EnvironmentVariableKey.GIT_INFO.value, {})),
             github_info=GitHubInfo.deserialize(data.get(EnvironmentVariableKey.GITHUB_INFO.value, {})),
-            accept_config_not_exist=ast.literal_eval(
-                str(data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]).capitalize()
-            ),
+            accept_config_not_exist=data.get(EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value, False),
         )
