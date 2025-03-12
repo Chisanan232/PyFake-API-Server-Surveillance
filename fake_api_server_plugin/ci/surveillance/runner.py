@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import Mapping, cast
@@ -5,7 +6,9 @@ from typing import Mapping, cast
 import urllib3
 from fake_api_server import FakeAPIConfig
 from fake_api_server.command.subcommand import SubCommandLine
+from fake_api_server.model import deserialize_api_doc_config, load_config
 
+from .log import init_logger_config
 from .model.action import ActionInput
 
 try:
@@ -13,13 +16,13 @@ try:
 except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
-from fake_api_server.model import deserialize_api_doc_config, load_config
-
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
 from .component.pull import SavingConfigComponent
 from .model.config import PullApiDocConfigArgs, SurveillanceConfig
 from .model.config.github_action import get_github_action_env
+
+logger = logging.getLogger(__name__)
 
 
 class FakeApiServerSurveillance:
@@ -29,35 +32,33 @@ class FakeApiServerSurveillance:
         self.github_operation: GitHubOperation = GitHubOperation()
 
     def monitor(self) -> None:
-        print("monitor the github repro ...")
+        logger.info("Start to monitor the github repro ...")
         action_inputs = self._deserialize_action_inputs(self._get_action_inputs())
         surveillance_config = self._deserialize_surveillance_config(action_inputs)
 
-        print("try to get the latest api doc config ...")
+        logger.info("Try to get the latest API documentation configuration ...")
         new_api_doc_config = self._get_latest_api_doc_config(surveillance_config)
-        print("compare the latest api doc config with current config ...")
+        logger.info("Compare the latest API documentation configuration with current configuration ...")
         has_api_change = self._compare_with_current_config(surveillance_config, new_api_doc_config)
         if has_api_change:
-            print("has something change and will create a pull request")
+            logger.info("Has something change and will create a pull request.")
             self._process_api_change(surveillance_config, new_api_doc_config)
         else:
-            print("nothing change and won't do anything..")
+            logger.info("Nothing change and won't do anything.")
             self._process_no_api_change(surveillance_config)
 
     def _get_action_inputs(self) -> Mapping:
         return os.environ
 
     def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
-        print("[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
         return ActionInput.deserialize(action_inputs)
 
     def _deserialize_surveillance_config(self, action_input: ActionInput) -> SurveillanceConfig:
-        print("[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
         return action_input.get_config()
 
     def _get_latest_api_doc_config(self, surveillance_config: SurveillanceConfig) -> FakeAPIConfig:
-        print(f"[DEBUG in _get_latest_api_doc_config] action_inputs.api_doc_url: {surveillance_config.api_doc_url}")
         response = urllib3.request(method=HTTPMethod.GET, url=surveillance_config.api_doc_url)
+        logger.info(f"Get the API documentation configuration with response status code: {response.status}")
         current_api_doc_config = deserialize_api_doc_config(response.json())
         subcmd_args = cast(
             PullApiDocConfigArgs,
@@ -104,7 +105,6 @@ class FakeApiServerSurveillance:
             surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
         )
         self._update_api_doc_config(subcmd_args, new_api_doc_config)
-        print("commit the different and push to remote repository")
         self._process_versioning(surveillance_config)
         self._notify(surveillance_config)
 
@@ -113,15 +113,13 @@ class FakeApiServerSurveillance:
 
     def _process_versioning(self, surveillance_config: SurveillanceConfig) -> None:
         has_change = self.git_operation.version_change(surveillance_config)
-        print(f"[DEBUG] has_change: {has_change}")
         if has_change:
-            print(f"has something change and will create a pull request: {has_change}")
+            logger.info("Has something change and will create a pull request.")
             github_action_env = get_github_action_env()
             with self.github_operation(
                 repo_owner=github_action_env.repository_owner_name, repo_name=github_action_env.repository_name
             ):
                 pull_request_info = surveillance_config.github_info.pull_request
-                print(f"[DEBUG] pull_request_info: {pull_request_info}")
                 self.github_operation.create_pull_request(
                     title=pull_request_info.title,
                     body=pull_request_info.body,
@@ -139,4 +137,5 @@ class FakeApiServerSurveillance:
 
 
 def run() -> None:
+    init_logger_config()
     FakeApiServerSurveillance().monitor()
