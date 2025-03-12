@@ -48,11 +48,11 @@ class FakeApiServerSurveillance:
         return os.environ
 
     def _deserialize_action_inputs(self, action_inputs: Mapping) -> ActionInput:
-        print(f"[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
+        print("[DEBUG in _deserialize_action_inputs] deserialize action inputs ... ")
         return ActionInput.deserialize(action_inputs)
 
     def _deserialize_surveillance_config(self, action_input: ActionInput):
-        print(f"[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
+        print("[DEBUG in _deserialize_action_inputs] deserialize surveillance config ...")
         return action_input.get_config()
 
     def _get_latest_api_doc_config(self, surveillance_config: SurveillanceConfig) -> FakeAPIConfig:
