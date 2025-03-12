@@ -2,7 +2,8 @@ import glob
 from pathlib import Path
 from typing import Mapping, Type
 from unittest.mock import patch
-from yaml import dump, load
+
+from yaml import load
 
 try:
     from yaml import CDumper as Dumper
@@ -11,7 +12,6 @@ except ImportError:
     from yaml import Dumper, Loader  # type: ignore
 
 import pytest
-
 from fake_api_server._utils.file.operation import YAML
 
 from fake_api_server_plugin.ci.surveillance.model import EnvironmentVariableKey
@@ -62,4 +62,7 @@ class TestActionInput(_BaseModelTestSuite):
             if EnvironmentVariableKey.GITHUB_INFO.value in config_data.keys() is not None:
                 assert surveillance_config.fake_api_server
             if EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value in config_data.keys() is not None:
-                assert surveillance_config.accept_config_not_exist == config_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]
+                assert (
+                    surveillance_config.accept_config_not_exist
+                    == config_data[EnvironmentVariableKey.ACCEPT_CONFIG_NOT_EXIST.value]
+                )
