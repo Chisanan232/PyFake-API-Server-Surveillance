@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "fake-api-server-surveillance"
-version = "0.1.0"
+version = "0.0.0"
 description = "🤖 A CI tool for having surveillance at the specific API end points and updating."
 authors = [
     { name = "Liu, Bryant", email = "chi10211201@cycu.org.tw" }
@@ -41,7 +41,7 @@ dependencies = [
 
 [tool.poetry]
 name = "fake-api-server-surveillance"
-version = "0.1.0"
+version = "0.0.0"
 description = "🤖 A CI tool for having surveillance at the specific API end points and updating."
 authors = [
     "Liu, Bryant <chi10211201@cycu.org.tw>",

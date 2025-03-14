@@ -43,7 +43,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install -U pip
-          pip3 install -U "fake-api-server[mini]"
+          pip3 install -U "fake-api-server-surveillance"
           pip3 list
 
       - name: Install Python dependencies about Poetry
