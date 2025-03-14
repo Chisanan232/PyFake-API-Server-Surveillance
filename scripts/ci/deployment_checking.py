@@ -2,7 +2,8 @@ import subprocess
 from importlib.metadata import PackageNotFoundError, version
 
 _RELEASE_TYPE: str = "python-package"
-_LIB_NAME: str = "fake_api_server"
+_PyPI_LIB_NAME: str = "fake_api_server_surveillance"
+_SRC_LIB_NAME: str = "fake_api_server_plugin/ci/surveillance"
 _SOFTWARE_VERSION_FORMAT: str = "general-3"
 # NOTE: If you're developing or testing something, you could turn this *dry run mode* as *true*
 _DRY_RUN_MODE: str = "false"
@@ -10,7 +11,7 @@ _DRY_RUN_MODE: str = "false"
 
 def get_lib_ver() -> str:
     try:
-        return version(_LIB_NAME)
+        return version(_PyPI_LIB_NAME)
     except PackageNotFoundError:
         # Doesn't have the Python package
         return "0"
@@ -18,7 +19,7 @@ def get_lib_ver() -> str:
 
 def get_current_lib_ver() -> str:
     cmd_running_result: subprocess.CompletedProcess = subprocess.run(
-        f'bash ./scripts/ci/generate-software-version.sh -r "{_RELEASE_TYPE}" -p "{_LIB_NAME}" -v "{_SOFTWARE_VERSION_FORMAT}" -d "{_DRY_RUN_MODE}"',
+        f'bash ./scripts/ci/generate-software-version.sh -r "{_RELEASE_TYPE}" -p "{_SRC_LIB_NAME}" -v "{_SOFTWARE_VERSION_FORMAT}" -d "{_DRY_RUN_MODE}"',
         shell=True,
         capture_output=True,
     )
