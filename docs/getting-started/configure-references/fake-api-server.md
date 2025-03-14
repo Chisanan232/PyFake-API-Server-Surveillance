@@ -17,12 +17,12 @@ Which server type it should use to identify the target API server configuration.
 
 ### ``subcmd``
 
-Which subcommand line for customizing settings. Please refer to [command line details] of **_PyFake-API-Server_** to
-set value.
+This section is responsible for the specific subcommand line setting.
 
 #### ``subcmd.<subcommand line>``
 
-This section is responsible for the specific subcommand line setting.
+Which subcommand line for customizing settings. Please refer to [command line details] of **_PyFake-API-Server_** to
+set value.
 
 
 ##### ``subcmd.<subcommand line>.args``
