@@ -121,8 +121,14 @@ server if it needs without missing any change.
 
 ## Documentation
 
-🚧 coming soon.
-Currently, it won't have documentation. But it would have soon.
+The [documentation](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/) contains more details, demonstrations and anything you need about **_PyFake-API-Server-Surveillance_**.
+
+* [Getting start](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/getting-started/version-requirements/) helps you start to prepare environment, install dependencies and configure the detail settings with explanation in detail.
+    * How to [configure the details of surveillance](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/getting-started/configure-your-api/)?
+    * I have configuration right now. How can I [set up a monitoring automation by CI](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/getting-started/setup-web-server/)?
+* Want to learn more how to use it?
+    * Want to know more [detail settings](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/configure-references/config-basic-info/) to customize surveillance?
+* About the [release notes](https://chisanan232.github.io/PyFake-API-Server-Surveillance/latest/release_note/).
 
 
 ## Coding style and following rules
