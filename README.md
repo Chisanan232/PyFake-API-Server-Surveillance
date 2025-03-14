@@ -121,6 +121,8 @@ server if it needs without missing any change.
 
 ## Documentation
 
+[![documentation](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/documentation.yaml/badge.svg)](https://github.com/Chisanan232/PyFake-API-Server-Surveillance/actions/workflows/documentation.yaml)
+
 The [documentation](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/) contains more details, demonstrations and anything you need about **_PyFake-API-Server-Surveillance_**.
 
 * [Getting start](https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/getting-started/version-requirements/) helps you start to prepare environment, install dependencies and configure the detail settings with explanation in detail.
