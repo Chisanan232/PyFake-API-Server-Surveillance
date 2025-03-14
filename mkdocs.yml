@@ -178,15 +178,14 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting started:
-    - Version requirements: getting-started/version-requirements.md
-    - Installation: getting-started/installation.md
-    - Configure surveillance: getting-started/configure-surveillance.md
-    - Set up your surveillance: getting-started/setup-surveillance.md
-  - Configure references:
-    - Basic info: configure-references/config-basic-info.md
-    - Fake API Server: configure-references/fake-api-server.md
-    - Git info: configure-references/git-info.md
-    - GitHub info: configure-references/github-info.md
+    - getting-started/index.md
+    - Configure surveillance: getting-started/configure-setting.md
+    - Set up your surveillance: getting-started/configure-ci-workflow.md
+    - Configure references:
+      - getting-started/configure-references/index.md
+      - Fake API Server: getting-started/configure-references/fake-api-server.md
+      - Git info: getting-started/configure-references/git-info.md
+      - GitHub info: getting-started/configure-references/github-info.md
   - Development:
     - development/index.md
     - How it works: development/how-it-works.md
