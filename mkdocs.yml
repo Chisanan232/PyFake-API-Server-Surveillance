@@ -186,6 +186,24 @@ nav:
       - Fake API Server: getting-started/configure-references/fake-api-server.md
       - Git info: getting-started/configure-references/git-info.md
       - GitHub info: getting-started/configure-references/github-info.md
+    - API references (fake_api_server.ci.surveillance):
+      - getting-started/api-references/index.md
+      - runner: getting-started/api-references/runner.md
+      - log: getting-started/api-references/log.md
+      - model:
+        - getting-started/api-references/model/index.md
+        - _base: getting-started/api-references/model/_base.md
+        - action: getting-started/api-references/model/action.md
+        - config:
+          - getting-started/api-references/model/config/index.md
+          - api_config: getting-started/api-references/model/config/api_config.md
+          - git: getting-started/api-references/model/config/git.md
+          - github: getting-started/api-references/model/config/github.md
+          - github_action: getting-started/api-references/model/config/github_action.md
+      - component:
+        - getting-started/api-references/component/index.md
+        - git: getting-started/api-references/component/git.md
+        - github: getting-started/api-references/component/github.md
 #  - Development:
 #    - development/index.md
 #    - How it works: development/how-it-works.md
