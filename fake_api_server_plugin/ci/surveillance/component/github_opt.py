@@ -1,5 +1,5 @@
 """
-This module provides functionality to interact with GitHub repositories using the PyGithub library. 
+This module provides functionality to interact with GitHub repositories using the PyGithub library.
 It facilitates operations such as connecting to a repository, retrieving labels, and creating pull requests,
 while also utilizing Python context management for ease of use.
 """

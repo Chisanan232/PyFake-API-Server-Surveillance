@@ -63,7 +63,7 @@ class FakeApiServerSurveillance:
         requests or repository-level actions.
     :type github_operation: GitHubOperation
     """
-    
+
     def __init__(self):
         self.subcmd_pull_component = SavingConfigComponent()
         self.git_operation = GitOperation()
@@ -300,7 +300,6 @@ class FakeApiServerSurveillance:
             internal operation without producing a direct output.
         :rtype: None
         """
-        pass
 
     def _process_no_api_change(self, surveillance_config: SurveillanceConfig) -> None:
         """
@@ -315,7 +314,6 @@ class FakeApiServerSurveillance:
             relevant for system operations.
         :return: This method does not return any values.
         """
-        pass
 
 
 def run() -> None:

@@ -33,6 +33,7 @@ class ActionInput(_BaseModel):
     :ivar config_path: The path to the configuration file for the action input.
     :type config_path: str
     """
+
     config_path: str = field(default_factory=str)
 
     @staticmethod

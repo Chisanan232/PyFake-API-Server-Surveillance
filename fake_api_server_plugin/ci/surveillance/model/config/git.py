@@ -1,6 +1,6 @@
 """
-This module defines data models and serialization logic for Git-related objects, 
-including authors, commits, and repository information, allowing interoperation 
+This module defines data models and serialization logic for Git-related objects,
+including authors, commits, and repository information, allowing interoperation
 with Git operations such as deserialization and git actor representation.
 """
 
@@ -28,6 +28,7 @@ class GitAuthor(_BaseModel):
     :ivar email: The email address of the Git author.
     :type email: str
     """
+
     name: str
     email: str
 
@@ -71,6 +72,7 @@ class GitCommit(_BaseModel):
     :ivar message: The message associated with the commit.
     :type message: str
     """
+
     author: GitAuthor
     message: str
 
@@ -96,6 +98,7 @@ class GitInfo(_BaseModel):
     :ivar commit: Metadata of the commit associated with the repository.
     :type commit: GitCommit
     """
+
     repository: str
     commit: GitCommit
 

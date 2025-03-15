@@ -1,6 +1,6 @@
 """
-This module provides functionality to manage and retrieve GitHub Actions environment variables. 
-It includes a dataclass `GitHubActionEnvironmentVariable` for deserialization and accessing relevant 
+This module provides functionality to manage and retrieve GitHub Actions environment variables.
+It includes a dataclass `GitHubActionEnvironmentVariable` for deserialization and accessing relevant
 environment variables that control repository configuration and authentication in GitHub Actions workflows.
 """
 
@@ -36,6 +36,7 @@ class GitHubActionEnvironmentVariable(_BaseModel):
     :ivar github_token: The authentication token provided for GitHub Actions.
     :type github_token: str
     """
+
     # the environment variable in github action
     github_actions: bool = False
     repository: str = field(default_factory=str)

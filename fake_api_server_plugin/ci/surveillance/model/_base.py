@@ -1,6 +1,6 @@
 """
-This module defines a base class for models in the system. 
-The `_BaseModel` serves as an abstract base class that requires 
+This module defines a base class for models in the system.
+The `_BaseModel` serves as an abstract base class that requires
 derived classes to implement data deserialization.
 
 Classes:
@@ -43,4 +43,3 @@ class _BaseModel(metaclass=ABCMeta):
             the given data.
         :rtype: _BaseModel
         """
-        pass

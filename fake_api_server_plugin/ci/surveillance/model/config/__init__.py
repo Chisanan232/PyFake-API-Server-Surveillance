@@ -36,6 +36,7 @@ class SurveillanceConfig(_BaseModel):
         configuration does not exist.
     :type accept_config_not_exist: bool
     """
+
     api_doc_url: str
     fake_api_server: FakeAPIConfigSetting
     git_info: GitInfo

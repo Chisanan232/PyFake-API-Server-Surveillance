@@ -57,6 +57,7 @@ class SubCmdConfig(_BaseModel):
     :ivar args: List of command-line arguments.
     :type args: List[str]
     """
+
     args: List[str]
 
     @staticmethod
@@ -109,6 +110,7 @@ class FakeAPIConfigSetting(_BaseModel):
                  details.
     :type subcmd: Dict[SubCommandLine, SubCmdConfig]
     """
+
     # TODO: Still doesn't support this feature at action
     server_type: str = field(default_factory=str)
     subcmd: Dict[SubCommandLine, SubCmdConfig] = field(default_factory=dict)

@@ -1,10 +1,10 @@
 """
-This sub-package focuses on managing configuration keys and environment variables 
+This sub-package focuses on managing configuration keys and environment variables
 essential for the Fake API Server Surveillance system.
 
 It provides structured enumerations for various configuration settings related
-to API servers, Git operations, GitHub integrations, and CI/CD workflows. These 
-enumerations ensure consistent use of keys throughout the application and promote 
+to API servers, Git operations, GitHub integrations, and CI/CD workflows. These
+enumerations ensure consistent use of keys throughout the application and promote
 maintainability by avoiding hardcoded values.
 """
 
@@ -23,6 +23,7 @@ class EnvironmentVariableKey(Enum):
         path environment variable.
     :type SURVEILLANCE_CONFIG_PATH: str
     """
+
     SURVEILLANCE_CONFIG_PATH = "CONFIG_PATH"
 
 
@@ -99,6 +100,7 @@ class ConfigurationKey(Enum):
     :ivar ACCEPT_CONFIG_NOT_EXIST: Key allowing acceptance of missing configurations.
     :type ACCEPT_CONFIG_NOT_EXIST: str
     """
+
     # API documentation info
     API_DOC_URL = "api-doc-url"
 

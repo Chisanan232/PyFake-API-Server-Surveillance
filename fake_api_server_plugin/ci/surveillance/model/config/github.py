@@ -30,6 +30,7 @@ class PullRequestInfo(_BaseModel):
     :ivar labels: A list of labels associated with the pull request.
     :type labels: List[str]
     """
+
     title: str = field(default_factory=str)
     body: str = field(default_factory=str)
     draft: bool = False
@@ -60,6 +61,7 @@ class GitHubInfo(_BaseModel):
     :ivar pull_request: Encapsulates the details of a GitHub pull request.
     :type pull_request: PullRequestInfo
     """
+
     pull_request: PullRequestInfo
 
     @staticmethod
