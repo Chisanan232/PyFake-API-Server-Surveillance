@@ -1,3 +1,10 @@
+"""
+This module provides data models and utilities for managing API documentation
+configuration settings for section `fake-api-server`, handling subcommand-line
+arguments, and deserializing data into structured configurations used in a fake
+API server.
+"""
+
 import ast
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Type
@@ -39,6 +46,17 @@ class PullApiDocConfigArgs(_BaseModel):
 
 @dataclass
 class SubCmdConfig(_BaseModel):
+    """
+    Represents the configuration for a sub-command in the application.
+
+    The SubCmdConfig class is used for handling sub-command configuration and its
+    conversion to a specific model. It provides functionality to deserialize raw
+    data into a SubCmdConfig instance and to transform the arguments into a
+    sub-command argument model format.
+
+    :ivar args: List of command-line arguments.
+    :type args: List[str]
+    """
     args: List[str]
 
     @staticmethod
@@ -48,6 +66,20 @@ class SubCmdConfig(_BaseModel):
         )
 
     def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
+        """
+        Converts a list of command-line arguments into a model instance by mapping
+        argument keys and values into the appropriate format. This method parses
+        arguments, verifies their validity, and applies them to create and populate
+        an instance of the given model class.
+
+        :param subcmd_arg_model: The model class (`_BaseModel`) to which the
+            parsed arguments will be applied. Must subclass `_BaseModel`.
+
+        :return: An instance of the provided `subcmd_arg_model` populated with
+            values derived from the list of command-line arguments.
+
+        :rtype: `_BaseModel`
+        """
         param_with_key: Dict[str, str] = {}
         for arg in self.args:
             arg_eles = arg.split("=")
@@ -62,6 +94,21 @@ class SubCmdConfig(_BaseModel):
 
 @dataclass
 class FakeAPIConfigSetting(_BaseModel):
+    """
+    Represents the configuration settings for a fake API.
+
+    This class provides the structure and logic for handling and deserializing
+    configuration settings related to a fake API system. It includes attributes
+    for specifying the type of server and subcommands with their respective
+    configuration details. The class supports deserialization from a given
+    mapping to produce a fully-initialized configuration setting object.
+
+    :ivar server_type: Specifies the type of the server.
+    :type server_type: str
+    :ivar subcmd: Maps the subcommand enums to their corresponding configuration
+                 details.
+    :type subcmd: Dict[SubCommandLine, SubCmdConfig]
+    """
     # TODO: Still doesn't support this feature at action
     server_type: str = field(default_factory=str)
     subcmd: Dict[SubCommandLine, SubCmdConfig] = field(default_factory=dict)
