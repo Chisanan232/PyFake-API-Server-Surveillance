@@ -1,3 +1,13 @@
+"""
+This sub-package focuses on managing configuration keys and environment variables 
+essential for the Fake API Server Surveillance system.
+
+It provides structured enumerations for various configuration settings related
+to API servers, Git operations, GitHub integrations, and CI/CD workflows. These 
+enumerations ensure consistent use of keys throughout the application and promote 
+maintainability by avoiding hardcoded values.
+"""
+
 from enum import Enum
 
 
