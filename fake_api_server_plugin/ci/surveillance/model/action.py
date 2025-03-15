@@ -37,17 +37,6 @@ class ActionInput(_BaseModel):
 
     @staticmethod
     def deserialize(data: Mapping) -> "ActionInput":
-        """
-        Deserializes a mapping object into an instance of `ActionInput`. This method extracts
-        specific values from the provided mapping and initializes the `ActionInput` object
-        using these values.
-
-        :param data: A mapping object containing key-value pairs necessary for deserialization.
-        :type data: Mapping
-        :return: An instance of `ActionInput` with properties set based on extracted values
-                 from the `data` mapping object.
-        :rtype: ActionInput
-        """
         return ActionInput(
             config_path=data.get(
                 EnvironmentVariableKey.SURVEILLANCE_CONFIG_PATH.value, "./fake-api-server-surveillance.yaml"
