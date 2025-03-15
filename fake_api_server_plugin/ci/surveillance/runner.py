@@ -288,7 +288,7 @@ class FakeApiServerSurveillance:
         This method is intended to handle the notification logic based on the given
         surveillance configuration.
 
-        !!! warning: "🚧 This feature is under checking and development."
+        !!! warning "🚧 This feature is under checking and development."
 
             Currently, the implementation is pending as this represents a
             backlog task.
