@@ -7,9 +7,9 @@
 #
 
 __title__ = "pyfake-api-server-surveillance"
-__description__ = "🤖 A CI tool for having surveillance at the specific API end points and updating."
-__url__ = "https://chisanan232.github.io/PyFake-API-Server-Serveillance/"
-__version__ = "0.0.0"
+__description__ = "🤖 A CI tool for monitoring a specific API end points and keeping fake API server always up-to-date."
+__url__ = "https://chisanan232.github.io/PyFake-API-Server-Surveillance/stable/"
+__version__ = "0.1.0"
 __author__ = "Liu, Bryant"
 __author_email__ = "chi10211201@cycu.org.tw"
 __license__ = "MIT"

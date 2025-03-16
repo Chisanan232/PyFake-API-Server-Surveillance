@@ -1,7 +1,3 @@
-# Version 0.X.X
-
-## 0.1.0
-
 ### 🎉 New feature
 
 1. Newborn of **_PyFake-API-Server-Surveillance_**.
