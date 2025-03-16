@@ -14,7 +14,7 @@ def get_lib_ver() -> str:
         return version(_PyPI_LIB_NAME)
     except PackageNotFoundError:
         # Doesn't have the Python package
-        return "0"
+        return "0.0.0"
 
 
 def get_current_lib_ver() -> str:
