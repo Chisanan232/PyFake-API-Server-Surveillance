@@ -8,7 +8,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Chisanan232_PyFake-API-Server-Surveillance&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Chisanan232_PyFake-API-Server-Surveillance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A CI tool for having surveillance at the specific API end points and updating.
+🤖 A CI tool for monitoring a specific API end points and keeping fake API server always up-to-date.
 
 [Overview](#overview) | [Python versions support](#Python-versions-support) | [Quickly Start](#quickly-start) | [Documentation](#documentation)
 <hr>
