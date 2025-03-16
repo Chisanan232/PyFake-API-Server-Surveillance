@@ -7,7 +7,6 @@ on:
       - "master"
     paths:
 #     This deployment workflow would only be triggered by file change of module *__pkg_info__* because it has the package version info.
-      - ".github/workflows/cd.yaml"
       - "**/__pkg_info__.py"
 
 jobs:
