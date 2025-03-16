@@ -1,0 +1,1 @@
+v0.1.0 - 🍻 Newborn about automation monitoring tool for keeping Fake-API-Server config up-to-date
