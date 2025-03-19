@@ -1,4 +1,6 @@
+import os
 from typing import Mapping, Type
+from unittest.mock import patch, mock_open
 
 import pytest
 from git import Actor
@@ -93,3 +95,9 @@ class TestGitInfo(_BaseModelTestSuite):
         assert model.commit.author.name == original_git_commit_author_data[ConfigurationKey.GIT_AUTHOR_NAME.value]
         assert model.commit.author.email == original_git_commit_author_data[ConfigurationKey.GIT_AUTHOR_EMAIL.value]
         assert model.commit.message == original_git_commit_data[ConfigurationKey.GIT_COMMIT_MSG.value]
+
+    def test_deserialize_with_empty_data(self, model: Type[GitInfo]):
+        mock_project = "foo/sample-project"
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": mock_project}, clear=True):
+            model = model.deserialize({})
+            assert model.repository == mock_project
