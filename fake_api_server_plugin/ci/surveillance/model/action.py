@@ -60,4 +60,5 @@ class ActionInput(_BaseModel):
         :return: A `SurveillanceConfig` object created from the YAML file's content.
         :rtype: SurveillanceConfig
         """
+        print(f"[DEBUG] self.config_path: {self.config_path}")
         return SurveillanceConfig.deserialize(YAML().read(self.config_path))

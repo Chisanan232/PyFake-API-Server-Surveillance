@@ -86,7 +86,9 @@ class TestGitInfo(_BaseModelTestSuite):
         ],
     )
     def test_deserialize(self, model: Type[GitInfo], data: Mapping):
-        super().test_deserialize(model, data)
+        mock_project = "foo/sample-project"
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": mock_project}, clear=True):
+            super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: GitInfo, original_data: Mapping) -> None:
         assert model.repository == original_data[ConfigurationKey.GIT_REPOSITORY.value]
