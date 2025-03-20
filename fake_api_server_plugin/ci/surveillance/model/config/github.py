@@ -36,14 +36,18 @@ class PullRequestInfo(_BaseModel):
     draft: bool = False
     labels: List[str] = field(default_factory=list)
 
-    @staticmethod
-    def deserialize(data: Mapping) -> "PullRequestInfo":
+    @property
+    def default_pr_body(self) -> str:
+        return "Update Fake-API-Server configuration."
+
+    @classmethod
+    def deserialize(cls, data: Mapping) -> "PullRequestInfo":
         return PullRequestInfo(
             title=data.get(
                 ConfigurationKey.PR_TITLE.value,
                 "🤖✏️ Update Fake-API-Server configuration because of API changes.",
             ),
-            body=data.get(ConfigurationKey.PR_BODY.value, "Update Fake-API-Server configuration."),
+            body=data.get(ConfigurationKey.PR_BODY.value, cls.default_pr_body),
             draft=data.get(ConfigurationKey.PR_IS_DRAFT.value, False),
             labels=data.get(ConfigurationKey.PR_LABELS.value, []),
         )
