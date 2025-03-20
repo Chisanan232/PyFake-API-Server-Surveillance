@@ -1,12 +1,31 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Dict, List
+try:
+    from http import HTTPMethod
+except ImportError:
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[assignment]
 
 from fake_api_server import FakeAPIConfig
+
+
+@dataclass
+class ChangeStatistical:
+    add: int = 0
+    delete: int = 0
+    update: int = 0
+
+
+@dataclass
+class ChangeDetail:
+    change_statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
+    apis: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
 
 
 @dataclass
 class CompareInfo:
     local_model: FakeAPIConfig
     remote_model: FakeAPIConfig
+    change_detail: ChangeDetail = field(default_factory=ChangeDetail)
 
     def has_different(self) -> bool:
         has_api_change = False
