@@ -3,6 +3,7 @@ This module defines data models and serialization logic for Git-related objects,
 including authors, commits, and repository information, allowing interoperation
 with Git operations such as deserialization and git actor representation.
 """
+
 import os
 from dataclasses import dataclass
 from typing import Mapping

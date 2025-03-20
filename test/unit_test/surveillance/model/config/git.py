@@ -1,6 +1,6 @@
 import os
 from typing import Mapping, Type
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 
 import pytest
 from git import Actor
