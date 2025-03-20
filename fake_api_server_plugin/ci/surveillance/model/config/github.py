@@ -2,7 +2,8 @@
 This module provides classes and methods for managing and deserializing
 GitHub-related data structures, including pull requests and their associated information.
 """
-
+import os.path
+import pathlib
 from dataclasses import dataclass, field
 from typing import List, Mapping
 
@@ -38,7 +39,17 @@ class PullRequestInfo(_BaseModel):
 
     @property
     def default_pr_body(self) -> str:
-        return "Update Fake-API-Server configuration."
+
+        def _find_surveillance_lib_path(_path: pathlib.Path) -> pathlib.Path:
+            if _path.name == "surveillance":
+                return _path
+            return _find_surveillance_lib_path(_path.parent)
+
+        surveillance = _find_surveillance_lib_path(pathlib.Path(os.path.abspath(__file__)))
+        default_pr_body_md_file = pathlib.Path(surveillance, "_static", "pr-body-default.md")
+        assert default_pr_body_md_file.exists(), "Default PR body file not found."
+        with open(default_pr_body_md_file, "r") as file_stream:
+            return file_stream.read()
 
     @classmethod
     def deserialize(cls, data: Mapping) -> "PullRequestInfo":
