@@ -30,7 +30,9 @@ class CompareInfo:
     def has_different(self) -> bool:
         has_api_change = False
         all_api_configs = self.local_model.apis.apis
+        api_keys = all_api_configs.keys()
         all_new_api_configs = self.remote_model.apis.apis
+        new_api_keys = all_new_api_configs.keys()
         for api_key in all_new_api_configs.keys():
             if api_key in all_api_configs.keys():
                 one_api_config = all_api_configs[api_key]
@@ -57,4 +59,17 @@ class CompareInfo:
                     api_allow_methods = self.change_detail.apis[new_api.url]
                     api_allow_methods.append(HTTPMethod[new_api.http.request.method.upper()])
                     self.change_detail.apis[new_api.url] = api_allow_methods
+
+        if len(api_keys) != len(new_api_keys):
+            for api_key in api_keys:
+                if api_key not in new_api_keys:
+                    has_api_change = True
+                    api = all_api_configs[api_key]
+                    self.change_detail.change_statistical.delete += 1
+                    if api_key not in self.change_detail.apis:
+                        self.change_detail.apis[api.url] = [HTTPMethod[api.http.request.method.upper()]]
+                    else:
+                        api_allow_methods = self.change_detail.apis[api.url]
+                        api_allow_methods.append(HTTPMethod[api.http.request.method.upper()])
+                        self.change_detail.apis[api.url] = api_allow_methods
         return has_api_change
