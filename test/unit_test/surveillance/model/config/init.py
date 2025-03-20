@@ -1,5 +1,7 @@
 import ast
+import os
 from typing import Mapping, Type
+from unittest.mock import patch
 
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
@@ -28,7 +30,9 @@ class TestSurveillanceConfig(_BaseModelTestSuite):
         ],
     )
     def test_deserialize(self, model: Type[SurveillanceConfig], data: Mapping):
-        super().test_deserialize(model, data)
+        mock_project = "foo/sample-project"
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": mock_project}, clear=True):
+            super().test_deserialize(model, data)
 
     def _verify_model_props(self, model: SurveillanceConfig, original_data: Mapping) -> None:
         # API documentation info
