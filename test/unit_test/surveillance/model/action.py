@@ -1,4 +1,5 @@
 import glob
+import os
 from pathlib import Path
 from typing import Mapping, Type
 from unittest.mock import patch
@@ -52,8 +53,11 @@ class TestActionInput(_BaseModelTestSuite):
         with open(config_path, "r", encoding="utf-8") as file_stream:
             config_data: dict = load(stream=file_stream, Loader=Loader)
 
-        with patch.object(YAML, "read", return_value=config_data):
-            model = ActionInput(config_path=config_path).deserialize(config_data)
+        mock_project = "foo/sample-project"
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": mock_project}, clear=True):
+            with patch.object(YAML, "read", return_value=config_data):
+                model = ActionInput().deserialize(config_data)
+                model.config_path = config_path
 
             surveillance_config = model.get_config()
             assert surveillance_config

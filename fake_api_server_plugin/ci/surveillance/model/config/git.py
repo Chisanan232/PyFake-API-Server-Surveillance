@@ -4,6 +4,7 @@ including authors, commits, and repository information, allowing interoperation
 with Git operations such as deserialization and git actor representation.
 """
 
+import os
 from dataclasses import dataclass
 from typing import Mapping
 
@@ -105,6 +106,6 @@ class GitInfo(_BaseModel):
     @staticmethod
     def deserialize(data: Mapping) -> "GitInfo":
         return GitInfo(
-            repository=data[ConfigurationKey.GIT_REPOSITORY.value],
+            repository=data.get(ConfigurationKey.GIT_REPOSITORY.value, os.environ["GITHUB_REPOSITORY"]),
             commit=GitCommit.deserialize(data.get(ConfigurationKey.GIT_COMMIT.value, {})),
         )
