@@ -38,6 +38,14 @@ class CompareInfo:
                 assert one_api_config is not None, "It's strange. Please check it."
                 assert one_new_api_config is not None, "It's strange. Please check it."
                 has_api_change = one_api_config == one_new_api_config
+
+                self.change_detail.change_statistical.update += 1
+                if one_new_api_config.url not in self.change_detail.apis:
+                    self.change_detail.apis[one_new_api_config.url] = [HTTPMethod[one_new_api_config.http.request.method.upper()]]
+                else:
+                    api_allow_methods = self.change_detail.apis[one_new_api_config.url]
+                    api_allow_methods.append(HTTPMethod[one_new_api_config.http.request.method.upper()])
+                    self.change_detail.apis[one_new_api_config.url] = api_allow_methods
             else:
                 has_api_change = True
 
