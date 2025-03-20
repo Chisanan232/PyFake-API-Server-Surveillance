@@ -40,5 +40,13 @@ class CompareInfo:
                 has_api_change = one_api_config == one_new_api_config
             else:
                 has_api_change = True
-                break
+
+                new_api = all_new_api_configs[api_key]
+                self.change_detail.change_statistical.add += 1
+                if new_api.url not in self.change_detail.apis:
+                    self.change_detail.apis[new_api.url] = [HTTPMethod[new_api.http.request.method.upper()]]
+                else:
+                    api_allow_methods = self.change_detail.apis[new_api.url]
+                    api_allow_methods.append(HTTPMethod[new_api.http.request.method.upper()])
+                    self.change_detail.apis[new_api.url] = api_allow_methods
         return has_api_change
