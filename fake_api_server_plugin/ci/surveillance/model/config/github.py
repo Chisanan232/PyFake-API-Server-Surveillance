@@ -3,11 +3,19 @@ This module provides classes and methods for managing and deserializing
 GitHub-related data structures, including pull requests and their associated information.
 """
 
+import os.path
+import pathlib
 from dataclasses import dataclass, field
 from typing import List, Mapping
 
+try:
+    from http import HTTPMethod
+except ImportError:
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
+
 from .. import ConfigurationKey
 from .._base import _BaseModel
+from ..compare import ChangeDetail
 
 
 @dataclass
@@ -35,18 +43,60 @@ class PullRequestInfo(_BaseModel):
     body: str = field(default_factory=str)
     draft: bool = False
     labels: List[str] = field(default_factory=list)
+    change_detail: ChangeDetail = field(default_factory=ChangeDetail)
 
-    @staticmethod
-    def deserialize(data: Mapping) -> "PullRequestInfo":
+    @classmethod
+    def default_pr_body(cls) -> str:
+
+        def _find_surveillance_lib_path(_path: pathlib.Path) -> pathlib.Path:
+            if _path.name == "surveillance":
+                return _path
+            return _find_surveillance_lib_path(_path.parent)
+
+        surveillance = _find_surveillance_lib_path(pathlib.Path(os.path.abspath(__file__)))
+        default_pr_body_md_file = pathlib.Path(surveillance, "_static", "pr-body.md")
+        assert os.path.exists(default_pr_body_md_file), "Default PR body file not found."
+        with open(str(default_pr_body_md_file), "r") as file_stream:
+            return file_stream.read()
+
+    @classmethod
+    def deserialize(cls, data: Mapping) -> "PullRequestInfo":
         return PullRequestInfo(
             title=data.get(
                 ConfigurationKey.PR_TITLE.value,
                 "🤖✏️ Update Fake-API-Server configuration because of API changes.",
             ),
-            body=data.get(ConfigurationKey.PR_BODY.value, "Update Fake-API-Server configuration."),
+            body=data.get(ConfigurationKey.PR_BODY.value, cls.default_pr_body()),
             draft=data.get(ConfigurationKey.PR_IS_DRAFT.value, False),
             labels=data.get(ConfigurationKey.PR_LABELS.value, []),
         )
+
+    def set_change_detail(self, change_detail: ChangeDetail) -> None:
+        new_body = self.body
+
+        # Process GitHub repository commits
+        new_body.replace("{{ GITHUB_REPOSITORY }}", "")
+
+        # Process the details - statistics
+        new_body.replace("{{ NEW_API_NUMBER }}", str(change_detail.change_statistical.add))
+        new_body.replace("{{ CHANGE_API_NUMBER }}", str(change_detail.change_statistical.update))
+        new_body.replace("{{ DELETE_API_NUMBER }}", str(change_detail.change_statistical.delete))
+
+        # Process the details - summary
+        for api_path, api_methods in change_detail.apis.add.items():
+            new_body.replace("{{ ADD_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+        for api_path, api_methods in change_detail.apis.update.items():
+            new_body.replace("{{ CHANGE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+        for api_path, api_methods in change_detail.apis.delete.items():
+            new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+
+        self.body = new_body
+
+    def _api_change_list(self, path: str, methods: List[HTTPMethod]) -> str:
+        api_change_summary = f"* `{path}` \n"
+        for method in methods:
+            api_change_summary += f"  * `{method.name}` \n"
+        return api_change_summary
 
 
 @dataclass
