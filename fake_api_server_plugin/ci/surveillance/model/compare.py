@@ -58,9 +58,7 @@ class CompareInfo:
         if len(api_keys) != len(new_api_keys):
             for api_key in api_keys:
                 if api_key not in new_api_keys:
-                    has_api_change = True
-                    self.change_detail.change_statistical.delete += 1
-                    self.change_detail.record_change(all_api_configs[api_key])
+                    has_api_change = self._record_api_delete(all_api_configs[api_key])
         return has_api_change
 
     def _record_add_api(self, api: MockAPI) -> bool:
@@ -74,4 +72,10 @@ class CompareInfo:
         if has_api_change:
             self.change_detail.change_statistical.update += 1
             self.change_detail.record_change(one_new_api_config)
+        return has_api_change
+
+    def _record_api_delete(self, api: MockAPI) -> bool:
+        has_api_change = True
+        self.change_detail.change_statistical.delete += 1
+        self.change_detail.record_change(api)
         return has_api_change
