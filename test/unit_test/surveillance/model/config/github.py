@@ -124,6 +124,6 @@ class TestGitHubInfo(_BaseModelTestSuite):
         assert "{{ NEW_API_NUMBER }}" not in body
         assert "{{ CHANGE_API_NUMBER }}" not in body
         assert "{{ DELETE_API_NUMBER }}" not in body
-        assert "{{ NEW_API_SUMMARY }}" not in body
+        assert "{{ ADD_API_SUMMARY }}" not in body
         assert "{{ CHANGE_API_SUMMARY }}" not in body
         assert "{{ DELETE_API_SUMMARY }}" not in body
