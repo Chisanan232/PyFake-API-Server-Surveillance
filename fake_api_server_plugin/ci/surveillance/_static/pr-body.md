@@ -17,18 +17,6 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 {{ ADD_API_SUMMARY }}
 
 [//]: # (Should be like below content)
-[//]: # (* `/test/v1/process`)
-[//]: # (  * `PUT`)
-
-</ul>
-</details>
-
-<details>
-<summary>✏️ API (change)</summary>
-<ul>
-
-{{ CHANGE_API_SUMMARY }}
-
 [//]: # (* `/test/v1/sample`)
 [//]: # (  * `GET`)
 [//]: # (* `/test/v1/foo-feature`)
@@ -40,13 +28,19 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 </details>
 
 <details>
+<summary>✏️ API (change)</summary>
+<ul>
+
+{{ CHANGE_API_SUMMARY }}
+
+</ul>
+</details>
+
+<details>
 <summary>🚮 API (deprecate)</summary>
 <ul>
 
 {{ DELETE_API_SUMMARY }}
-
-[//]: # (* `/test/v1/deprecate`)
-[//]: # (  * `PUT`)
 
 </ul>
 </details>
