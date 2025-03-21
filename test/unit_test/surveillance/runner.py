@@ -2,6 +2,8 @@ import os
 from typing import Type
 
 import pytest
+from fake_api_server import FakeAPIConfig
+from fake_api_server.model.api_config.apis import ResponseStrategy
 from github.Label import Label
 
 try:
@@ -12,7 +14,13 @@ except ImportError:
 from unittest.mock import MagicMock, Mock, call, patch
 
 from fake_api_server._utils.file.operation import YAML
-from fake_api_server.model import deserialize_api_doc_config
+from fake_api_server.model import (
+    HTTP,
+    HTTPRequest,
+    HTTPResponse,
+    MockAPI,
+    MockAPIs,
+)
 
 from fake_api_server_plugin.ci.surveillance.component.git import GitOperation
 from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
@@ -49,7 +57,19 @@ def test_run_with_exist_fake_api_server_config(
         request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
-    mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+    mock_load_config.return_value = FakeAPIConfig(
+        apis=MockAPIs(
+            apis={
+                "get_sample": MockAPI(
+                    url="/sample",
+                    http=HTTP(
+                        request=HTTPRequest(method="GET"),
+                        response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                    ),
+                )
+            }
+        )
+    )
 
     # Setup mocks
     mock_github = Mock()
@@ -111,7 +131,7 @@ def test_run_with_not_exist_fake_api_server_config(
         request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
-    mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+    mock_load_config.return_value = FakeAPIConfig()
 
     # Setup mocks
     mock_github = Mock()
@@ -173,7 +193,7 @@ def test_run_with_not_exist_fake_api_server_config_and_not_accept_nonexist_confi
         request_url=data[ConfigurationKey.API_DOC_URL.value],
     )
     mock_version_change_process.return_value = True
-    mock_load_config.return_value = deserialize_api_doc_config(api_doc_config_resp.mock_data()).to_api_config()
+    mock_load_config.return_value = FakeAPIConfig()
 
     # Setup mocks
     mock_github = Mock()
