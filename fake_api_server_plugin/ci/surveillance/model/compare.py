@@ -52,22 +52,18 @@ class CompareInfo:
                 assert one_api_config is not None, "It's strange. Please check it."
                 assert one_new_api_config is not None, "It's strange. Please check it."
                 has_api_change = one_api_config != one_new_api_config
-
                 if has_api_change:
                     self.change_detail.change_statistical.update += 1
                     self.change_detail.record_change(one_new_api_config)
             else:
                 has_api_change = True
-
-                new_api = all_new_api_configs[api_key]
                 self.change_detail.change_statistical.add += 1
-                self.change_detail.record_change(new_api)
+                self.change_detail.record_change(all_new_api_configs[api_key])
 
         if len(api_keys) != len(new_api_keys):
             for api_key in api_keys:
                 if api_key not in new_api_keys:
                     has_api_change = True
-                    api = all_api_configs[api_key]
                     self.change_detail.change_statistical.delete += 1
-                    self.change_detail.record_change(api)
+                    self.change_detail.record_change(all_api_configs[api_key])
         return has_api_change
