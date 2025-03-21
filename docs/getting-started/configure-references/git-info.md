@@ -11,6 +11,11 @@ git operation.
 
 The target repository naming which need include project owner name. For example, ``Chisanan232/Sample-Fake-Server``.
 
+!!! tip "New in version 0.2.0"
+
+    It has default value is the current GitHub repository
+    which be got by environemnt variable `GITHUB_REPOSITORY`.
+
 ### ``commit``
 
 The section about setting properties which are relative with ``git commit`` operation.
