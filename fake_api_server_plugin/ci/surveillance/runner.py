@@ -22,10 +22,11 @@ import urllib3
 from fake_api_server import FakeAPIConfig
 from fake_api_server.command.subcommand import SubCommandLine
 from fake_api_server.model import deserialize_api_doc_config, load_config
+from mkdocs.config.config_options import Optional
 
 from .log import init_logger_config
 from .model.action import ActionInput
-from .model.compare import CompareInfo
+from .model.compare import CompareInfo, ChangeDetail
 
 try:
     from http import HTTPMethod
@@ -69,6 +70,7 @@ class FakeApiServerSurveillance:
         self.subcmd_pull_component = SavingConfigComponent()
         self.git_operation = GitOperation()
         self.github_operation: GitHubOperation = GitHubOperation()
+        self.change_detail_info: ChangeDetail = ChangeDetail()
 
     def monitor(self) -> None:
         """
@@ -193,8 +195,8 @@ class FakeApiServerSurveillance:
         fake_api_server_config = subcmd_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
-            compare_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
-            has_api_change = compare_info.has_different()
+            self.change_detail_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
+            has_api_change = self.change_detail_info.has_different()
         else:
             if not surveillance_config.accept_config_not_exist:
                 raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
