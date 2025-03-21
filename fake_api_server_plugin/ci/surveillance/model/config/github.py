@@ -7,6 +7,10 @@ import os.path
 import pathlib
 from dataclasses import dataclass, field
 from typing import List, Mapping
+try:
+    from http import HTTPMethod
+except ImportError:
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from .. import ConfigurationKey
 from .._base import _BaseModel
@@ -68,7 +72,30 @@ class PullRequestInfo(_BaseModel):
 
     def set_change_detail(self, change_detail: ChangeDetail) -> None:
         new_body = self.body
+
+        # Process GitHub repository commits
+        new_body.replace("{{ GITHUB_REPOSITORY }}", "")
+
+        # Process the details - statistics
+        new_body.replace("{{ NEW_API_NUMBER }}", str(change_detail.change_statistical.add))
+        new_body.replace("{{ CHANGE_API_NUMBER }}", str(change_detail.change_statistical.update))
+        new_body.replace("{{ DELETE_API_NUMBER }}", str(change_detail.change_statistical.delete))
+
+        # Process the details - summary
+        for api_path, api_methods in change_detail.apis.add.items():
+            new_body.replace("{{ ADD_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+        for api_path, api_methods in change_detail.apis.update.items():
+            new_body.replace("{{ CHANGE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+        for api_path, api_methods in change_detail.apis.delete.items():
+            new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+
         self.body = new_body
+
+    def _api_change_list(self, path: str, methods: List[HTTPMethod]) -> str:
+        api_change_summary = f"* `{path}` \n"
+        for method in methods:
+            api_change_summary += f"  * `{method.name}` \n"
+        return api_change_summary
 
 
 @dataclass

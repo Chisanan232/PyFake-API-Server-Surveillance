@@ -2,7 +2,7 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 <details>
 <summary>Commits</summary>
 <ul>
-<li>See full diff in <a href="https://github.com/{{ github.GITHUB_REPOSITORY }}/commits">compare view</a></li>
+<li>See full diff in <a href="https://github.com/{{ GITHUB_REPOSITORY }}/commits">compare view</a></li>
 </ul>
 </details>
 <br />
@@ -11,18 +11,21 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 
 All API changes summary:
 
-| modification state | number |
-|--------------------|--------|
-| new                | 2      |
-| change             | 1      |
-| deprecate          | 1      |
+| modification state | number                  |
+|--------------------|-------------------------|
+| new                | {{ NEW_API_NUMBER }}    |
+| change             | {{ CHANGE_API_NUMBER }} |
+| deprecate          | {{ DELETE_API_NUMBER }} |
 
 <details>
 <summary>API (new)</summary>
 <ul>
 
-* `/test/v1/process`
-  * `PUT`
+{{ ADD_API_SUMMARY }}
+
+[//]: # (Should be like below content)
+[//]: # (* `/test/v1/process`)
+[//]: # (  * `PUT`)
 
 </ul>
 </details>
@@ -31,12 +34,14 @@ All API changes summary:
 <summary>API (change)</summary>
 <ul>
 
-* `/test/v1/sample`
-  * `GET`
-* `/test/v1/foo-feature`
-  * `GET`
-  * `POST`
-  * `DELETE`
+{{ CHANGE_API_SUMMARY }}
+
+[//]: # (* `/test/v1/sample`)
+[//]: # (  * `GET`)
+[//]: # (* `/test/v1/foo-feature`)
+[//]: # (  * `GET`)
+[//]: # (  * `POST`)
+[//]: # (  * `DELETE`)
 
 </ul>
 </details>
@@ -45,8 +50,10 @@ All API changes summary:
 <summary>API (deprecate)</summary>
 <ul>
 
-* `/test/v1/deprecate`
-  * `PUT`
+{{ DELETE_API_SUMMARY }}
+
+[//]: # (* `/test/v1/deprecate`)
+[//]: # (  * `PUT`)
 
 </ul>
 </details>
