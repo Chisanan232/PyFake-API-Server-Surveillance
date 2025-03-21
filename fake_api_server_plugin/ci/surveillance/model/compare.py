@@ -38,6 +38,9 @@ class ChangeDetail:
     summary: ChangeSummary = field(default_factory=ChangeSummary)
 
     def record_change(self, api: MockAPI, change_type: APIChangeType) -> None:
+        api_change_statistical = getattr(self.statistical, change_type.value)
+        setattr(self.statistical, change_type.value, api_change_statistical + 1)
+
         api_http_method = HTTPMethod[api.http.request.method.upper()]
         api_with_change_type: Dict[str, List[HTTPMethod]] = getattr(self.summary, change_type.value)
         if api.url not in api_with_change_type:
@@ -84,13 +87,10 @@ class CompareInfo:
         return has_api_change
 
     def _record_add_api(self, api: MockAPI) -> None:
-        self.change_detail.statistical.add += 1
         self.change_detail.record_change(api, APIChangeType.ADD)
 
     def _record_update_api(self, api: MockAPI) -> None:
-        self.change_detail.statistical.update += 1
         self.change_detail.record_change(api, APIChangeType.UPDATE)
 
     def _record_api_delete(self, api: MockAPI) -> None:
-        self.change_detail.statistical.delete += 1
         self.change_detail.record_change(api, APIChangeType.DELETE)
