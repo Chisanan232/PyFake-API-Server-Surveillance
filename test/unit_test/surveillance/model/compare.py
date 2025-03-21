@@ -1,7 +1,15 @@
 import pytest
 from fake_api_server import FakeAPIConfig
-from fake_api_server.model import MockAPIs, MockAPI, HTTP, HTTPRequest, HTTPResponse, APIParameter
+from fake_api_server.model import (
+    HTTP,
+    APIParameter,
+    HTTPRequest,
+    HTTPResponse,
+    MockAPI,
+    MockAPIs,
+)
 from fake_api_server.model.api_config.apis import ResponseStrategy
+
 try:
     from http import HTTPMethod
 except ImportError:
@@ -17,9 +25,29 @@ class TestCompareInfo:
         return FakeAPIConfig(
             apis=MockAPIs(
                 apis={
-                    "get_test_v1_sample": MockAPI(url="/test/v1/sample", http=HTTP(request=HTTPRequest(method="GET", parameters=[APIParameter(name="value", value_type="str")]), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "post_test_v1_sample": MockAPI(url="/test/v1/sample", http=HTTP(request=HTTPRequest(method="POST"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "get_test_v1_deprecate": MockAPI(url="/test/v1/deprecate", http=HTTP(request=HTTPRequest(method="GET"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
+                    "get_test_v1_sample": MockAPI(
+                        url="/test/v1/sample",
+                        http=HTTP(
+                            request=HTTPRequest(
+                                method="GET", parameters=[APIParameter(name="value", value_type="str")]
+                            ),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "post_test_v1_sample": MockAPI(
+                        url="/test/v1/sample",
+                        http=HTTP(
+                            request=HTTPRequest(method="POST"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "get_test_v1_deprecate": MockAPI(
+                        url="/test/v1/deprecate",
+                        http=HTTP(
+                            request=HTTPRequest(method="GET"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
                 },
             ),
         )
@@ -29,11 +57,47 @@ class TestCompareInfo:
         return FakeAPIConfig(
             apis=MockAPIs(
                 apis={
-                    "get_test_v1_sample": MockAPI(url="/test/v1/sample", http=HTTP(request=HTTPRequest(method="GET", parameters=[APIParameter(name="value", value_type="str"), APIParameter(name="id", value_type="str")]), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "post_test_v1_sample": MockAPI(url="/test/v1/sample", http=HTTP(request=HTTPRequest(method="POST"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "get_test_v1_new": MockAPI(url="/test/v1/new", http=HTTP(request=HTTPRequest(method="GET"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "post_test_v1_new": MockAPI(url="/test/v1/new", http=HTTP(request=HTTPRequest(method="POST"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
-                    "put_test_v1_new": MockAPI(url="/test/v1/new", http=HTTP(request=HTTPRequest(method="PUT"), response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"))),
+                    "get_test_v1_sample": MockAPI(
+                        url="/test/v1/sample",
+                        http=HTTP(
+                            request=HTTPRequest(
+                                method="GET",
+                                parameters=[
+                                    APIParameter(name="value", value_type="str"),
+                                    APIParameter(name="id", value_type="str"),
+                                ],
+                            ),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "post_test_v1_sample": MockAPI(
+                        url="/test/v1/sample",
+                        http=HTTP(
+                            request=HTTPRequest(method="POST"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "get_test_v1_new": MockAPI(
+                        url="/test/v1/new",
+                        http=HTTP(
+                            request=HTTPRequest(method="GET"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "post_test_v1_new": MockAPI(
+                        url="/test/v1/new",
+                        http=HTTP(
+                            request=HTTPRequest(method="POST"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
+                    "put_test_v1_new": MockAPI(
+                        url="/test/v1/new",
+                        http=HTTP(
+                            request=HTTPRequest(method="PUT"),
+                            response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
+                        ),
+                    ),
                 },
             ),
         )

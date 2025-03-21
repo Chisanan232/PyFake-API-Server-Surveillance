@@ -2,6 +2,7 @@
 This module provides classes and methods for managing and deserializing
 GitHub-related data structures, including pull requests and their associated information.
 """
+
 import os.path
 import pathlib
 from dataclasses import dataclass, field
