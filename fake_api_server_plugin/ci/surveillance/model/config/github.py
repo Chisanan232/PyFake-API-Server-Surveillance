@@ -38,7 +38,7 @@ class PullRequestInfo(_BaseModel):
     :type draft: bool
     :ivar labels: List of labels associated with the pull request.
     :type labels: List[str]
-    :ivar change_detail: An object containing statistical and summary details of API changes.
+    :ivar change_detail: An object containing statistical and summary details of API changes. This property is new in version 0.2.0.
     :type change_detail: ChangeDetail
     """
 
@@ -62,6 +62,10 @@ class PullRequestInfo(_BaseModel):
         `pr-body.md` file is not found in the expected path, an assertion is raised.
 
         The returned content of the file can be used as a template for pull request bodies.
+
+        !!! tip ""
+
+            This function is new in version 0.2.0.
 
         :raises AssertionError: If the default pull request body file (`pr-body.md`) is
                                 not found at the expected path.
@@ -99,6 +103,10 @@ class PullRequestInfo(_BaseModel):
         Updates the body of the content based on the provided change details, altering it to
         reflect the statistical changes and API summary. Existing placeholders in the body
         are replaced with the relevant information derived from the `change_detail` object.
+
+        !!! tip ""
+
+            This function is new in version 0.2.0.
 
         :param change_detail: Contains statistical and summary details of API changes that are
             used to update the body content.

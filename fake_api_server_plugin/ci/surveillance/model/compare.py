@@ -4,6 +4,10 @@ to detect and summarize any differences. It provides functionality to identify
 API changes, including additions, updates, and deletions, and records these 
 changes with statistical and detailed summaries.
 
+!!! tip ""
+
+    This module is new in version 0.2.0.
+
 Classes:
 
 - APIChangeType: Enum defining the types of changes (add, update, delete).
