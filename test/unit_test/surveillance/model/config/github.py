@@ -76,20 +76,25 @@ class TestGitHubInfo(_BaseModelTestSuite):
         assert isinstance(body, str)
         assert body == expect_pr_body
 
-    def test_pr_body_after_process(self, model: Type[GitHubInfo]):
+    @pytest.mark.parametrize(
+        "change_detail",
+        [
+            ChangeDetail(
+                change_statistical=ChangeStatistical(
+                    add=1,
+                    update=2,
+                    delete=1,
+                ),
+                apis=ChangeSummary(
+                    add={"/add-foo": [HTTPMethod.GET]},
+                    update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
+                    delete={"/delete-foo": [HTTPMethod.GET]},
+                ),
+            ),
+        ],
+    )
+    def test_pr_body_after_process(self, model: Type[GitHubInfo], change_detail: ChangeDetail):
         github_info_model = model.deserialize({})
-        change_detail = ChangeDetail(
-            change_statistical=ChangeStatistical(
-                add=1,
-                update=2,
-                delete=1,
-            ),
-            apis=ChangeSummary(
-                add={"/add-foo": [HTTPMethod.GET]},
-                update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
-                delete={"/delete-foo": [HTTPMethod.GET]},
-            ),
-        )
         github_info_model.pull_request.set_change_detail(change_detail)
 
         body = github_info_model.pull_request.body
