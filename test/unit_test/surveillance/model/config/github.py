@@ -2,7 +2,15 @@ from typing import Mapping, Type
 
 import pytest
 
+try:
+    from http import HTTPMethod
+except ImportError:
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
+
+from ci.surveillance.model.compare import ChangeStatistical, ChangeSummary
+
 from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
+from fake_api_server_plugin.ci.surveillance.model.compare import ChangeDetail
 from fake_api_server_plugin.ci.surveillance.model.config.github import (
     GitHubInfo,
     PullRequestInfo,
@@ -35,6 +43,66 @@ class TestPullRequestInfo(_BaseModelTestSuite):
         assert model.body == original_data[ConfigurationKey.PR_BODY.value]
         assert model.draft == original_data[ConfigurationKey.PR_IS_DRAFT.value]
         assert model.labels == original_data[ConfigurationKey.PR_LABELS.value]
+
+    def test_default_pr_body(self, model: Type[PullRequestInfo]):
+        github_pr_model = model.deserialize({})
+        with open("./fake_api_server_plugin/ci/surveillance/_static/pr-body.md", "r") as file_stream:
+            expect_pr_body = file_stream.read()
+
+        body = github_pr_model.body
+        assert isinstance(body, str)
+        assert body == expect_pr_body
+
+    @pytest.mark.parametrize(
+        "change_detail",
+        [
+            ChangeDetail(
+                statistical=ChangeStatistical(
+                    add=1,
+                    update=2,
+                    delete=1,
+                ),
+                summary=ChangeSummary(
+                    add={"/add-foo": [HTTPMethod.GET]},
+                    update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
+                    delete={"/delete-foo": [HTTPMethod.GET]},
+                ),
+            ),
+            ChangeDetail(
+                statistical=ChangeStatistical(
+                    add=0,
+                    update=2,
+                    delete=1,
+                ),
+                summary=ChangeSummary(
+                    update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
+                    delete={"/delete-foo": [HTTPMethod.GET]},
+                ),
+            ),
+            ChangeDetail(
+                statistical=ChangeStatistical(
+                    add=1,
+                    update=0,
+                    delete=0,
+                ),
+                summary=ChangeSummary(
+                    add={"/add-foo": [HTTPMethod.GET]},
+                ),
+            ),
+        ],
+    )
+    def test_pr_body_after_process(self, model: Type[PullRequestInfo], change_detail: ChangeDetail):
+        github_pr_model = model.deserialize({})
+        github_pr_model.set_change_detail(change_detail)
+
+        body = github_pr_model.body
+        assert isinstance(body, str)
+        assert "{{ NEW_API_NUMBER }}" not in body
+        assert "{{ CHANGE_API_NUMBER }}" not in body
+        assert "{{ DELETE_API_NUMBER }}" not in body
+        assert "{{ ADD_API_SUMMARY }}" not in body
+        assert "{{ CHANGE_API_SUMMARY }}" not in body
+        assert "{{ DELETE_API_SUMMARY }}" not in body
 
 
 class TestGitHubInfo(_BaseModelTestSuite):
