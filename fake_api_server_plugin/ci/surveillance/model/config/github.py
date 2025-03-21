@@ -90,6 +90,10 @@ class PullRequestInfo(_BaseModel):
         for api_path, api_methods in change_detail.apis.delete.items():
             new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
 
+        new_body = new_body.replace("{{ ADD_API_SUMMARY }}", "No changes.")
+        new_body = new_body.replace("{{ CHANGE_API_SUMMARY }}", "No changes.")
+        new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", "No changes.")
+
         self.body = new_body
 
     def _api_change_list(self, path: str, methods: List[HTTPMethod]) -> str:
