@@ -10,6 +10,7 @@ from typing import List, Mapping
 
 from .. import ConfigurationKey
 from .._base import _BaseModel
+from ..compare import ChangeDetail
 
 
 @dataclass
@@ -37,6 +38,7 @@ class PullRequestInfo(_BaseModel):
     body: str = field(default_factory=str)
     draft: bool = False
     labels: List[str] = field(default_factory=list)
+    change_detail: ChangeDetail = field(default_factory=ChangeDetail)
 
     @classmethod
     def default_pr_body(cls) -> str:
@@ -63,6 +65,10 @@ class PullRequestInfo(_BaseModel):
             draft=data.get(ConfigurationKey.PR_IS_DRAFT.value, False),
             labels=data.get(ConfigurationKey.PR_LABELS.value, []),
         )
+
+    def set_change_detail(self, change_detail: ChangeDetail) -> None:
+        new_body = self.body
+        self.body = new_body
 
 
 @dataclass
