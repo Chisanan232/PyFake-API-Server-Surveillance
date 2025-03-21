@@ -16,7 +16,7 @@ keep the fake server repository up-to-date.
 import logging
 import os
 from pathlib import Path
-from typing import Mapping, cast
+from typing import Mapping, cast, Tuple
 
 import urllib3
 from fake_api_server import FakeAPIConfig
@@ -70,7 +70,6 @@ class FakeApiServerSurveillance:
         self.subcmd_pull_component = SavingConfigComponent()
         self.git_operation = GitOperation()
         self.github_operation: GitHubOperation = GitHubOperation()
-        self.change_detail_info: ChangeDetail = ChangeDetail()
 
     def monitor(self) -> None:
         """
@@ -94,10 +93,10 @@ class FakeApiServerSurveillance:
         logger.info("Try to get the latest API documentation configuration ...")
         new_api_doc_config = self._get_latest_api_doc_config(surveillance_config)
         logger.info("Compare the latest API documentation configuration with current configuration ...")
-        has_api_change = self._compare_with_current_config(surveillance_config, new_api_doc_config)
+        has_api_change, change_details = self._compare_with_current_config(surveillance_config, new_api_doc_config)
         if has_api_change:
             logger.info("Has something change and will create a pull request.")
-            self._process_api_change(surveillance_config, new_api_doc_config)
+            self._process_api_change(surveillance_config, new_api_doc_config, change_details)
         else:
             logger.info("Nothing change and won't do anything.")
             self._process_no_api_change(surveillance_config)
@@ -175,7 +174,7 @@ class FakeApiServerSurveillance:
 
     def _compare_with_current_config(
         self, surveillance_config: SurveillanceConfig, new_api_doc_config: FakeAPIConfig
-    ) -> bool:
+    ) -> Tuple[bool, ChangeDetail]:
         """
         Determines if there are any changes in the new API documentation configuration compared to the current
         surveillance configuration. This function compares the API documentation configurations stored within
@@ -195,18 +194,19 @@ class FakeApiServerSurveillance:
         fake_api_server_config = subcmd_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
-            self.change_detail_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
-            has_api_change = self.change_detail_info.has_different()
+            change_detail_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
+            has_api_change = change_detail_info.has_different()
         else:
             if not surveillance_config.accept_config_not_exist:
                 raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
             has_api_change = True
+            change_detail_info = ChangeDetail()
             fake_api_server_config_dir = Path(fake_api_server_config).parent
             if not fake_api_server_config_dir.exists():
                 fake_api_server_config_dir.mkdir(parents=True, exist_ok=True)
-        return has_api_change
+        return has_api_change, change_detail_info
 
-    def _process_api_change(self, surveillance_config: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> None:
+    def _process_api_change(self, surveillance_config: SurveillanceConfig, new_api_doc_config: FakeAPIConfig, change_details: ChangeDetail) -> None:
         """
         Processes changes in API configuration for the surveillance system. This method updates the
         new API documentation configuration based on the surveillance configuration, handles versioning,
@@ -226,7 +226,7 @@ class FakeApiServerSurveillance:
             surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
         )
         self._update_api_doc_config(subcmd_args, new_api_doc_config)
-        self._process_versioning(surveillance_config)
+        self._process_versioning(surveillance_config, change_details)
         self._notify(surveillance_config)
 
     def _update_api_doc_config(self, args: PullApiDocConfigArgs, new_api_doc_config: FakeAPIConfig) -> None:
@@ -242,7 +242,7 @@ class FakeApiServerSurveillance:
         """
         self.subcmd_pull_component.serialize_and_save(cmd_args=args, api_config=new_api_doc_config)
 
-    def _process_versioning(self, surveillance_config: SurveillanceConfig) -> None:
+    def _process_versioning(self, surveillance_config: SurveillanceConfig, change_details: ChangeDetail) -> None:
         """
         Processes version change by creating a pull request if changes are detected.
 
