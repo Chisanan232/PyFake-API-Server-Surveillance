@@ -41,6 +41,7 @@ class TestCompareInfo:
                             response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
                         ),
                     ),
+                    # delete
                     "get_test_v1_deprecate": MockAPI(
                         url="/test/v1/deprecate",
                         http=HTTP(
@@ -57,6 +58,7 @@ class TestCompareInfo:
         return FakeAPIConfig(
             apis=MockAPIs(
                 apis={
+                    # change
                     "get_test_v1_sample": MockAPI(
                         url="/test/v1/sample",
                         http=HTTP(
@@ -77,6 +79,7 @@ class TestCompareInfo:
                             response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
                         ),
                     ),
+                    # add
                     "get_test_v1_new": MockAPI(
                         url="/test/v1/new",
                         http=HTTP(
@@ -84,6 +87,7 @@ class TestCompareInfo:
                             response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
                         ),
                     ),
+                    # add
                     "post_test_v1_new": MockAPI(
                         url="/test/v1/new",
                         http=HTTP(
@@ -91,6 +95,7 @@ class TestCompareInfo:
                             response=HTTPResponse(strategy=ResponseStrategy.STRING, value="test"),
                         ),
                     ),
+                    # add
                     "put_test_v1_new": MockAPI(
                         url="/test/v1/new",
                         http=HTTP(
