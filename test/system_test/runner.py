@@ -6,8 +6,9 @@ from typing import Type
 from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
+from fake_api_server import FakeAPIConfig
 from fake_api_server._utils.file.operation import YAML
-from fake_api_server.model import deserialize_api_doc_config
+from fake_api_server.model import MockAPIs
 from git import Repo
 from git.remote import PushInfoList
 from github import Label
@@ -95,9 +96,7 @@ def test_entire_flow_with_not_exist_config(
         mock_request.return_value = dummy_api_doc_config_resp.generate(
             request_url=data[ConfigurationKey.API_DOC_URL.value],
         )
-        mock_load_config.return_value = deserialize_api_doc_config(
-            dummy_api_doc_config_resp.mock_data()
-        ).to_api_config()
+        mock_load_config.return_value = FakeAPIConfig(apis=MockAPIs(apis={}))
         with patch.dict(os.environ, fake_github_action_values.ci_env(fake_data.repo()), clear=True):
             with patch.object(YAML, "read", return_value=data):
                 surveillance.monitor()
