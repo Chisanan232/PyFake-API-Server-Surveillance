@@ -1,14 +1,16 @@
 from typing import Mapping, Type
 
 import pytest
+
 try:
     from http import HTTPMethod
 except ImportError:
     from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from ci.surveillance.model.compare import ChangeStatistical, ChangeSummary
-from fake_api_server_plugin.ci.surveillance.model.compare import ChangeDetail
+
 from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
+from fake_api_server_plugin.ci.surveillance.model.compare import ChangeDetail
 from fake_api_server_plugin.ci.surveillance.model.config.github import (
     GitHubInfo,
     PullRequestInfo,
