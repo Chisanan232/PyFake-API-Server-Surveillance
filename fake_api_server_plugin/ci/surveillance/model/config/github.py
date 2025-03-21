@@ -7,6 +7,7 @@ import os.path
 import pathlib
 from dataclasses import dataclass, field
 from typing import List, Mapping
+
 try:
     from http import HTTPMethod
 except ImportError:

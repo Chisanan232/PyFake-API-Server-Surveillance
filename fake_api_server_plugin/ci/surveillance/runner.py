@@ -16,17 +16,16 @@ keep the fake server repository up-to-date.
 import logging
 import os
 from pathlib import Path
-from typing import Mapping, cast, Tuple
+from typing import Mapping, Tuple, cast
 
 import urllib3
 from fake_api_server import FakeAPIConfig
 from fake_api_server.command.subcommand import SubCommandLine
 from fake_api_server.model import deserialize_api_doc_config, load_config
-from mkdocs.config.config_options import Optional
 
 from .log import init_logger_config
 from .model.action import ActionInput
-from .model.compare import CompareInfo, ChangeDetail
+from .model.compare import CompareInfo
 
 try:
     from http import HTTPMethod
