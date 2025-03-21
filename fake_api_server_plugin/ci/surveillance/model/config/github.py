@@ -45,6 +45,8 @@ class PullRequestInfo(_BaseModel):
     labels: List[str] = field(default_factory=list)
     change_detail: ChangeDetail = field(default_factory=ChangeDetail)
 
+    _NO_API_CHANGE_CONTENT: str = "No changes."
+
     @classmethod
     def default_pr_body(cls) -> str:
 
@@ -87,9 +89,9 @@ class PullRequestInfo(_BaseModel):
         for api_path, api_methods in change_detail.apis.delete.items():
             new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
 
-        new_body = new_body.replace("{{ ADD_API_SUMMARY }}", "No changes.")
-        new_body = new_body.replace("{{ CHANGE_API_SUMMARY }}", "No changes.")
-        new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", "No changes.")
+        new_body = new_body.replace("{{ ADD_API_SUMMARY }}", self._NO_API_CHANGE_CONTENT)
+        new_body = new_body.replace("{{ CHANGE_API_SUMMARY }}", self._NO_API_CHANGE_CONTENT)
+        new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", self._NO_API_CHANGE_CONTENT)
 
         self.body = new_body
 
