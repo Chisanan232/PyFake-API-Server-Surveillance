@@ -44,35 +44,12 @@ class TestPullRequestInfo(_BaseModelTestSuite):
         assert model.draft == original_data[ConfigurationKey.PR_IS_DRAFT.value]
         assert model.labels == original_data[ConfigurationKey.PR_LABELS.value]
 
-
-class TestGitHubInfo(_BaseModelTestSuite):
-
-    @pytest.fixture(scope="function")
-    def model(self) -> Type[GitHubInfo]:
-        return GitHubInfo
-
-    @pytest.mark.parametrize(
-        "data",
-        [
-            fake_data.github_info(),
-        ],
-    )
-    def test_deserialize(self, model: Type[GitHubInfo], data: Mapping):
-        super().test_deserialize(model, data)
-
-    def _verify_model_props(self, model: GitHubInfo, original_data: Mapping) -> None:
-        original_github_info_data = original_data[ConfigurationKey.GITHUB_PULL_REQUEST.value]
-        assert model.pull_request.title == original_github_info_data[ConfigurationKey.PR_TITLE.value]
-        assert model.pull_request.body == original_github_info_data[ConfigurationKey.PR_BODY.value]
-        assert model.pull_request.draft == original_github_info_data[ConfigurationKey.PR_IS_DRAFT.value]
-        assert model.pull_request.labels == original_github_info_data[ConfigurationKey.PR_LABELS.value]
-
-    def test_default_pr_body(self, model: Type[GitHubInfo]):
-        github_info_model = model.deserialize({})
+    def test_default_pr_body(self, model: Type[PullRequestInfo]):
+        github_pr_model = model.deserialize({})
         with open("./fake_api_server_plugin/ci/surveillance/_static/pr-body.md", "r") as file_stream:
             expect_pr_body = file_stream.read()
 
-        body = github_info_model.pull_request.body
+        body = github_pr_model.body
         assert isinstance(body, str)
         assert body == expect_pr_body
 
@@ -114,11 +91,11 @@ class TestGitHubInfo(_BaseModelTestSuite):
             ),
         ],
     )
-    def test_pr_body_after_process(self, model: Type[GitHubInfo], change_detail: ChangeDetail):
-        github_info_model = model.deserialize({})
-        github_info_model.pull_request.set_change_detail(change_detail)
+    def test_pr_body_after_process(self, model: Type[PullRequestInfo], change_detail: ChangeDetail):
+        github_pr_model = model.deserialize({})
+        github_pr_model.set_change_detail(change_detail)
 
-        body = github_info_model.pull_request.body
+        body = github_pr_model.body
         assert isinstance(body, str)
         assert "{{ NEW_API_NUMBER }}" not in body
         assert "{{ CHANGE_API_NUMBER }}" not in body
@@ -126,3 +103,26 @@ class TestGitHubInfo(_BaseModelTestSuite):
         assert "{{ ADD_API_SUMMARY }}" not in body
         assert "{{ CHANGE_API_SUMMARY }}" not in body
         assert "{{ DELETE_API_SUMMARY }}" not in body
+
+
+class TestGitHubInfo(_BaseModelTestSuite):
+
+    @pytest.fixture(scope="function")
+    def model(self) -> Type[GitHubInfo]:
+        return GitHubInfo
+
+    @pytest.mark.parametrize(
+        "data",
+        [
+            fake_data.github_info(),
+        ],
+    )
+    def test_deserialize(self, model: Type[GitHubInfo], data: Mapping):
+        super().test_deserialize(model, data)
+
+    def _verify_model_props(self, model: GitHubInfo, original_data: Mapping) -> None:
+        original_github_info_data = original_data[ConfigurationKey.GITHUB_PULL_REQUEST.value]
+        assert model.pull_request.title == original_github_info_data[ConfigurationKey.PR_TITLE.value]
+        assert model.pull_request.body == original_github_info_data[ConfigurationKey.PR_BODY.value]
+        assert model.pull_request.draft == original_github_info_data[ConfigurationKey.PR_IS_DRAFT.value]
+        assert model.pull_request.labels == original_github_info_data[ConfigurationKey.PR_LABELS.value]
