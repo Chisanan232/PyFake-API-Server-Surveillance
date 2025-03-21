@@ -83,10 +83,6 @@ class CompareInfo:
                     self._record_api_delete(all_api_configs[api_key])
         return has_api_change
 
-    @staticmethod
-    def empty() -> "CompareInfo":
-        return CompareInfo(local_model=FakeAPIConfig(), remote_model=FakeAPIConfig())
-
     def _record_add_api(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.add += 1
         self.change_detail.record_change(api, APIChangeType.ADD)
