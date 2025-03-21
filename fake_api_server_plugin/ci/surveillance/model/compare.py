@@ -51,8 +51,9 @@ class CompareInfo:
                 one_new_api_config = all_new_api_configs[api_key]
                 assert one_api_config is not None, "It's strange. Please check it."
                 assert one_new_api_config is not None, "It's strange. Please check it."
-                has_api_change = one_api_config != one_new_api_config
-                if has_api_change:
+                api_is_diff = one_api_config != one_new_api_config
+                if api_is_diff:
+                    has_api_change = True
                     self._record_update_api(one_new_api_config)
             else:
                 has_api_change = True
