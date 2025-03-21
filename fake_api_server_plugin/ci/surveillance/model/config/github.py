@@ -3,6 +3,8 @@ This module provides classes and methods for managing and deserializing
 GitHub-related data structures, including pull requests and their associated information.
 """
 
+import os.path
+import pathlib
 from dataclasses import dataclass, field
 from typing import List, Mapping
 
@@ -36,14 +38,31 @@ class PullRequestInfo(_BaseModel):
     draft: bool = False
     labels: List[str] = field(default_factory=list)
 
-    @staticmethod
-    def deserialize(data: Mapping) -> "PullRequestInfo":
+    @property
+    def default_pr_body(self) -> str:
+
+        def _find_surveillance_lib_path(_path: pathlib.Path) -> pathlib.Path:
+            if _path.name == "surveillance":
+                return _path
+            return _find_surveillance_lib_path(_path.parent)
+
+        surveillance = _find_surveillance_lib_path(pathlib.Path(os.path.abspath(__file__)))
+        default_pr_body_md_file = pathlib.Path(surveillance, "_static", "pr-body-default.md")
+        assert default_pr_body_md_file.exists(), "Default PR body file not found."
+        with open(str(default_pr_body_md_file), "r") as file_stream:
+            return file_stream.read()
+
+    @classmethod
+    def deserialize(cls, data: Mapping) -> "PullRequestInfo":
+        print(f"[DEBUG] data: {data}")
+        body = cls.default_pr_body
+        print(f"[DEBUG] body: {body}")
         return PullRequestInfo(
             title=data.get(
                 ConfigurationKey.PR_TITLE.value,
                 "🤖✏️ Update Fake-API-Server configuration because of API changes.",
             ),
-            body=data.get(ConfigurationKey.PR_BODY.value, "Update Fake-API-Server configuration."),
+            body=data.get(ConfigurationKey.PR_BODY.value, body),
             draft=data.get(ConfigurationKey.PR_IS_DRAFT.value, False),
             labels=data.get(ConfigurationKey.PR_LABELS.value, []),
         )
