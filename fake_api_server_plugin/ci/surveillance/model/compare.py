@@ -51,31 +51,28 @@ class CompareInfo:
                 one_new_api_config = all_new_api_configs[api_key]
                 assert one_api_config is not None, "It's strange. Please check it."
                 assert one_new_api_config is not None, "It's strange. Please check it."
-                has_api_change = self._record_update_api(one_api_config, one_new_api_config)
+                has_api_change = one_api_config != one_new_api_config
+                if has_api_change:
+                    self._record_update_api(one_new_api_config)
             else:
-                has_api_change = self._record_add_api(all_new_api_configs[api_key])
+                has_api_change = True
+                self._record_add_api(all_new_api_configs[api_key])
 
         if len(api_keys) != len(new_api_keys):
             for api_key in api_keys:
                 if api_key not in new_api_keys:
-                    has_api_change = self._record_api_delete(all_api_configs[api_key])
+                    has_api_change = True
+                    self._record_api_delete(all_api_configs[api_key])
         return has_api_change
 
-    def _record_add_api(self, api: MockAPI) -> bool:
-        has_api_change = True
+    def _record_add_api(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.add += 1
         self.change_detail.record_change(api)
-        return has_api_change
 
-    def _record_update_api(self, one_api_config: MockAPI, one_new_api_config: MockAPI) -> bool:
-        has_api_change = one_api_config != one_new_api_config
-        if has_api_change:
-            self.change_detail.change_statistical.update += 1
-            self.change_detail.record_change(one_new_api_config)
-        return has_api_change
+    def _record_update_api(self, api: MockAPI) -> None:
+        self.change_detail.change_statistical.update += 1
+        self.change_detail.record_change(api)
 
-    def _record_api_delete(self, api: MockAPI) -> bool:
-        has_api_change = True
+    def _record_api_delete(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.delete += 1
         self.change_detail.record_change(api)
-        return has_api_change
