@@ -1,5 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
+
+from fake_api_server.model import MockAPI
+
 try:
     from http import HTTPMethod
 except ImportError:
@@ -19,6 +22,15 @@ class ChangeStatistical:
 class ChangeDetail:
     change_statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
     apis: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
+
+    def record_change(self, api: MockAPI) -> None:
+        api_http_method = HTTPMethod[api.http.request.method.upper()]
+        if api.url not in self.apis:
+            self.apis[api.url] = [api_http_method]
+        else:
+            api_allow_methods = self.apis[api.url]
+            api_allow_methods.append(api_http_method)
+            self.apis[api.url] = api_allow_methods
 
 
 @dataclass
@@ -43,23 +55,13 @@ class CompareInfo:
 
                 if has_api_change:
                     self.change_detail.change_statistical.update += 1
-                    if one_new_api_config.url not in self.change_detail.apis:
-                        self.change_detail.apis[one_new_api_config.url] = [HTTPMethod[one_new_api_config.http.request.method.upper()]]
-                    else:
-                        api_allow_methods = self.change_detail.apis[one_new_api_config.url]
-                        api_allow_methods.append(HTTPMethod[one_new_api_config.http.request.method.upper()])
-                        self.change_detail.apis[one_new_api_config.url] = api_allow_methods
+                    self.change_detail.record_change(one_new_api_config)
             else:
                 has_api_change = True
 
                 new_api = all_new_api_configs[api_key]
                 self.change_detail.change_statistical.add += 1
-                if new_api.url not in self.change_detail.apis:
-                    self.change_detail.apis[new_api.url] = [HTTPMethod[new_api.http.request.method.upper()]]
-                else:
-                    api_allow_methods = self.change_detail.apis[new_api.url]
-                    api_allow_methods.append(HTTPMethod[new_api.http.request.method.upper()])
-                    self.change_detail.apis[new_api.url] = api_allow_methods
+                self.change_detail.record_change(new_api)
 
         if len(api_keys) != len(new_api_keys):
             for api_key in api_keys:
@@ -67,10 +69,5 @@ class CompareInfo:
                     has_api_change = True
                     api = all_api_configs[api_key]
                     self.change_detail.change_statistical.delete += 1
-                    if api_key not in self.change_detail.apis:
-                        self.change_detail.apis[api.url] = [HTTPMethod[api.http.request.method.upper()]]
-                    else:
-                        api_allow_methods = self.change_detail.apis[api.url]
-                        api_allow_methods.append(HTTPMethod[api.http.request.method.upper()])
-                        self.change_detail.apis[api.url] = api_allow_methods
+                    self.change_detail.record_change(api)
         return has_api_change
