@@ -62,7 +62,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
                     update=2,
                     delete=1,
                 ),
-                apis=ChangeSummary(
+                summary=ChangeSummary(
                     add={"/add-foo": [HTTPMethod.GET]},
                     update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
                     delete={"/delete-foo": [HTTPMethod.GET]},
@@ -74,7 +74,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
                     update=2,
                     delete=1,
                 ),
-                apis=ChangeSummary(
+                summary=ChangeSummary(
                     update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
                     delete={"/delete-foo": [HTTPMethod.GET]},
                 ),
@@ -85,7 +85,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
                     update=0,
                     delete=0,
                 ),
-                apis=ChangeSummary(
+                summary=ChangeSummary(
                     add={"/add-foo": [HTTPMethod.GET]},
                 ),
             ),

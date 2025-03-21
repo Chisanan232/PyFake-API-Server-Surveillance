@@ -82,11 +82,11 @@ class PullRequestInfo(_BaseModel):
         new_body = new_body.replace("{{ DELETE_API_NUMBER }}", str(change_detail.statistical.delete))
 
         # Process the details - summary
-        for api_path, api_methods in change_detail.apis.add.items():
+        for api_path, api_methods in change_detail.summary.add.items():
             new_body = new_body.replace("{{ ADD_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
-        for api_path, api_methods in change_detail.apis.update.items():
+        for api_path, api_methods in change_detail.summary.update.items():
             new_body = new_body.replace("{{ CHANGE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
-        for api_path, api_methods in change_detail.apis.delete.items():
+        for api_path, api_methods in change_detail.summary.delete.items():
             new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
 
         new_body = new_body.replace("{{ ADD_API_SUMMARY }}", self._NO_API_CHANGE_CONTENT)

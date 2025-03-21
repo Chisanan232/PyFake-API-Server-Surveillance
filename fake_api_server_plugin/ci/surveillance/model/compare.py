@@ -35,19 +35,19 @@ class ChangeSummary:
 @dataclass
 class ChangeDetail:
     statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
-    apis: ChangeSummary = field(default_factory=ChangeSummary)
+    summary: ChangeSummary = field(default_factory=ChangeSummary)
 
     def record_change(self, api: MockAPI, change_type: APIChangeType) -> None:
         api_http_method = HTTPMethod[api.http.request.method.upper()]
-        api_with_change_type: Dict[str, List[HTTPMethod]] = getattr(self.apis, change_type.value)
+        api_with_change_type: Dict[str, List[HTTPMethod]] = getattr(self.summary, change_type.value)
         if api.url not in api_with_change_type:
             api_with_change_type[api.url] = [api_http_method]
-            setattr(self.apis, change_type.value, api_with_change_type)
+            setattr(self.summary, change_type.value, api_with_change_type)
         else:
             api_allow_methods = api_with_change_type[api.url]
             api_allow_methods.append(api_http_method)
             api_with_change_type[api.url] = api_allow_methods
-            setattr(self.apis, change_type.value, api_with_change_type)
+            setattr(self.summary, change_type.value, api_with_change_type)
 
 
 @dataclass

@@ -118,7 +118,7 @@ class TestCompareInfo:
         assert model.has_different() is True
         change_detail = model.change_detail
 
-        apis = change_detail.apis
+        apis = change_detail.summary
         assert apis.add.keys() == {"/test/v1/new"}
         assert apis.add["/test/v1/new"] == [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT]
         assert apis.update.keys() == {"/test/v1/sample"}
