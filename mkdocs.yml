@@ -196,6 +196,7 @@ nav:
         - getting-started/api-references/model/index.md
         - _base: getting-started/api-references/model/_base.md
         - action: getting-started/api-references/model/action.md
+        - compare: getting-started/api-references/model/compare.md
         - config:
           - getting-started/api-references/model/config/index.md
           - api_config: getting-started/api-references/model/config/api_config.md
