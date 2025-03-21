@@ -4,11 +4,11 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 
 All API changes summary:
 
-| modification state | number                  |
-|--------------------|-------------------------|
-| new                | {{ NEW_API_NUMBER }}    |
-| change             | {{ CHANGE_API_NUMBER }} |
-| deprecate          | {{ DELETE_API_NUMBER }} |
+| modification state | number (by allow methods of API) |
+|--------------------|----------------------------------|
+| new                | {{ NEW_API_NUMBER }}             |
+| change             | {{ CHANGE_API_NUMBER }}          |
+| deprecate          | {{ DELETE_API_NUMBER }}          |
 
 <details>
 <summary>API (new)</summary>
