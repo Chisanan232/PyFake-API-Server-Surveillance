@@ -21,7 +21,7 @@ from typing import Mapping, Tuple, cast
 import urllib3
 from fake_api_server import FakeAPIConfig
 from fake_api_server.command.subcommand import SubCommandLine
-from fake_api_server.model import deserialize_api_doc_config, load_config, MockAPIs
+from fake_api_server.model import MockAPIs, deserialize_api_doc_config, load_config
 
 from .log import init_logger_config
 from .model.action import ActionInput
@@ -200,7 +200,9 @@ class FakeApiServerSurveillance:
             if not surveillance_config.accept_config_not_exist:
                 raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
             has_api_change = True
-            change_detail_info = CompareInfo(local_model=FakeAPIConfig(apis=MockAPIs(apis={})), remote_model=new_api_doc_config)
+            change_detail_info = CompareInfo(
+                local_model=FakeAPIConfig(apis=MockAPIs(apis={})), remote_model=new_api_doc_config
+            )
             assert change_detail_info.has_different()
             fake_api_server_config_dir = Path(fake_api_server_config).parent
             if not fake_api_server_config_dir.exists():
