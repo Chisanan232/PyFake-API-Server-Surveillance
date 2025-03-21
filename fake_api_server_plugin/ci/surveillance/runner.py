@@ -16,7 +16,7 @@ keep the fake server repository up-to-date.
 import logging
 import os
 from pathlib import Path
-from typing import Mapping, cast
+from typing import Mapping, Tuple, cast
 
 import urllib3
 from fake_api_server import FakeAPIConfig
@@ -25,6 +25,7 @@ from fake_api_server.model import deserialize_api_doc_config, load_config
 
 from .log import init_logger_config
 from .model.action import ActionInput
+from .model.compare import CompareInfo
 
 try:
     from http import HTTPMethod
@@ -91,7 +92,8 @@ class FakeApiServerSurveillance:
         logger.info("Try to get the latest API documentation configuration ...")
         new_api_doc_config = self._get_latest_api_doc_config(surveillance_config)
         logger.info("Compare the latest API documentation configuration with current configuration ...")
-        has_api_change = self._compare_with_current_config(surveillance_config, new_api_doc_config)
+        has_api_change, change_info = self._compare_with_current_config(surveillance_config, new_api_doc_config)
+        surveillance_config.github_info.pull_request.set_change_detail(change_info.change_detail)
         if has_api_change:
             logger.info("Has something change and will create a pull request.")
             self._process_api_change(surveillance_config, new_api_doc_config)
@@ -172,7 +174,7 @@ class FakeApiServerSurveillance:
 
     def _compare_with_current_config(
         self, surveillance_config: SurveillanceConfig, new_api_doc_config: FakeAPIConfig
-    ) -> bool:
+    ) -> Tuple[bool, CompareInfo]:
         """
         Determines if there are any changes in the new API documentation configuration compared to the current
         surveillance configuration. This function compares the API documentation configurations stored within
@@ -185,7 +187,6 @@ class FakeApiServerSurveillance:
             to be compared with the current surveillance configuration.
         :return: A boolean value indicating whether there is any change in the API documentation configuration.
         """
-        has_api_change = False
         subcmd_args = cast(
             PullApiDocConfigArgs,
             surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
@@ -193,27 +194,17 @@ class FakeApiServerSurveillance:
         fake_api_server_config = subcmd_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
-
-            all_api_configs = api_config.apis.apis
-            all_new_api_configs = new_api_doc_config.apis.apis
-            for api_key in all_new_api_configs.keys():
-                if api_key in all_api_configs.keys():
-                    one_api_config = all_api_configs[api_key]
-                    one_new_api_config = all_new_api_configs[api_key]
-                    assert one_api_config is not None, "It's strange. Please check it."
-                    assert one_new_api_config is not None, "It's strange. Please check it."
-                    has_api_change = one_api_config == one_new_api_config
-                else:
-                    has_api_change = True
-                    break
+            change_detail_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
+            has_api_change = change_detail_info.has_different()
         else:
             if not surveillance_config.accept_config_not_exist:
                 raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
             has_api_change = True
+            change_detail_info = CompareInfo.empty()
             fake_api_server_config_dir = Path(fake_api_server_config).parent
             if not fake_api_server_config_dir.exists():
                 fake_api_server_config_dir.mkdir(parents=True, exist_ok=True)
-        return has_api_change
+        return has_api_change, change_detail_info
 
     def _process_api_change(self, surveillance_config: SurveillanceConfig, new_api_doc_config: FakeAPIConfig) -> None:
         """
