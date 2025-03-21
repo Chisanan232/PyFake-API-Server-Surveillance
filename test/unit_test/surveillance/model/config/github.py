@@ -120,7 +120,6 @@ class TestGitHubInfo(_BaseModelTestSuite):
 
         body = github_info_model.pull_request.body
         assert isinstance(body, str)
-        assert "{{ GITHUB_REPOSITORY }}" not in body
         assert "{{ NEW_API_NUMBER }}" not in body
         assert "{{ CHANGE_API_NUMBER }}" not in body
         assert "{{ DELETE_API_NUMBER }}" not in body

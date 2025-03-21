@@ -1,11 +1,4 @@
 Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) configuration because of API changes.
-<details>
-<summary>Commits</summary>
-<ul>
-<li>See full diff in <a href="https://github.com/{{ GITHUB_REPOSITORY }}/commits">compare view</a></li>
-</ul>
-</details>
-<br />
 
 ---
 

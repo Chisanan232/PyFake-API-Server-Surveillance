@@ -74,9 +74,6 @@ class PullRequestInfo(_BaseModel):
     def set_change_detail(self, change_detail: ChangeDetail) -> None:
         new_body = self.body
 
-        # Process GitHub repository commits
-        new_body = new_body.replace("{{ GITHUB_REPOSITORY }}", "")
-
         # Process the details - statistics
         new_body = new_body.replace("{{ NEW_API_NUMBER }}", str(change_detail.change_statistical.add))
         new_body = new_body.replace("{{ CHANGE_API_NUMBER }}", str(change_detail.change_statistical.update))
