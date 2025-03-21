@@ -58,3 +58,7 @@ class TestGitHubInfo(_BaseModelTestSuite):
         assert model.pull_request.body == original_github_info_data[ConfigurationKey.PR_BODY.value]
         assert model.pull_request.draft == original_github_info_data[ConfigurationKey.PR_IS_DRAFT.value]
         assert model.pull_request.labels == original_github_info_data[ConfigurationKey.PR_LABELS.value]
+
+    def test_default_pr_body(self, model: Type[GitHubInfo]):
+        github_info_model = model.deserialize({})
+        assert isinstance(github_info_model.pull_request.body, str)

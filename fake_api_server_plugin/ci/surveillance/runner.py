@@ -25,6 +25,7 @@ from fake_api_server.model import deserialize_api_doc_config, load_config
 
 from .log import init_logger_config
 from .model.action import ActionInput
+from .model.compare import CompareInfo
 
 try:
     from http import HTTPMethod
@@ -185,7 +186,6 @@ class FakeApiServerSurveillance:
             to be compared with the current surveillance configuration.
         :return: A boolean value indicating whether there is any change in the API documentation configuration.
         """
-        has_api_change = False
         subcmd_args = cast(
             PullApiDocConfigArgs,
             surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
@@ -193,19 +193,8 @@ class FakeApiServerSurveillance:
         fake_api_server_config = subcmd_args.config_path
         if Path(fake_api_server_config).exists():
             api_config = load_config(fake_api_server_config)
-
-            all_api_configs = api_config.apis.apis
-            all_new_api_configs = new_api_doc_config.apis.apis
-            for api_key in all_new_api_configs.keys():
-                if api_key in all_api_configs.keys():
-                    one_api_config = all_api_configs[api_key]
-                    one_new_api_config = all_new_api_configs[api_key]
-                    assert one_api_config is not None, "It's strange. Please check it."
-                    assert one_new_api_config is not None, "It's strange. Please check it."
-                    has_api_change = one_api_config == one_new_api_config
-                else:
-                    has_api_change = True
-                    break
+            compare_info = CompareInfo(local_model=api_config, remote_model=new_api_doc_config)
+            has_api_change = compare_info.has_different()
         else:
             if not surveillance_config.accept_config_not_exist:
                 raise FileNotFoundError("Not found Fake-API-Server config file. Please add it in repository.")
