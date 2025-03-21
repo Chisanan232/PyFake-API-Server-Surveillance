@@ -7,9 +7,6 @@ Update [Fake-API-Server](https://github.com/Chisanan232/PyFake-API-Server) confi
 </details>
 <br />
 
-[//]: # (dependabot-automerge-start)
-[//]: # (dependabot-automerge-end)
-
 ---
 
 All API changes summary:
