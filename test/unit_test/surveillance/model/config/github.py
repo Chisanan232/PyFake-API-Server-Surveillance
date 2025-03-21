@@ -91,6 +91,27 @@ class TestGitHubInfo(_BaseModelTestSuite):
                     delete={"/delete-foo": [HTTPMethod.GET]},
                 ),
             ),
+            ChangeDetail(
+                change_statistical=ChangeStatistical(
+                    add=0,
+                    update=2,
+                    delete=1,
+                ),
+                apis=ChangeSummary(
+                    update={"/update-foo": [HTTPMethod.GET, HTTPMethod.POST]},
+                    delete={"/delete-foo": [HTTPMethod.GET]},
+                ),
+            ),
+            ChangeDetail(
+                change_statistical=ChangeStatistical(
+                    add=1,
+                    update=0,
+                    delete=0,
+                ),
+                apis=ChangeSummary(
+                    add={"/add-foo": [HTTPMethod.GET]},
+                ),
+            ),
         ],
     )
     def test_pr_body_after_process(self, model: Type[GitHubInfo], change_detail: ChangeDetail):
