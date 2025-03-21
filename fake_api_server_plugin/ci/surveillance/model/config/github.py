@@ -75,20 +75,20 @@ class PullRequestInfo(_BaseModel):
         new_body = self.body
 
         # Process GitHub repository commits
-        new_body.replace("{{ GITHUB_REPOSITORY }}", "")
+        new_body = new_body.replace("{{ GITHUB_REPOSITORY }}", "")
 
         # Process the details - statistics
-        new_body.replace("{{ NEW_API_NUMBER }}", str(change_detail.change_statistical.add))
-        new_body.replace("{{ CHANGE_API_NUMBER }}", str(change_detail.change_statistical.update))
-        new_body.replace("{{ DELETE_API_NUMBER }}", str(change_detail.change_statistical.delete))
+        new_body = new_body.replace("{{ NEW_API_NUMBER }}", str(change_detail.change_statistical.add))
+        new_body = new_body.replace("{{ CHANGE_API_NUMBER }}", str(change_detail.change_statistical.update))
+        new_body = new_body.replace("{{ DELETE_API_NUMBER }}", str(change_detail.change_statistical.delete))
 
         # Process the details - summary
         for api_path, api_methods in change_detail.apis.add.items():
-            new_body.replace("{{ ADD_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+            new_body = new_body.replace("{{ ADD_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
         for api_path, api_methods in change_detail.apis.update.items():
-            new_body.replace("{{ CHANGE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+            new_body = new_body.replace("{{ CHANGE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
         for api_path, api_methods in change_detail.apis.delete.items():
-            new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
+            new_body = new_body.replace("{{ DELETE_API_SUMMARY }}", self._api_change_list(api_path, api_methods))
 
         self.body = new_body
 
