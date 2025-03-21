@@ -38,8 +38,8 @@ class PullRequestInfo(_BaseModel):
     draft: bool = False
     labels: List[str] = field(default_factory=list)
 
-    @property
-    def default_pr_body(self) -> str:
+    @classmethod
+    def default_pr_body(cls) -> str:
 
         def _find_surveillance_lib_path(_path: pathlib.Path) -> pathlib.Path:
             if _path.name == "surveillance":
@@ -54,15 +54,12 @@ class PullRequestInfo(_BaseModel):
 
     @classmethod
     def deserialize(cls, data: Mapping) -> "PullRequestInfo":
-        print(f"[DEBUG] data: {data}")
-        body = cls.default_pr_body
-        print(f"[DEBUG] body: {body}")
         return PullRequestInfo(
             title=data.get(
                 ConfigurationKey.PR_TITLE.value,
                 "🤖✏️ Update Fake-API-Server configuration because of API changes.",
             ),
-            body=data.get(ConfigurationKey.PR_BODY.value, body),
+            body=data.get(ConfigurationKey.PR_BODY.value, cls.default_pr_body()),
             draft=data.get(ConfigurationKey.PR_IS_DRAFT.value, False),
             labels=data.get(ConfigurationKey.PR_LABELS.value, []),
         )
