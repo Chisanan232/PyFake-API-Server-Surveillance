@@ -57,7 +57,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
         "change_detail",
         [
             ChangeDetail(
-                change_statistical=ChangeStatistical(
+                statistical=ChangeStatistical(
                     add=1,
                     update=2,
                     delete=1,
@@ -69,7 +69,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
                 ),
             ),
             ChangeDetail(
-                change_statistical=ChangeStatistical(
+                statistical=ChangeStatistical(
                     add=0,
                     update=2,
                     delete=1,
@@ -80,7 +80,7 @@ class TestPullRequestInfo(_BaseModelTestSuite):
                 ),
             ),
             ChangeDetail(
-                change_statistical=ChangeStatistical(
+                statistical=ChangeStatistical(
                     add=1,
                     update=0,
                     delete=0,

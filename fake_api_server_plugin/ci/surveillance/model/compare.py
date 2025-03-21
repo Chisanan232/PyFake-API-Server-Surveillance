@@ -34,7 +34,7 @@ class ChangeSummary:
 
 @dataclass
 class ChangeDetail:
-    change_statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
+    statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
     apis: ChangeSummary = field(default_factory=ChangeSummary)
 
     def record_change(self, api: MockAPI, change_type: APIChangeType) -> None:
@@ -84,13 +84,13 @@ class CompareInfo:
         return has_api_change
 
     def _record_add_api(self, api: MockAPI) -> None:
-        self.change_detail.change_statistical.add += 1
+        self.change_detail.statistical.add += 1
         self.change_detail.record_change(api, APIChangeType.ADD)
 
     def _record_update_api(self, api: MockAPI) -> None:
-        self.change_detail.change_statistical.update += 1
+        self.change_detail.statistical.update += 1
         self.change_detail.record_change(api, APIChangeType.UPDATE)
 
     def _record_api_delete(self, api: MockAPI) -> None:
-        self.change_detail.change_statistical.delete += 1
+        self.change_detail.statistical.delete += 1
         self.change_detail.record_change(api, APIChangeType.DELETE)

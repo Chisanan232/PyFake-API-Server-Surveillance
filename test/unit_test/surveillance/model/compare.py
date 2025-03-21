@@ -126,7 +126,7 @@ class TestCompareInfo:
         assert apis.delete.keys() == {"/test/v1/deprecate"}
         assert apis.delete["/test/v1/deprecate"] == [HTTPMethod.GET]
 
-        change_statistical = change_detail.change_statistical
+        change_statistical = change_detail.statistical
         assert change_statistical.add == len(apis.add["/test/v1/new"])
         assert change_statistical.update == len(apis.update["/test/v1/sample"])
         assert change_statistical.delete == len(apis.delete["/test/v1/deprecate"])
