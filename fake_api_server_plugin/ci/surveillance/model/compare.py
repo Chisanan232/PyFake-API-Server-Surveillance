@@ -6,7 +6,7 @@ from fake_api_server.model import MockAPI
 try:
     from http import HTTPMethod
 except ImportError:
-    from fake_api_server.model.http import HTTPMethod  # type: ignore[assignment]
+    from fake_api_server.model.http import HTTPMethod  # type: ignore[no-redef]
 
 from fake_api_server import FakeAPIConfig
 
