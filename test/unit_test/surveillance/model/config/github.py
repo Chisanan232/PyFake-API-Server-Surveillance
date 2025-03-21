@@ -61,4 +61,9 @@ class TestGitHubInfo(_BaseModelTestSuite):
 
     def test_default_pr_body(self, model: Type[GitHubInfo]):
         github_info_model = model.deserialize({})
-        assert isinstance(github_info_model.pull_request.body, str)
+        with open("./fake_api_server_plugin/ci/surveillance/_static/pr-body.md", "r") as file_stream:
+            expect_pr_body = file_stream.read()
+
+        body = github_info_model.pull_request.body
+        assert isinstance(body, str)
+        assert body == expect_pr_body
