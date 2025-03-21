@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Dict, List
 
 from fake_api_server.model import MockAPI
@@ -11,6 +12,12 @@ except ImportError:
 from fake_api_server import FakeAPIConfig
 
 
+class APIChangeType(Enum):
+    ADD = "add"
+    UPDATE = "update"
+    DELETE = "delete"
+
+
 @dataclass
 class ChangeStatistical:
     add: int = 0
@@ -19,18 +26,28 @@ class ChangeStatistical:
 
 
 @dataclass
+class ChangeSummary:
+    add: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
+    delete: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
+    update: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
+
+
+@dataclass
 class ChangeDetail:
     change_statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
-    apis: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
+    apis: ChangeSummary = field(default_factory=ChangeSummary)
 
-    def record_change(self, api: MockAPI) -> None:
+    def record_change(self, api: MockAPI, change_type: APIChangeType) -> None:
         api_http_method = HTTPMethod[api.http.request.method.upper()]
-        if api.url not in self.apis:
-            self.apis[api.url] = [api_http_method]
+        api_with_change_type: Dict[str, List[HTTPMethod]] = getattr(self.apis, change_type.value)
+        if api.url not in api_with_change_type:
+            api_with_change_type[api.url] = [api_http_method]
+            setattr(self.apis, change_type.value, api_with_change_type)
         else:
-            api_allow_methods = self.apis[api.url]
+            api_allow_methods = api_with_change_type[api.url]
             api_allow_methods.append(api_http_method)
-            self.apis[api.url] = api_allow_methods
+            api_with_change_type[api.url] = api_allow_methods
+            setattr(self.apis, change_type.value, api_with_change_type)
 
 
 @dataclass
@@ -68,12 +85,12 @@ class CompareInfo:
 
     def _record_add_api(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.add += 1
-        self.change_detail.record_change(api)
+        self.change_detail.record_change(api, APIChangeType.ADD)
 
     def _record_update_api(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.update += 1
-        self.change_detail.record_change(api)
+        self.change_detail.record_change(api, APIChangeType.UPDATE)
 
     def _record_api_delete(self, api: MockAPI) -> None:
         self.change_detail.change_statistical.delete += 1
-        self.change_detail.record_change(api)
+        self.change_detail.record_change(api, APIChangeType.DELETE)

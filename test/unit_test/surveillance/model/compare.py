@@ -119,12 +119,14 @@ class TestCompareInfo:
         change_detail = model.change_detail
 
         apis = change_detail.apis
-        assert apis.keys() == {"/test/v1/sample", "/test/v1/deprecate", "/test/v1/new"}
-        assert apis["/test/v1/sample"] == [HTTPMethod.GET]
-        assert apis["/test/v1/deprecate"] == [HTTPMethod.GET]
-        assert apis["/test/v1/new"] == [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT]
+        assert apis.add.keys() == {"/test/v1/new"}
+        assert apis.add["/test/v1/new"] == [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT]
+        assert apis.update.keys() == {"/test/v1/sample"}
+        assert apis.update["/test/v1/sample"] == [HTTPMethod.GET]
+        assert apis.delete.keys() == {"/test/v1/deprecate"}
+        assert apis.delete["/test/v1/deprecate"] == [HTTPMethod.GET]
 
         change_statistical = change_detail.change_statistical
-        assert change_statistical.add == len(apis["/test/v1/new"])
-        assert change_statistical.update == len(apis["/test/v1/sample"])
-        assert change_statistical.delete == len(apis["/test/v1/deprecate"])
+        assert change_statistical.add == len(apis.add["/test/v1/new"])
+        assert change_statistical.update == len(apis.update["/test/v1/sample"])
+        assert change_statistical.delete == len(apis.delete["/test/v1/deprecate"])
