@@ -48,7 +48,7 @@ class PullRequestInfo(_BaseModel):
 
         surveillance = _find_surveillance_lib_path(pathlib.Path(os.path.abspath(__file__)))
         default_pr_body_md_file = pathlib.Path(surveillance, "_static", "pr-body.md")
-        assert default_pr_body_md_file.exists(), "Default PR body file not found."
+        assert os.path.exists(default_pr_body_md_file), "Default PR body file not found."
         with open(str(default_pr_body_md_file), "r") as file_stream:
             return file_stream.read()
 
