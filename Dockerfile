@@ -6,6 +6,7 @@
 # Environment variables:
 # * CONFIG_PATH: The configuration path.
 #         - Default values: './fake-api-server-surveillance.yaml'
+# * GITHUB_TOKEN: The GitHub token of fake server repository. It must have 2 prioroties: `contents` and `pull-requests`.
 #
 # Example running docker command line:
 # >>> docker build ./ -t <image name>:<image tag>
