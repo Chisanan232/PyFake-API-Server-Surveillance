@@ -95,20 +95,20 @@ class SubCmdConfig(_BaseModel):
             args=data.get(ConfigurationKey.ARGS.value, []),
         )
 
-    def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
+    def to_subcmd_args(self, subcmd_arg_model: Type[BaseArgsAdapter]) -> BaseArgsAdapter:
         """
         Converts a list of command-line arguments into a model instance by mapping
         argument keys and values into the appropriate format. This method parses
         arguments, verifies their validity, and applies them to create and populate
         an instance of the given model class.
 
-        :param subcmd_arg_model: The model class (`_BaseModel`) to which the
-            parsed arguments will be applied. Must subclass `_BaseModel`.
+        :param subcmd_arg_model: The model class (`BaseArgsAdapter`) to which the
+            parsed arguments will be applied. Must subclass `BaseArgsAdapter`.
 
         :return: An instance of the provided `subcmd_arg_model` populated with
             values derived from the list of command-line arguments.
 
-        :rtype: `_BaseModel`
+        :rtype: `BaseArgsAdapter`
         """
         param_with_key: Dict[str, str] = {}
         for arg in self.args:
