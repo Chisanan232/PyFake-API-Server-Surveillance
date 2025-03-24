@@ -9,7 +9,8 @@ import ast
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Type
 
-from fake_api_server.model.subcmd_common import SubCommandLine
+from fake_api_server.model.command.rest_server.cmd_args import SubcmdPullArguments
+from fake_api_server.model.subcmd_common import SubCommandLine, SysArg
 
 from .. import ConfigurationKey
 from .._base import _BaseModel
@@ -41,6 +42,25 @@ class PullApiDocConfigArgs(_BaseModel):
             divide_http_request=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_REQUEST.value]).capitalize()),
             divide_http_response=ast.literal_eval(str(data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()),
             dry_run=ast.literal_eval(str(data[ConfigurationKey.DRY_RUN.value]).capitalize()),
+        )
+
+    def to_subcmd_model(self) -> SubcmdPullArguments:
+        return SubcmdPullArguments(
+            # Unnecessary in Fake-API-Server-Surveillance
+            subparser_structure=SysArg(subcmd=SubCommandLine.Pull),
+            source="",
+            source_file="",
+            request_with_https=False,
+            # Necessary in Fake-API-Server-Surveillance
+            config_path=self.config_path,
+            base_file_path=self.base_file_path,
+            base_url=self.base_url,
+            include_template_config=self.include_template_config,
+            divide_api=self.divide_api,
+            divide_http=self.divide_http,
+            divide_http_request=self.divide_http_request,
+            divide_http_response=self.divide_http_response,
+            dry_run=self.dry_run,
         )
 
 

@@ -3,6 +3,7 @@ from typing import Mapping, Type, List, Union
 
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
+from fake_api_server.model import SubcmdPullArguments
 
 from fake_api_server_plugin.ci.surveillance.model import ConfigurationKey
 from fake_api_server_plugin.ci.surveillance.model.config.api_config import (
@@ -51,6 +52,19 @@ class TestPullApiDocConfigArgs(_BaseModelTestSuite):
             str(original_data[ConfigurationKey.DIVIDE_HTTP_RESPONSE.value]).capitalize()
         )
         assert model.dry_run == ast.literal_eval(str(original_data[ConfigurationKey.DRY_RUN.value]).capitalize())
+
+    def test_to_subcmd_model(self, model: Type[PullApiDocConfigArgs]):
+        arg_model = model.deserialize(fake_data.subcmd_pull_args(file_path="./api.yaml", base_test_dir="../"))
+        subcmd_arg_model = arg_model.to_subcmd_model()
+        assert isinstance(subcmd_arg_model, SubcmdPullArguments)
+        assert subcmd_arg_model.config_path == arg_model.config_path
+        assert subcmd_arg_model.base_file_path == arg_model.base_file_path
+        assert subcmd_arg_model.base_url == arg_model.base_url
+        assert subcmd_arg_model.include_template_config == arg_model.include_template_config
+        assert subcmd_arg_model.divide_api == arg_model.divide_api
+        assert subcmd_arg_model.divide_http == arg_model.divide_http
+        assert subcmd_arg_model.divide_http_request == arg_model.divide_http_request
+        assert subcmd_arg_model.divide_http_response == arg_model.divide_http_response
 
 
 class TestSubCmdConfig(_BaseModelTestSuite):
