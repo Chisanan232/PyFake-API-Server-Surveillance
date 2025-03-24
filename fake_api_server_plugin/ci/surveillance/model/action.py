@@ -4,9 +4,11 @@ for the surveillance action workflow. It handles deserialization of input data
 and provides methods to retrieve the surveillance configuration.
 
 Classes:
+
 - ActionInput: Manages input deserialization and configuration handling.
 
 Dependencies:
+
 - Reads YAML configuration from a file and deserializes it into a SurveillanceConfig.
 """
 
