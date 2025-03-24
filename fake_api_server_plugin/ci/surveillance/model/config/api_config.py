@@ -6,9 +6,11 @@ API server.
 """
 
 import ast
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Type
 
+from fake_api_server.model import ParserArguments
 from fake_api_server.model.command.rest_server.cmd_args import SubcmdPullArguments
 from fake_api_server.model.subcmd_common import SubCommandLine, SysArg
 
@@ -17,7 +19,14 @@ from .._base import _BaseModel
 
 
 @dataclass
-class PullApiDocConfigArgs(_BaseModel):
+class BaseArgsAdapter(metaclass=ABCMeta):
+    @abstractmethod
+    def to_subcmd_model(self) -> ParserArguments:
+        pass
+
+
+@dataclass
+class PullApiDocConfigArgs(_BaseModel, BaseArgsAdapter):
     config_path: str = "./api.yaml"
     include_template_config: bool = False
     base_file_path: str = "./"
