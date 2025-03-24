@@ -34,6 +34,7 @@ class BaseArgsAdapter(metaclass=ABCMeta):
         by any subclass deriving from BaseArgsAdapter.
     :type __abstractmethods__: frozenset
     """
+
     @abstractmethod
     def to_subcmd_model(self) -> ParserArguments:
         pass
@@ -75,6 +76,7 @@ class PullApiDocConfigArgs(_BaseModel, BaseArgsAdapter):
         response parts of the API.
     :type divide_http_response: bool
     """
+
     config_path: str = "./api.yaml"
     include_template_config: bool = False
     base_file_path: str = "./"
