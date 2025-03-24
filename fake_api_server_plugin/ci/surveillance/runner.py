@@ -20,8 +20,14 @@ from typing import Mapping, Tuple, cast
 
 import urllib3
 from fake_api_server import FakeAPIConfig
+from fake_api_server.command._common.component import SavingConfigComponent
 from fake_api_server.command.subcommand import SubCommandLine
-from fake_api_server.model import MockAPIs, deserialize_api_doc_config, load_config
+from fake_api_server.model import (
+    MockAPIs,
+    SubcmdPullArguments,
+    deserialize_api_doc_config,
+    load_config,
+)
 
 from .log import init_logger_config
 from .model.action import ActionInput
@@ -34,7 +40,6 @@ except ImportError:
 
 from .component.git import GitOperation
 from .component.github_opt import GitHubOperation
-from .component.pull import SavingConfigComponent
 from .model.config import PullApiDocConfigArgs, SurveillanceConfig
 from .model.config.github_action import get_github_action_env
 
@@ -228,16 +233,16 @@ class FakeApiServerSurveillance:
             PullApiDocConfigArgs,
             surveillance_config.fake_api_server.subcmd[SubCommandLine.Pull].to_subcmd_args(PullApiDocConfigArgs),
         )
-        self._update_api_doc_config(subcmd_args, new_api_doc_config)
+        self._update_api_doc_config(subcmd_args.to_subcmd_model(), new_api_doc_config)
         self._process_versioning(surveillance_config)
         self._notify(surveillance_config)
 
-    def _update_api_doc_config(self, args: PullApiDocConfigArgs, new_api_doc_config: FakeAPIConfig) -> None:
+    def _update_api_doc_config(self, args: SubcmdPullArguments, new_api_doc_config: FakeAPIConfig) -> None:
         """
         Updates the API documentation configuration using the provided arguments and configuration.
 
-        :param args: The arguments required to execute the API documentation configuration update.
-        :type args: PullApiDocConfigArgs
+        :param args: The arguments required to execute the API documentation configuration update by subcommand line *pull* of Fake-API-Server.
+        :type args: SubcmdPullArguments
         :param new_api_doc_config: The new configuration object for the API documentation to
             be applied.
         :type new_api_doc_config: FakeAPIConfig
