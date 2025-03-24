@@ -1,7 +1,7 @@
 """
-This module is responsible for comparing local and remote API configurations 
+This module is responsible for comparing local and remote API configurations
 to detect and summarize any differences. It provides functionality to identify
-API changes, including additions, updates, and deletions, and records these 
+API changes, including additions, updates, and deletions, and records these
 changes with statistical and detailed summaries.
 
 !!! tip ""
@@ -53,6 +53,7 @@ class APIChangeType(Enum):
     :ivar DELETE: Represents the removal or deprecation of an element in the API.
     :type DELETE: str
     """
+
     ADD = "add"
     UPDATE = "update"
     DELETE = "delete"
@@ -76,6 +77,7 @@ class ChangeStatistical:
     :ivar update: The number of updates made.
     :type update: int
     """
+
     add: int = 0
     delete: int = 0
     update: int = 0
@@ -104,6 +106,7 @@ class ChangeSummary:
         updated HTTP methods.
     :type update: Dict[str, List[HTTPMethod]]
     """
+
     add: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
     delete: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
     update: Dict[str, List[HTTPMethod]] = field(default_factory=dict)
@@ -126,6 +129,7 @@ class ChangeDetail:
         API URLs to the respective HTTP methods affected.
     :type summary: ChangeSummary
     """
+
     statistical: ChangeStatistical = field(default_factory=ChangeStatistical)
     summary: ChangeSummary = field(default_factory=ChangeSummary)
 
@@ -172,6 +176,7 @@ class CompareInfo:
     :ivar change_detail: Records details about changes identified during comparison.
     :type change_detail: ChangeDetail
     """
+
     local_model: FakeAPIConfig
     remote_model: FakeAPIConfig
     change_detail: ChangeDetail = field(default_factory=ChangeDetail)
