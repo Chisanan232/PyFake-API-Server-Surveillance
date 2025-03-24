@@ -4,7 +4,8 @@ The `_BaseModel` serves as an abstract base class that requires
 derived classes to implement data deserialization.
 
 Classes:
-    _BaseModel: Abstract base class for defining data models with deserialization logic.
+
+- _BaseModel: Abstract base class for defining data models with deserialization logic.
 """
 
 from abc import ABCMeta, abstractmethod
