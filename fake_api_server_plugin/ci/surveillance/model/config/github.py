@@ -21,22 +21,25 @@ from ..compare import ChangeDetail
 @dataclass
 class PullRequestInfo(_BaseModel):
     """
-    Represents information about a pull request.
+    Represents information related to a pull request, including metadata such as title, body, labels,
+    and draft status, as well as details of the changes it encompasses.
 
     This class encapsulates details of a pull request, such as its title, body description, whether
-    it is a draft or not, and associated labels. It can be used for creating or processing pull
-    requests programmatically. The `deserialize` method allows reconstructing an instance of this
+    it be marked as a draft or not, and associated labels. It can be used for creating or processing
+    pull requests programmatically. The `deserialize` method allows reconstructing an instance of this
     class from a dictionary-like mapping, supporting specific use cases related to mappings and
     configuration items.
 
     :ivar title: The title of the pull request.
     :type title: str
-    :ivar body: The body description of the pull request, providing further context.
+    :ivar body: The body content of the pull request.
     :type body: str
-    :ivar draft: Indicates if the pull request is a draft.
+    :ivar draft: Indicates if the pull request is marked as a draft.
     :type draft: bool
-    :ivar labels: A list of labels associated with the pull request.
+    :ivar labels: List of labels associated with the pull request.
     :type labels: List[str]
+    :ivar change_detail: An object containing statistical and summary details of API changes. This property is new in version 0.2.0.
+    :type change_detail: ChangeDetail
     """
 
     title: str = field(default_factory=str)
@@ -49,6 +52,28 @@ class PullRequestInfo(_BaseModel):
 
     @classmethod
     def default_pr_body(cls) -> str:
+        """
+        Generates and returns a default pull request body from a file.
+
+        This method reads the content of a Markdown file named `pr-body.md` located within
+        a `_static` directory inside the `surveillance` directory of the project's
+        file system structure. The `_find_surveillance_lib_path` helper function navigates
+        through the file path hierarchy to locate the `surveillance` directory. If the
+        `pr-body.md` file is not found in the expected path, an assertion is raised.
+
+        The returned content of the file can be used as a template for pull request bodies.
+
+        !!! tip ""
+
+            This function is new in version 0.2.0.
+
+        :raises AssertionError: If the default pull request body file (`pr-body.md`) is
+                                not found at the expected path.
+
+        :return: The content of the `pr-body.md` file as a string representing
+                 the default pull request body.
+        :rtype: str
+        """
 
         def _find_surveillance_lib_path(_path: pathlib.Path) -> pathlib.Path:
             if _path.name == "surveillance":
@@ -74,6 +99,21 @@ class PullRequestInfo(_BaseModel):
         )
 
     def set_change_detail(self, change_detail: ChangeDetail) -> None:
+        """
+        Updates the body of the content based on the provided change details, altering it to
+        reflect the statistical changes and API summary. Existing placeholders in the body
+        are replaced with the relevant information derived from the `change_detail` object.
+
+        !!! tip ""
+
+            This function is new in version 0.2.0.
+
+        :param change_detail: Contains statistical and summary details of API changes that are
+            used to update the body content.
+        :type change_detail: ChangeDetail
+
+        :return: None
+        """
         new_body = self.body
 
         # Process the details - statistics
