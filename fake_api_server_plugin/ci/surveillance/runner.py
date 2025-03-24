@@ -20,9 +20,14 @@ from typing import Mapping, Tuple, cast
 
 import urllib3
 from fake_api_server import FakeAPIConfig
-from fake_api_server.command.subcommand import SubCommandLine
-from fake_api_server.model import MockAPIs, deserialize_api_doc_config, load_config, SubcmdPullArguments
 from fake_api_server.command._common.component import SavingConfigComponent
+from fake_api_server.command.subcommand import SubCommandLine
+from fake_api_server.model import (
+    MockAPIs,
+    SubcmdPullArguments,
+    deserialize_api_doc_config,
+    load_config,
+)
 
 from .log import init_logger_config
 from .model.action import ActionInput

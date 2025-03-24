@@ -1,5 +1,5 @@
 import ast
-from typing import Mapping, Type, List, Union
+from typing import List, Mapping, Type, Union
 
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
@@ -95,7 +95,7 @@ class TestSubCmdConfig(_BaseModelTestSuite):
         assert isinstance(subcmd_args, PullApiDocConfigArgs)
         original_args_config: List[str] = fake_api_server_subcmd_pull_args[ConfigurationKey.ARGS.value]
 
-        def _find(_k: str) -> Union[str, bool] :
+        def _find(_k: str) -> Union[str, bool]:
 
             def _filter_value(_e: str) -> bool:
                 return _k in _e
