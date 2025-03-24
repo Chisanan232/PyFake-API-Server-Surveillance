@@ -1,5 +1,5 @@
 import ast
-from typing import Mapping, Type
+from typing import Mapping, Type, List, Union
 
 import pytest
 from fake_api_server.command.subcommand import SubCommandLine
@@ -75,7 +75,36 @@ class TestSubCmdConfig(_BaseModelTestSuite):
     def test_to_subcmd_args(self):
         fake_api_server_subcmd_pull_args = fake_data.fake_api_server_subcmd_pull_args()
         subcmd_config = SubCmdConfig.deserialize(fake_api_server_subcmd_pull_args)
-        # assert subcmd_config.to_subcmd_args(PullApiDocConfigArgs) == fake_api_server_subcmd_pull_args["args"]
+
+        subcmd_args = subcmd_config.to_subcmd_args(PullApiDocConfigArgs)
+
+        assert isinstance(subcmd_args, PullApiDocConfigArgs)
+        original_args_config: List[str] = fake_api_server_subcmd_pull_args[ConfigurationKey.ARGS.value]
+
+        def _find(_k: str) -> Union[str, bool] :
+
+            def _filter_value(_e: str) -> bool:
+                return _k in _e
+
+            _filter_result = list(filter(lambda e: _filter_value(e), original_args_config))
+            if _filter_result:
+                _filter_result = _filter_result[0]
+                if "=" in _filter_result:
+                    return _filter_result.split("=")[-1]
+                else:
+                    return True
+            else:
+                return False
+
+        assert subcmd_args.config_path == _find("config-path")
+        assert subcmd_args.base_file_path == _find("base-file-path")
+        assert subcmd_args.base_url == _find("base-url")
+        assert subcmd_args.include_template_config is _find("include-template-config")
+        assert subcmd_args.divide_api is _find("divide-api")
+        assert subcmd_args.divide_http is _find("divide-http")
+        assert subcmd_args.divide_http_request is _find("divide-http-request")
+        assert subcmd_args.divide_http_response is _find("divide-http-response")
+        assert subcmd_args.dry_run is _find("dry-run")
 
 
 class TestFakeAPIConfigSetting(_BaseModelTestSuite):
