@@ -6,17 +6,27 @@ API server.
 """
 
 import ast
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Type
 
-from fake_api_server.model.subcmd_common import SubCommandLine
+from fake_api_server.model import ParserArguments
+from fake_api_server.model.command.rest_server.cmd_args import SubcmdPullArguments
+from fake_api_server.model.subcmd_common import SubCommandLine, SysArg
 
 from .. import ConfigurationKey
 from .._base import _BaseModel
 
 
 @dataclass
-class PullApiDocConfigArgs(_BaseModel):
+class BaseArgsAdapter(metaclass=ABCMeta):
+    @abstractmethod
+    def to_subcmd_model(self) -> ParserArguments:
+        pass
+
+
+@dataclass
+class PullApiDocConfigArgs(_BaseModel, BaseArgsAdapter):
     config_path: str = "./api.yaml"
     include_template_config: bool = False
     base_file_path: str = "./"
@@ -43,6 +53,25 @@ class PullApiDocConfigArgs(_BaseModel):
             dry_run=ast.literal_eval(str(data[ConfigurationKey.DRY_RUN.value]).capitalize()),
         )
 
+    def to_subcmd_model(self) -> SubcmdPullArguments:
+        return SubcmdPullArguments(
+            # Unnecessary in Fake-API-Server-Surveillance
+            subparser_structure=SysArg(subcmd=SubCommandLine.Pull),
+            source="",
+            source_file="",
+            request_with_https=False,
+            # Necessary in Fake-API-Server-Surveillance
+            config_path=self.config_path,
+            base_file_path=self.base_file_path,
+            base_url=self.base_url,
+            include_template_config=self.include_template_config,
+            divide_api=self.divide_api,
+            divide_http=self.divide_http,
+            divide_http_request=self.divide_http_request,
+            divide_http_response=self.divide_http_response,
+            dry_run=self.dry_run,
+        )
+
 
 @dataclass
 class SubCmdConfig(_BaseModel):
@@ -66,20 +95,20 @@ class SubCmdConfig(_BaseModel):
             args=data.get(ConfigurationKey.ARGS.value, []),
         )
 
-    def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
+    def to_subcmd_args(self, subcmd_arg_model: Type[BaseArgsAdapter]) -> BaseArgsAdapter:
         """
         Converts a list of command-line arguments into a model instance by mapping
         argument keys and values into the appropriate format. This method parses
         arguments, verifies their validity, and applies them to create and populate
         an instance of the given model class.
 
-        :param subcmd_arg_model: The model class (`_BaseModel`) to which the
-            parsed arguments will be applied. Must subclass `_BaseModel`.
+        :param subcmd_arg_model: The model class (`BaseArgsAdapter`) to which the
+            parsed arguments will be applied. Must subclass `BaseArgsAdapter`.
 
         :return: An instance of the provided `subcmd_arg_model` populated with
             values derived from the list of command-line arguments.
 
-        :rtype: `_BaseModel`
+        :rtype: `BaseArgsAdapter`
         """
         param_with_key: Dict[str, str] = {}
         for arg in self.args:
