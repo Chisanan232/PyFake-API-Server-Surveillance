@@ -6,17 +6,77 @@ API server.
 """
 
 import ast
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Type
 
-from fake_api_server.model.subcmd_common import SubCommandLine
+from fake_api_server.model import ParserArguments
+from fake_api_server.model.command.rest_server.cmd_args import SubcmdPullArguments
+from fake_api_server.model.subcmd_common import SubCommandLine, SysArg
 
 from .. import ConfigurationKey
 from .._base import _BaseModel
 
 
 @dataclass
-class PullApiDocConfigArgs(_BaseModel):
+class BaseArgsAdapter(metaclass=ABCMeta):
+    """
+    BaseArgsAdapter serves as an abstract base class for adapting arguments in
+    a consistent manner with a specific subcommand model.
+
+    This class is designed to enforce the implementation of the `to_subcmd_model`
+    method in all derived classes, ensuring that they convert arguments to a
+    `ParserArguments` instance. It is intended to be subclassed and used in
+    contexts where argument transformation and adherence to a particular
+    subcommand model are required.
+
+    :ivar __abstractmethods__: Defines abstract methods that must be implemented
+        by any subclass deriving from BaseArgsAdapter.
+    :type __abstractmethods__: frozenset
+    """
+
+    @abstractmethod
+    def to_subcmd_model(self) -> ParserArguments:
+        pass
+
+
+@dataclass
+class PullApiDocConfigArgs(_BaseModel, BaseArgsAdapter):
+    """
+    Configuration arguments for pulling API documentation.
+
+    This dataclass is designed to encapsulate the configuration details required
+    to pull API documentation. It includes settings for config paths, base URLs,
+    division of API elements, and other related parameters. This class also
+    provides methods to deserialize data into an instance of the class and to
+    convert it into a subcommand-compatible model format.
+
+    :ivar config_path: The file path to the API configuration YAML file.
+    :type config_path: str
+    :ivar include_template_config: Boolean flag indicating whether to include the
+        template configuration in the process.
+    :type include_template_config: bool
+    :ivar base_file_path: The path to the base directory for generated files.
+    :type base_file_path: str
+    :ivar base_url: The base URL for the API.
+    :type base_url: str
+    :ivar dry_run: Boolean flag indicating whether the operation should be a
+        simulation without actual execution.
+    :type dry_run: bool
+    :ivar divide_api: Boolean flag indicating whether to divide the API components
+        during the process.
+    :type divide_api: bool
+    :ivar divide_http: Boolean flag indicating whether to divide HTTP components
+        in the API process.
+    :type divide_http: bool
+    :ivar divide_http_request: Boolean flag indicating whether to divide the HTTP
+        request parts of the API.
+    :type divide_http_request: bool
+    :ivar divide_http_response: Boolean flag indicating whether to divide the HTTP
+        response parts of the API.
+    :type divide_http_response: bool
+    """
+
     config_path: str = "./api.yaml"
     include_template_config: bool = False
     base_file_path: str = "./"
@@ -43,6 +103,35 @@ class PullApiDocConfigArgs(_BaseModel):
             dry_run=ast.literal_eval(str(data[ConfigurationKey.DRY_RUN.value]).capitalize()),
         )
 
+    def to_subcmd_model(self) -> SubcmdPullArguments:
+        """
+        Transforms and maps the internal configuration objects and attributes into
+        a `SubcmdPullArguments` model. This method provides the necessary arguments
+        and configuration for constructing a pull command subparser model and
+        ensures appropriate data is passed for command execution.
+
+        :rtype: SubcmdPullArguments
+        :return: A `SubcmdPullArguments` object that encapsulates the required
+            and optional data for executing the Pull sub-command.
+        """
+        return SubcmdPullArguments(
+            # Unnecessary in Fake-API-Server-Surveillance
+            subparser_structure=SysArg(subcmd=SubCommandLine.Pull),
+            source="",
+            source_file="",
+            request_with_https=False,
+            # Necessary in Fake-API-Server-Surveillance
+            config_path=self.config_path,
+            base_file_path=self.base_file_path,
+            base_url=self.base_url,
+            include_template_config=self.include_template_config,
+            divide_api=self.divide_api,
+            divide_http=self.divide_http,
+            divide_http_request=self.divide_http_request,
+            divide_http_response=self.divide_http_response,
+            dry_run=self.dry_run,
+        )
+
 
 @dataclass
 class SubCmdConfig(_BaseModel):
@@ -66,20 +155,20 @@ class SubCmdConfig(_BaseModel):
             args=data.get(ConfigurationKey.ARGS.value, []),
         )
 
-    def to_subcmd_args(self, subcmd_arg_model: Type[_BaseModel]) -> _BaseModel:
+    def to_subcmd_args(self, subcmd_arg_model: Type[BaseArgsAdapter]) -> BaseArgsAdapter:
         """
         Converts a list of command-line arguments into a model instance by mapping
         argument keys and values into the appropriate format. This method parses
         arguments, verifies their validity, and applies them to create and populate
         an instance of the given model class.
 
-        :param subcmd_arg_model: The model class (`_BaseModel`) to which the
-            parsed arguments will be applied. Must subclass `_BaseModel`.
+        :param subcmd_arg_model: The model class (`BaseArgsAdapter`) to which the
+            parsed arguments will be applied. Must subclass `BaseArgsAdapter`.
 
         :return: An instance of the provided `subcmd_arg_model` populated with
             values derived from the list of command-line arguments.
 
-        :rtype: `_BaseModel`
+        :rtype: `BaseArgsAdapter`
         """
         param_with_key: Dict[str, str] = {}
         for arg in self.args:
