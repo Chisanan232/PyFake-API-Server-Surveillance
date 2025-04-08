@@ -83,11 +83,10 @@ pylint = "^3.1.0"
 # Dependency for test
 pytest = "^8.1.1"
 pytest-cov = "^5.0.0"
-pytest-html = "^4.1.1"
+#pytest-html = "^4.1.1"
 pytest-rerunfailures = "^14.0"
 # Dependency for coverage report
 coverage = "^6.2"
-coveralls = "^3.3.1"
 
 [tool.poetry.group.docs]
 optional = true
