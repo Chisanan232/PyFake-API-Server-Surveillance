@@ -16,23 +16,6 @@ files = [
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
 
 [[package]]
-name = "astunparse"
-version = "1.6.3"
-description = "An AST unparser for Python"
-optional = false
-python-versions = "*"
-groups = ["docs"]
-markers = "python_version < \"3.9\""
-files = [
-    {file = "astunparse-1.6.3-py2.py3-none-any.whl", hash = "sha256:c2652417f2c8b5bb325c885ae329bdf3f86424075c4fd1a128674bc6fba4b8e8"},
-    {file = "astunparse-1.6.3.tar.gz", hash = "sha256:5ad93a8456f0d084c3456d059fd9a92cce667963232cbf763eac3bc5b7940872"},
-]
-
-[package.dependencies]
-six = ">=1.6.1,<2.0"
-wheel = ">=0.23.0,<1.0"
-
-[[package]]
 name = "babel"
 version = "2.17.0"
 description = "Internationalization utilities"
@@ -43,9 +26,6 @@ files = [
     {file = "babel-2.17.0-py3-none-any.whl", hash = "sha256:4d0b53093fdfb4b21c92b5213dba5a1b23885afa8383709427046b21c366e5f2"},
     {file = "babel-2.17.0.tar.gz", hash = "sha256:0c54cffb19f690cdcc52a3b50bcbf71e07a808d1c80d549f2459b9d2cf0afb9d"},
 ]
-
-[package.dependencies]
-pytz = {version = ">=2015.7", markers = "python_version < \"3.9\""}
 
 [package.extras]
 dev = ["backports.zoneinfo", "freezegun (>=1.0,<2.0)", "jinja2 (>=3.0)", "pytest (>=6.0)", "pytest-cov", "pytz", "setuptools", "tzdata"]
@@ -578,7 +558,6 @@ files = [
 ]
 
 [package.dependencies]
-astunparse = {version = ">=1.6", markers = "python_version < \"3.9\""}
 colorama = ">=0.4"
 
 [[package]]
@@ -1785,22 +1764,6 @@ files = [
 watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
-name = "wheel"
-version = "0.45.1"
-description = "A built-package format for Python"
-optional = false
-python-versions = ">=3.8"
-groups = ["docs"]
-markers = "python_version < \"3.9\""
-files = [
-    {file = "wheel-0.45.1-py3-none-any.whl", hash = "sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248"},
-    {file = "wheel-0.45.1.tar.gz", hash = "sha256:661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729"},
-]
-
-[package.extras]
-test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
-
-[[package]]
 name = "wrapt"
 version = "1.17.2"
 description = "Module for decorators, wrappers and monkey patching."
@@ -1911,5 +1874,5 @@ type = ["pytest-mypy"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.8,<3.13"
-content-hash = "2a4b70b5e729bcf61e7e70aeb3284d255ff4edeab8b11802cf267e3c46e6e67c"
+python-versions = ">=3.9,<3.13"
+content-hash = "04b432e888ba5fa21c614a0c2f9eae0415f2498691b058ce0ad7c8f579adf228"
