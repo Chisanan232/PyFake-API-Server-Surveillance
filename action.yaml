@@ -18,6 +18,9 @@ runs:
 
     - name: Clone project
       uses: actions/checkout@v4
+      with:
+        repository: 'Chisanan232/PyFake-API-Server-Surveillance'
+        ref: 'master'
 
     - name: Install Python 3.12 for running surveillance
       uses: actions/setup-python@v5
