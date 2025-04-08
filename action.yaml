@@ -6,10 +6,6 @@ inputs:
     description: "The file path of the PyFake-API-Server-Surveillance configuration."
     required: false
     default: "./fake-api-server-surveillance.yaml"
-outputs:
-  monitor-result:
-    description: "If it has any change, this property value would be *true*."
-    value: ${{ steps.monitor-result.outputs.monitor-result }}
 runs:
   using: "composite"
   steps:
@@ -22,6 +18,9 @@ runs:
 
     - name: Clone project
       uses: actions/checkout@v4
+      with:
+        repository: 'Chisanan232/PyFake-API-Server-Surveillance'
+        ref: 'master'
 
     - name: Install Python 3.12 for running surveillance
       uses: actions/setup-python@v5
@@ -46,11 +45,6 @@ runs:
       shell: bash
       env:
         CONFIG_PATH: ${{ inputs.config-path }}
-
-    - name: Set result as output value
-      id: monitor-result
-      shell: bash
-      run: echo "monitor-result=$(echo $TODO_SOMETHING_OUTPUT)" >> $GITHUB_OUTPUT
 branding:
   icon: 'monitor'
   color: 'black'
