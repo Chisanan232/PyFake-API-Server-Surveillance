@@ -59,6 +59,10 @@ The body of pull request.
 
     ![pull request title](../../_images/getting-started/configure-references/github_pull_request_body.png)
 
+!!! tip "Default GitHub pull request body"
+
+    ![pull request title](../../_images/getting-started/configure-references/default_pr_values-body.png)
+
 #### ``pull-request.draft``
 
 Whether the pull request it opens is draft or not. It's a boolean type property.
