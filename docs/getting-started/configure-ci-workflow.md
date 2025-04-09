@@ -64,7 +64,7 @@ jobs:
 
         ```yaml
         permissions:
-          pull-requests: write  # Need this to push commits
+          pull-requests: write  # Need this open pull reuqest in GitHub repository
         ```
 
     Finally, please don't forget set the ``GITHUB_TOKEN`` for the action:
