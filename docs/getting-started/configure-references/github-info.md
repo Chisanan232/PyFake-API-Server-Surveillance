@@ -53,7 +53,7 @@ The body of pull request.
 
     As following result:
 
-    ![pull request title](../../_images/github_pull_request_body.png)
+    ![pull request title](../../_images/getting-started/configure-references/github_pull_request_body.png)
 
 #### ``pull-request.draft``
 
