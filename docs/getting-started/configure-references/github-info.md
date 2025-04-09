@@ -31,7 +31,7 @@ The pull request title.
 
     As following result:
 
-    ![pull request title](../../_images/github_pull_request_title.png)
+    ![pull request title](../../_images/getting-started/configure-references/github_pull_request_title.png)
 
 #### ``pull-request.body``
 
