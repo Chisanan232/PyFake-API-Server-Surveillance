@@ -31,7 +31,11 @@ The pull request title.
 
     As following result:
 
-    ![pull request title](../../_images/github_pull_request_title.png)
+    ![pull request title](../../_images/getting-started/configure-references/github_pull_request_title.png)
+
+!!! tip "Default GitHub pull request title"
+
+    ![pull request title](../../_images/getting-started/configure-references/default_pr_values-title.png)
 
 #### ``pull-request.body``
 
@@ -53,7 +57,11 @@ The body of pull request.
 
     As following result:
 
-    ![pull request title](../../_images/github_pull_request_body.png)
+    ![pull request title](../../_images/getting-started/configure-references/github_pull_request_body.png)
+
+!!! tip "Default GitHub pull request body"
+
+    ![pull request title](../../_images/getting-started/configure-references/default_pr_values-body.png)
 
 #### ``pull-request.draft``
 
@@ -79,4 +87,4 @@ What labels it should use to tag at the pull request. It's an array type propert
 
     As following result:
 
-    ![pull request title](../../_images/github_pull_request_labels.png)
+    ![pull request title](../../_images/getting-started/configure-references/github_pull_request_labels.png)

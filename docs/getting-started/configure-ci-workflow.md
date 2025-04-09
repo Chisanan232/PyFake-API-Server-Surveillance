@@ -32,7 +32,7 @@ jobs:
 
       # Monitor and update the config if it needs by opening pull request
       - name: Run Fake-API-Server-Surveillance
-        uses: ./
+        uses: actions/PyFake-API-Server-Surveillance@v0.2.0
         with:
           config-path: <your fake-api-server-surveillance config>
         env:
@@ -64,7 +64,7 @@ jobs:
 
         ```yaml
         permissions:
-          pull-requests: write  # Need this to push commits
+          pull-requests: write  # Need this open pull reuqest in GitHub repository
         ```
 
     Finally, please don't forget set the ``GITHUB_TOKEN`` for the action:
