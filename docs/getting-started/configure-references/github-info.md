@@ -33,6 +33,10 @@ The pull request title.
 
     ![pull request title](../../_images/getting-started/configure-references/github_pull_request_title.png)
 
+!!! tip "Default GitHub pull request title"
+
+    ![pull request title](../../_images/getting-started/configure-references/default_pr_values-title.png)
+
 #### ``pull-request.body``
 
 The body of pull request.
