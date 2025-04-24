@@ -3,7 +3,7 @@
 Recently, it only supports GitHub Action to run **_PyFake-API-Server-Surveillance_** to monitor. So let's set up the
 monitoring automation by GitHub Action.
 
-!!! tip "What is different between **Pure value** and **Object for truly function**?"
+!!! tip "Integrate with **GitHub Action** to make optimal"
 
     It's recommanded that using [schedule event] in GitHub Action to monitor target end point.
 
