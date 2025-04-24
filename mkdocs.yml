@@ -207,11 +207,20 @@ nav:
         - getting-started/api-references/component/index.md
         - git: getting-started/api-references/component/git.md
         - github: getting-started/api-references/component/github.md
-#  - Development:
-#    - development/index.md
-#    - How it works: development/how-it-works.md
-#    - Software architecture: development/software-architecture.md
-#    - Contributing : development/contributing.md
+  - Development:
+    - development/index.md
+    - Why it exists: development/why-it-exists.md
+    - How it works: development/how-it-works.md
+    - Contributing :
+      - development/contributing/index.md
+      - Reporting a bug: development/contributing/reporting-a-bug.md
+      - Requesting a feature or change: development/contributing/requesting-a-feature.md
+      - Join in developing:
+        - development/contributing/join_in_developing/index.md
+        - Development workflow: development/contributing/join_in_developing/development_workflow.md
+        - CI workflow: development/contributing/join_in_developing/ci_workflow.md
+        - Developing: development/contributing/join_in_developing/developing.md
+        - Testing: development/contributing/join_in_developing/testing.md
   - Release notes:
     - release_note/index.md
     - Version 0.X.X: release_note/version_0xx.md
