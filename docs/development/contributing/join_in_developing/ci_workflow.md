@@ -145,7 +145,7 @@ Here records all the CI workflows of this project runs.
 
     It would build the Docker image and push it to [DockerHub].
 
-[DockerHub]: https://hub.docker.com/repository/docker/chisanan232/pyfake-api-server/general
+[DockerHub]: https://hub.docker.com/repository/docker/chisanan232/pyfake-api-server-surveillance/general
 
 ## Documentation CI
 
