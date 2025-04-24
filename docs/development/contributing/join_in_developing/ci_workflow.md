@@ -73,14 +73,14 @@ Here records all the CI workflows of this project runs.
     coding style (this would also be checked in [pre-commit CI]), security or something details about code quality. And 
     finally, it would try to test to run the command line ``mock`` to ensure it should work finely.
 
-[tests]: https://github.com/Chisanan232/PyFake-API-Server/tree/master/test
-[unit test]: https://github.com/Chisanan232/PyFake-API-Server/tree/master/test/unit_test
-[integration test]: https://github.com/Chisanan232/PyFake-API-Server/tree/master/test/integration_test
-[system test]: https://github.com/Chisanan232/PyFake-API-Server/tree/master/test/system_test
+[tests]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/tree/master/test
+[unit test]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/tree/master/test/unit_test
+[integration test]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/tree/master/test/integration_test
+[system test]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/tree/master/test/system_test
 
-[test coverage reports]: https://app.codecov.io/gh/Chisanan232/PyFake-API-Server
-[SonarQube]: https://sonarcloud.io/summary/new_code?id=Chisanan232_PyFake-API-Server
-[pre-commit CI]: https://results.pre-commit.ci/run/github/604187293/1735723133.6DCBop-ERCWYNuC-gaGlyA
+[test coverage reports]: https://app.codecov.io/gh/Chisanan232/PyFake-API-Server-Surveillance
+[SonarQube]: https://sonarcloud.io/summary/new_code?id=Chisanan232_PyFake-API-Server-Surveillance
+[pre-commit CI]: https://results.pre-commit.ci/run/github/901659765/1744171173.8RV_66z2TtCE36bs0f5Syw
 
 ![source code ci]
 
@@ -103,7 +103,7 @@ Here records all the CI workflows of this project runs.
     It would create new git tag and git release info. After tag and release building, it would build the source code as 
     Python package and push it to [PyPI] service.
 
-[PyPI]: https://pypi.org/project/PyFake-API-Server/
+[PyPI]: https://pypi.org/project/fake-api-server-surveillance/
 
 ![cd]
 
@@ -127,7 +127,7 @@ Here records all the CI workflows of this project runs.
     ```
 
 [Chisanan232]: https://github.com/Chisanan232
-[source code]: https://github.com/Chisanan232/PyFake-API-Server/blob/master/pymock_server/__pkg_info__.py#L17
+[source code]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/blob/master/pymock_server/__pkg_info__.py#L17
 
 ## Docker CI
 
@@ -186,8 +186,8 @@ Here records all the CI workflows of this project runs.
         Only when software version be updated in package info module would trigger the after-process of this workflow,
         it would try to get the software version as the version to deploy the content to specific version of documentation.
 
-[documentation]: https://github.com/Chisanan232/PyFake-API-Server/tree/master/docs
-[GitHub pages]: https://chisanan232.github.io/pyfake-api-server/stable/
+[documentation]: https://github.com/Chisanan232/PyFake-API-Server-Surveillance/tree/master/docs
+[GitHub pages]: https://chisanan232.github.io/pyfake-api-server-surveillance/stable/
 
 ![documentation cd]
 
