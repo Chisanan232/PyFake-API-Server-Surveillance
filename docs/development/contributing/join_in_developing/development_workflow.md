@@ -15,8 +15,8 @@ We can talk about the development workflow in different points:
 
 ## Roles
 
-First, what thing you want to do? Think and plan what feature it should have? Exactly develop **_PyFake-API-Server_** by 
-your hand? Or you just be interested in finding something issues for others to fix it? Different thing for different
+First, what thing you want to do? Think and plan what feature it should have? Exactly develop **_PyFake-API-Server-Surveillance_**
+by your hand? Or you just be interested in finding something issues for others to fix it? Different thing for different
 roles:
 
 * Developers: who's interested in developing
