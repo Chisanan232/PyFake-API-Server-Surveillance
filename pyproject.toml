@@ -9,7 +9,7 @@ description = "🤖 A CI tool for monitoring a specific API end points and keepi
 authors = [
     { name = "Liu, Bryant", email = "chi10211201@cycu.org.tw" }
 ]
-license = { file = "LICENSE" }
+license = {text = "MIT"}
 readme = "README.md"
 keywords = ["fake", "API", "fake server", "fake API server", "web", "server", "surveillance", "monitor"]
 classifiers = [
@@ -41,12 +41,6 @@ dependencies = [
 ]
 
 [tool.poetry]
-name = "fake-api-server-surveillance"
-version = "0.1.0"
-description = "🤖 A CI tool for monitoring a specific API end points and keeping fake API server always up-to-date."
-authors = [
-    "Liu, Bryant <chi10211201@cycu.org.tw>",
-]
 packages = [
     { include = "ci", from = "fake_api_server_plugin", to = "fake_api_server" },
 ]
