@@ -58,7 +58,7 @@ jobs:
 #    name: Organize and generate the testing report and upload it to Codecov
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
     needs: build-and-test
-    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.2
+    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.3
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -72,7 +72,7 @@ jobs:
 #    name: Organize and generate the testing report and upload it to Codecov
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
     needs: build-and-test
-    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.2
+    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.3
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -86,7 +86,7 @@ jobs:
 #    name: Organize and generate the testing report and upload it to Codecov
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
     needs: build-and-test
-    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.2
+    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.3
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -100,7 +100,7 @@ jobs:
 ##    name: Organize and generate the testing report and upload it to Codecov
 #    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
 #    needs: build-and-test
-#    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.2
+#    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.3
 #    secrets:
 #      codecov_token: ${{ secrets.CODECOV_TOKEN }}
 #    with:
@@ -114,7 +114,7 @@ jobs:
 #    name: Organize and generate the testing report and upload it to Codecov
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
     needs: build-and-test
-    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.2
+    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_upload_test_cov_report.yaml@v7.3
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     with:
@@ -128,7 +128,7 @@ jobs:
 #    name: SonarCloud Scan
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name == 'master') }}
     needs: build-and-test
-    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_sonarqube_scan.yaml@v7.2
+    uses: Chisanan232/GitHub-Action_Reusable_Workflows-Python/.github/workflows/rw_sonarqube_scan.yaml@v7.3
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
     with:
