@@ -1,0 +1,43 @@
+# CODEOWNERS file for PyFake-API-Server-Surveillance
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# These owners will be the default owners for everything in the repo.
+# Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
+* @Chisanan232
+
+# Core application code
+/fake_api_server_plugin/ @Chisanan232
+/fake_api_server_plugin/ci/ @Chisanan232
+/fake_api_server_plugin/ci/surveillance/ @Chisanan232 @code-reviewers
+
+# Test files
+/test/ @Chisanan232 @test-reviewers
+/test/unit_test/ @Chisanan232 @unit-test-team
+/test/integration_test/ @Chisanan232 @integration-test-team
+/test/system_test/ @Chisanan232 @system-test-team
+
+# Documentation
+/docs/ @Chisanan232 @documentation-team
+*.md @Chisanan232 @documentation-team
+/mkdocs.yml @Chisanan232 @documentation-team
+
+# CI/CD and GitHub Actions
+/.github/workflows/ @Chisanan232 @devops-team
+/.github/actions/ @Chisanan232 @devops-team
+/scripts/ci/ @Chisanan232 @devops-team
+/action.yaml @Chisanan232 @devops-team
+
+# Docker related files
+/Dockerfile @Chisanan232 @devops-team
+/README-DOCKER.md @Chisanan232 @devops-team @documentation-team
+
+# Configuration files
+/pyproject.toml @Chisanan232 @core-maintainers
+/poetry.lock @Chisanan232 @core-maintainers
+/.pre-commit-config.yaml @Chisanan232 @core-maintainers
+/.pylintrc @Chisanan232 @core-maintainers
+/mypy.ini @Chisanan232 @core-maintainers
+/pytest.ini @Chisanan232 @test-reviewers
+/.coveragerc @Chisanan232 @test-reviewers
+/sonar-project.properties @Chisanan232 @devops-team
+/codecov.yml @Chisanan232 @devops-team
