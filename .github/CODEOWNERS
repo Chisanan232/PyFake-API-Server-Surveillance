@@ -1,43 +1,45 @@
 # CODEOWNERS file for PyFake-API-Server-Surveillance
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# These owners will be the default owners for everything in the repo.
-# Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
-* @Chisanan232
+# Default owner for everything in the repository
+*                                    @Chisanan232
+
+# Software license annotation
+/LICENSE                             @Chisanan232
 
 # Core application code
-/fake_api_server_plugin/ @Chisanan232
-/fake_api_server_plugin/ci/ @Chisanan232
-/fake_api_server_plugin/ci/surveillance/ @Chisanan232 @code-reviewers
+/fake_api_server_plugin/             @Chisanan232
+/fake_api_server_plugin/ci/          @Chisanan232
+/fake_api_server_plugin/ci/surveillance/  @Chisanan232
 
 # Test files
-/test/ @Chisanan232 @test-reviewers
-/test/unit_test/ @Chisanan232 @unit-test-team
-/test/integration_test/ @Chisanan232 @integration-test-team
-/test/system_test/ @Chisanan232 @system-test-team
+/test/                               @Chisanan232
+/test/unit_test/                     @Chisanan232
+/test/integration_test/              @Chisanan232
+/test/system_test/                   @Chisanan232
 
 # Documentation
-/docs/ @Chisanan232 @documentation-team
-*.md @Chisanan232 @documentation-team
-/mkdocs.yml @Chisanan232 @documentation-team
+/docs/                               @Chisanan232
+*.md                                 @Chisanan232
+/mkdocs.yml                          @Chisanan232
 
 # CI/CD and GitHub Actions
-/.github/workflows/ @Chisanan232 @devops-team
-/.github/actions/ @Chisanan232 @devops-team
-/scripts/ci/ @Chisanan232 @devops-team
-/action.yaml @Chisanan232 @devops-team
+/.github/workflows/                  @Chisanan232
+/.github/actions/                    @Chisanan232
+/scripts/ci/                         @Chisanan232
+/action.yaml                         @Chisanan232
 
 # Docker related files
-/Dockerfile @Chisanan232 @devops-team
-/README-DOCKER.md @Chisanan232 @devops-team @documentation-team
+/Dockerfile                          @Chisanan232
+/README-DOCKER.md                    @Chisanan232
 
 # Configuration files
-/pyproject.toml @Chisanan232 @core-maintainers
-/poetry.lock @Chisanan232 @core-maintainers
-/.pre-commit-config.yaml @Chisanan232 @core-maintainers
-/.pylintrc @Chisanan232 @core-maintainers
-/mypy.ini @Chisanan232 @core-maintainers
-/pytest.ini @Chisanan232 @test-reviewers
-/.coveragerc @Chisanan232 @test-reviewers
-/sonar-project.properties @Chisanan232 @devops-team
-/codecov.yml @Chisanan232 @devops-team
+/pyproject.toml                      @Chisanan232
+/poetry.lock                         @Chisanan232
+/.pre-commit-config.yaml             @Chisanan232
+/.pylintrc                           @Chisanan232
+/mypy.ini                            @Chisanan232
+/pytest.ini                          @Chisanan232
+/.coveragerc                         @Chisanan232
+/sonar-project.properties            @Chisanan232
+/codecov.yml                         @Chisanan232
