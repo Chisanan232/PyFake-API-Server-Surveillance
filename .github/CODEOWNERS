@@ -1,0 +1,45 @@
+# CODEOWNERS file for PyFake-API-Server-Surveillance
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repository
+*                                    @Chisanan232
+
+# Software license annotation
+/LICENSE                             @Chisanan232
+
+# Core application code
+/fake_api_server_plugin/             @Chisanan232
+/fake_api_server_plugin/ci/          @Chisanan232
+/fake_api_server_plugin/ci/surveillance/  @Chisanan232
+
+# Test files
+/test/                               @Chisanan232
+/test/unit_test/                     @Chisanan232
+/test/integration_test/              @Chisanan232
+/test/system_test/                   @Chisanan232
+
+# Documentation
+/docs/                               @Chisanan232
+*.md                                 @Chisanan232
+/mkdocs.yml                          @Chisanan232
+
+# CI/CD and GitHub Actions
+/.github/workflows/                  @Chisanan232
+/.github/actions/                    @Chisanan232
+/scripts/ci/                         @Chisanan232
+/action.yaml                         @Chisanan232
+
+# Docker related files
+/Dockerfile                          @Chisanan232
+/README-DOCKER.md                    @Chisanan232
+
+# Configuration files
+/pyproject.toml                      @Chisanan232
+/poetry.lock                         @Chisanan232
+/.pre-commit-config.yaml             @Chisanan232
+/.pylintrc                           @Chisanan232
+/mypy.ini                            @Chisanan232
+/pytest.ini                          @Chisanan232
+/.coveragerc                         @Chisanan232
+/sonar-project.properties            @Chisanan232
+/codecov.yml                         @Chisanan232
