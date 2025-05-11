@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "fake-api-server-surveillance"
-version = "0.1.0"
+version = "0.2.0"
 description = "🤖 A CI tool for monitoring a specific API end points and keeping fake API server always up-to-date."
 authors = [
     { name = "Liu, Bryant", email = "chi10211201@cycu.org.tw" }
