@@ -1,1 +1,1 @@
-v0.1.0 - 🍻 Newborn about automation monitoring tool for keeping Fake-API-Server config up-to-date
+v0.2.0 - 🌸 Let PR content to be more humanly readable
