@@ -34,10 +34,10 @@ on:
 env:
   DOCKER_ACCOUNT: chisanan232
   DOCKER_IMAGE_NAME: pyfake-api-server-surveillance
-#  DOCKER_IMAGE_NAME: test    # For testing
   RELEASE_TYPE: python-package
   PYTHON_PACKAGE_NAME: fake_api_server_plugin/ci/surveillance
   SOFTWARE_VERSION_FORMAT: general-3
+#  DOCKER_IMAGE_NAME: test    # For testing
 #  RUNNING_MODE: dry-run
 
 permissions:
