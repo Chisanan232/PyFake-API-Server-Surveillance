@@ -68,6 +68,7 @@ plugins:
           options:
             docstring_style: sphinx
             docstring_section_style: spacy
+            # FIXME: Will occur error about it cannot set the property finely (unexpected error)
 #            docstring_options:
 #              ignore_init_summary: true
             merge_init_into_class: true
