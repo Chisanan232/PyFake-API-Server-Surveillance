@@ -18,18 +18,12 @@ on:
   push:
     branches:
       - "master"
+      - "develop/**"  # for debug or hotfix
     paths:
 #     Python source code package info
       - "**/__pkg_info__.py"
 #      Only activate below setting for developing, testing or troubleshooting
-#      - ".github/workflows/docker.yaml"
-
-  pull_request:
-    branches:
-      - "master"
-    paths:
-#      Only activate below setting for developing, testing or troubleshooting
-      - ".github/workflows/docker.yaml"
+      - ".github/workflows/docker.yaml"  # for debug or hotfix
 
 env:
   DOCKER_ACCOUNT: chisanan232
