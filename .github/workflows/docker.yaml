@@ -18,19 +18,20 @@ on:
   push:
     branches:
       - "master"
+#      - "develop/**"  # for debug or hotfix
     paths:
 #     Python source code package info
       - "**/__pkg_info__.py"
 #      Only activate below setting for developing, testing or troubleshooting
-      - ".github/workflows/docker.yaml"
+#      - ".github/workflows/docker.yaml"  # for debug or hotfix
 
 env:
   DOCKER_ACCOUNT: chisanan232
   DOCKER_IMAGE_NAME: pyfake-api-server-surveillance
-#  DOCKER_IMAGE_NAME: test    # For testing
   RELEASE_TYPE: python-package
   PYTHON_PACKAGE_NAME: fake_api_server_plugin/ci/surveillance
   SOFTWARE_VERSION_FORMAT: general-3
+#  DOCKER_IMAGE_NAME: test    # For testing
 #  RUNNING_MODE: dry-run
 
 permissions:
@@ -51,9 +52,9 @@ jobs:
     secrets:
       github_auth_token: ${{ secrets.GITHUB_TOKEN }}
     with:
-      project_type: ${{ env.RELEASE_TYPE }}
-      project_name: ${{ env.PYTHON_PACKAGE_NAME }}
-      software_version_format: ${{ env.SOFTWARE_VERSION_FORMAT }}
+      project_type: python-package
+      project_name: fake_api_server_plugin/ci/surveillance
+      software_version_format: general-3
       debug_mode: true
 
   deploy_documentation:
