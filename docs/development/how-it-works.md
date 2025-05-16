@@ -37,4 +37,4 @@ version configuration.
 
     [git info in configuration]: ../getting-started/configure-references/git-info.md
     [GitHub info in configuration]: ../getting-started/configure-references/github-info.md
-    [notification function]: ../../getting-started/api-references/runner/#fake_api_server_plugin.ci.surveillance.runner.FakeApiServerSurveillance._notify
+    [notification function]: ../getting-started/api-references/runner.md#fake_api_server_plugin.ci.surveillance.runner.FakeApiServerSurveillance._notify
