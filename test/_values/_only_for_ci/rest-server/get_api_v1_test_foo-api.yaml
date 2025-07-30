@@ -1,0 +1,9 @@
+url: /api/v1/test/foo
+tag: ''
+http:
+  request:
+    method: GET
+    parameters: []
+  response:
+    strategy: object
+    properties: []
