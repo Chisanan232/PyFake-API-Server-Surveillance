@@ -65,7 +65,7 @@ run-fake-server-surveillance = "ci.surveillance.runner:run"
 [tool.poetry.group.local-dev.dependencies]
 # Dependency for CI
 pre-commit = "^4.3.0"
-pylint = "^3.3.7"
+pylint = "^3.3.8"
 mypy = "^1.17.1"
 # Dependency of core logic
 
