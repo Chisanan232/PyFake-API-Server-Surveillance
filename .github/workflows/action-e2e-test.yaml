@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up fake server
         uses: ./.github/actions/setup_fake_server/
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up fake server
         uses: ./.github/actions/setup_fake_server/
@@ -104,7 +104,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Clone project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Fake-API-Server-Surveillance
         id: e2e-test-invalid-case
