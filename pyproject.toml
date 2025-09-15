@@ -78,7 +78,7 @@ mypy = "^1.17.1"
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
 #pytest-html = "^4.1.1"
-pytest-rerunfailures = "^15.1"
+pytest-rerunfailures = "^16.0"
 # Dependency for coverage report
 coverage = "^7.10"
 
