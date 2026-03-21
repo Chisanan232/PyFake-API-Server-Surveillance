@@ -102,7 +102,7 @@ jobs:
           mv ./.coverage ./.coverage.${{ inputs.test_type }}.${{ inputs.runtime_os }}-${{ inputs.python_version }}
 
       - name: Upload code coverage result file
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage_${{ inputs.test_type }}_${{ inputs.runtime_os }}_${{ inputs.python_version }}
           path: .coverage.${{ inputs.test_type }}.${{ inputs.runtime_os }}-${{ inputs.python_version }}
