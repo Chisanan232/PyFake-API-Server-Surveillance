@@ -1,3 +1,11 @@
+> [!IMPORTANT]
+> **Maintenance status: active development is paused.**
+>
+> Active development of this project is currently paused. While it is paused, regular feature
+> work, dependency upgrades, compatibility updates and security fixes are not guaranteed, and
+> issues and pull requests may not receive a timely response. Existing releases remain
+> available on PyPI.
+
 # PyFake-API-Server-Surveillance
 
 [![PyPI](https://img.shields.io/pypi/v/fake-api-server-surveillance?color=%23099cec&amp;label=PyPI&amp;logo=pypi&amp;logoColor=white)](https://pypi.org/project/fake-api-server-surveillance)
