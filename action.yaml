@@ -17,7 +17,7 @@ runs:
         exit 1
 
     - name: Clone project
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: 'Chisanan232/PyFake-API-Server-Surveillance'
         ref: 'master'
